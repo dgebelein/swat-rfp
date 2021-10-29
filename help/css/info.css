@@ -1,0 +1,56 @@
+
+@media screen
+{
+	body  {
+		color:#FFFFFF;
+		background-color:#000000;
+		font-family: Verdana,Arial,sans-serif;
+	}
+
+	p {
+		font-size:10pt;
+		line-height:15pt;
+	}
+	
+	h1 {
+		font-family: Arial,sans-serif;
+		font-weight:bold;
+		font-size:15pt;
+		color:#F07000;
+	}
+
+	h2 {
+		margin-top:3em;
+		margin-bottom:-1em;
+		font-weight:bold;
+		font-size:11pt;
+		color:#F07000;
+	}
+	
+}
+@media print
+{
+	body  {
+		font-family:Arial, Verdana, sans-serif;
+	}
+
+	p {
+		font-size:10pt;
+		line-height:15pt;
+
+	}
+	
+	h1 {
+		font-weight:bold;
+		font-size:15pt;
+	}
+
+	h2 {
+		font-weight:bold;
+		font-size:12pt;
+		margin-top:3em;
+		margin-bottom:-1em;
+
+	}
+	
+}

@@ -1,0 +1,71 @@
+﻿<Window x:Class="SwatPresentations.DlgScaleAxis"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+		       xmlns:ui="clr-namespace:TTP.UiUtils;assembly=TtpUiUtils"
+				Title="Achse skalieren"
+		       x:Name="This"
+		       Loaded="This_Loaded"	
+		  		FontFamily="Calibri" FontSize="15" 
+			   WindowStartupLocation="CenterScreen"
+				Foreground="White"
+				Height="320" Width="600"
+            >
+
+<Window.Resources>
+	<ResourceDictionary>
+		<ResourceDictionary.MergedDictionaries>
+			<ResourceDictionary Source="pack://application:,,,/SwatTheme;component/SwatTheme.xaml"/>
+		</ResourceDictionary.MergedDictionaries>
+	</ResourceDictionary>
+</Window.Resources>
+
+	<Window.CommandBindings>
+		<CommandBinding Command="ApplicationCommands.Save" Executed="CmdScale" CanExecute="CanScale" />
+		<CommandBinding Command="ApplicationCommands.Stop" Executed="CmdEsc" CanExecute="CanEsc" />
+	</Window.CommandBindings>
+
+
+	<Grid Background="#6080a0">
+		<Grid Margin="15,15,15,30">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				
+			</Grid.RowDefinitions>
+
+			<TextBlock Name="DlgHeader" Grid.Row="0" FontWeight="Medium"  Margin="0,0,0,10"  TextAlignment="Center" FontSize="18"/>
+			<RadioButton Grid.Row="1" Name="AutoButton"	GroupName="options" Margin="15,10,0,0"
+											Content="Achse automatisch an dargestellte Werte anpassen"/>
+			<StackPanel Grid.Row="2"  Orientation="Vertical" Margin="15,5">
+				<RadioButton	Name="FixedButton" GroupName="options" Margin="0,10,0,0"
+											Content="Achse fest skalieren" 
+											/>
+				<StackPanel Orientation="Horizontal"  VerticalAlignment="Center" Margin="20,8, 0, 0">
+
+					<TextBlock Text="Minimum:"  VerticalAlignment="Center"/>
+					<TextBox Name="MiniText" Margin ="5,0, 0, 0" Width="75" VerticalAlignment="Center" BorderThickness="1"
+										ui:TextBoxMaskBehavior.Mask="Decimal"
+										Text="{Binding ScaleMin, ConverterCulture=en-US}"/>
+					<TextBlock Text="Maximum:" Margin="15,0, 0, 0" VerticalAlignment="Center"/>
+					<TextBox Name="MaxiText" Margin ="5,0" Width="75" VerticalAlignment="Center" BorderThickness="1"
+										ui:TextBoxMaskBehavior.Mask="Decimal"
+										Text="{Binding ScaleMax, ConverterCulture=en-US}"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel	 Grid.Row="3"  Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,35,0,35">
+				<Button Width="150" Height="35"	Margin="5"  Background="#202020" Command="ApplicationCommands.Save">Übernehmen</Button>
+				<Button Width="150" Height="35" Margin="5"   Background="#202020" Command="ApplicationCommands.Stop">Abbrechen</Button>
+			</StackPanel>
+		</Grid>
+
+		</Grid>
+</Window>

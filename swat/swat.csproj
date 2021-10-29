@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A607CC9B-E1C6-4C01-A3E2-89DD33F4F323}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>swat</RootNamespace>
+    <AssemblyName>swat</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>P:\pub\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>0.9.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Images\swat.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>C27A0D5F875CBD947AFD0339F1400BFD56426E27</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>swat_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="dwd-import, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\dwd-import.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Solver.Foundation, Version=3.0.2.10889, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Solver.Foundation.3.1.0\lib\Microsoft.Solver.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TtpCommand3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="TtpEngine3">
+      <HintPath>..\..\..\TTP\TTP-V3\engine3\engine3\bin\Debug\TtpEngine3.dll</HintPath>
+    </Reference>
+    <Reference Include="TtpResources">
+      <HintPath>J:\TTP-V3\TtpResources\TtpResources\bin\Debug\TtpResources.dll</HintPath>
+    </Reference>
+    <Reference Include="TtpUiUtils">
+      <HintPath>J:\TTP-V3\TtpUiUtils\TtpUiUtils\bin\Debug\TtpUiUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="cmd\CmdItem.cs" />
+    <Compile Include="cmd\CmdMenu.cs" />
+    <Compile Include="FunctionPlotter\PlotterData.cs" />
+    <Compile Include="iodata\DwdWeatherCreator.cs" />
+    <Compile Include="iodata\Utility.cs" />
+    <Compile Include="Optimizer\OptEventArgs.cs" />
+    <Compile Include="Optimizer\OptimizationData.cs" />
+    <Compile Include="iodata\WorkspaceData.cs" />
+    <Compile Include="views\cmd\CmdView.xaml.cs">
+      <DependentUpon>CmdView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\cmd\MenuArea.xaml.cs">
+      <DependentUpon>MenuArea.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\dlg\DlgImportDwdData.xaml.cs">
+      <DependentUpon>DlgImportDwdData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\dlg\DlgImportParameters.xaml.cs">
+      <DependentUpon>DlgImportParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\dlg\DlgNewWorkspace.xaml.cs">
+      <DependentUpon>DlgNewWorkspace.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\dlg\DlgNotes.xaml.cs">
+      <DependentUpon>DlgNotes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\dlg\DlgOptimizationParameters.xaml.cs">
+      <DependentUpon>DlgOptimizationParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\dlg\DlgUpdateDwdData.xaml.cs">
+      <DependentUpon>DlgUpdateDwdData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\panels\ViewPanelOptimization.xaml.cs">
+      <DependentUpon>ViewPanelOptimization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\panels\ViewPanelParameters.xaml.cs">
+      <DependentUpon>ViewPanelParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\panels\ViewPanelPopDyn.xaml.cs">
+      <DependentUpon>ViewPanelPopDyn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\panels\ViewPanelWeather.xaml.cs">
+      <DependentUpon>ViewPanelWeather.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewFunctionPlotter.xaml.cs">
+      <DependentUpon>ViewFunctionPlotter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewHelp.xaml.cs">
+      <DependentUpon>ViewHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewNotes.xaml.cs">
+      <DependentUpon>ViewNotes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewOptimizationControl.xaml.cs">
+      <DependentUpon>ViewOptimizationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewParameterGrid.xaml.cs">
+      <DependentUpon>ViewParameterGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewWorkspace.xaml.cs">
+      <DependentUpon>ViewWorkspace.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewMonitoringGrid.xaml.cs">
+      <DependentUpon>ViewMonitoringGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\sheets\ViewWeatherGrid.xaml.cs">
+      <DependentUpon>ViewWeatherGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vm\VmAgeClasses.cs" />
+    <Compile Include="vm\VmBase.cs" />
+    <Compile Include="vm\VmDlgUpdateDwdData.cs" />
+    <Compile Include="vm\VmFunctionPlotter.cs" />
+    <Compile Include="vm\VmMonitoringGraph.cs" />
+    <Compile Include="vm\VmMonitoringGrid.cs" />
+    <Compile Include="vm\VmNotes.cs" />
+    <Compile Include="vm\VmOptimizationControl.cs" />
+    <Compile Include="vm\VmOptimizationGraph.cs" />
+    <Compile Include="vm\VmPanelMonitoring.cs" />
+    <Compile Include="vm\VmPanelOptimization.cs" />
+    <Compile Include="vm\VmPanelParameters.cs" />
+    <Compile Include="vm\VmPanelPopDyn.cs" />
+    <Compile Include="vm\VmPanelWeather.cs" />
+    <Compile Include="vm\VmParameterGrid.cs" />
+    <Compile Include="vm\VmParamFunc.cs" />
+    <Compile Include="vm\VmPopDyn.cs" />
+    <Compile Include="vm\VmPrognGraph.cs" />
+    <Compile Include="vm\VmWeatherGraph.cs" />
+    <Compile Include="vm\VmWorkspace.cs" />
+    <Compile Include="vm\VmSwat.cs" />
+    <Compile Include="vm\VmWeatherGrid.cs" />
+    <Compile Include="vm\VmNewWorkspace.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="views\cmd\CmdView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\cmd\MenuArea.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\dlg\DlgImportDwdData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\dlg\DlgImportParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\dlg\DlgNewWorkspace.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\dlg\DlgNotes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\dlg\DlgOptimizationParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\dlg\DlgUpdateDwdData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\panels\ViewPanelOptimization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\panels\ViewPanelParameters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\panels\ViewPanelPopDyn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\panels\ViewPanelWeather.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewFunctionPlotter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewNotes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewOptimizationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewParameterGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewWorkspace.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewMonitoringGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\sheets\ViewWeatherGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="swat_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\error.png" />
+    <Resource Include="Resources\Images\info.png" />
+    <Resource Include="Resources\Images\save.png" />
+    <Resource Include="Resources\Images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SwatDwdImporter\SwatDwdImporter.csproj">
+      <Project>{e7f94932-637d-4137-a7e6-6a24a72ff87b}</Project>
+      <Name>SwatDwdImporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SwatPresentations\SwatPresentations.csproj">
+      <Project>{dd40c06d-d084-4390-ab60-a863d96dfbb3}</Project>
+      <Name>SwatPresentations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\swatSim\swatSim.csproj">
+      <Project>{e0aec615-87c3-4925-81df-1476dadbd87f}</Project>
+      <Name>swatSim</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SwatTheme\SwatTheme.csproj">
+      <Project>{35b9167f-e4b1-4963-bcdb-7a926efb759a}</Project>
+      <Name>SwatTheme</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\explore.png" />
+    <Resource Include="Resources\Images\new_file.png" />
+    <Resource Include="Resources\Images\open_file.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\swat.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\download.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\update.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\reset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\gear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\check-box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\downSave.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\notes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\print.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\button-arrow-right.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

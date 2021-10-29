@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="swat.views.panels.ViewPanelPopDyn"
+				 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"	
+				 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+				 xmlns:local="clr-namespace:swat.views.panels"
+				 xmlns:sheets="clr-namespace:swat.views.sheets"
+				 mc:Ignorable="d"	
+				 d:DesignHeight="600" d:DesignWidth="300">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition  Height="3*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*" MinHeight="0"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="40" MinHeight="0"/>
+		</Grid.RowDefinitions>
+
+		<ContentControl Grid.Row="0" Content="{Binding ViewVisual}"  DataContext="{Binding DC_PopDyn}"/>
+		<GridSplitter Grid.Row="1"  HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4"  ShowsPreview="False" Background="DeepSkyBlue"
+                      ResizeDirection="Rows" ToolTip="zum Verändern der Größen nach oben/unten ziehen"/>
+
+		<ContentControl Grid.Row="2" Content="{Binding ViewVisual}"  DataContext="{Binding DC_AgeClasses}" />
+		<GridSplitter Grid.Row="3"  HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Height="4"  ShowsPreview="False" Background="DeepSkyBlue"
+                      ResizeDirection="Rows"   ToolTip="zum Verändern der Größen nach oben/unten ziehen"/>
+
+		<ContentControl Grid.Row="4" Content="{Binding ViewVisual}"  DataContext="{Binding DC_WeatherGraph}" />		
+
+
+		<!--ViewBox ?-->
+
+	</Grid>
+</UserControl>

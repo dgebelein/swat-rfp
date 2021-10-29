@@ -1,0 +1,97 @@
+﻿<Window x:Class="swat.views.dlg.DlgImportDwdData"
+				xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+				xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+				xmlns:local="clr-namespace:swat.views.dlg"
+				xmlns:ui="clr-namespace:TTP.UiUtils;assembly=TtpUiUtils"
+				Width="825" Height="680"
+				Foreground="White"
+				FontFamily="Calibri" FontSize="16"	
+				WindowStartupLocation="CenterScreen">
+	
+	<Window.Resources>
+
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/SwatTheme;component/SwatTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+
+	<Grid Background="#6080a0">
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="50"/>
+			<ColumnDefinition Width="220"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="100"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="50"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="80"/>
+		</Grid.RowDefinitions>
+
+		<TextBlock	Grid.ColumnSpan="3" 	Text="DWD-Wetterdaten importieren" FontSize="24"	HorizontalAlignment="Center"	Margin="0,25"/>
+
+		<TextBlock Grid.Row="1" Grid.Column="1"  Text="DWD-Station:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="1" Grid.Column="2"  Text="{Binding DwdStationName}" Margin="10,0"/>
+		
+		<TextBlock Grid.Row="2" Grid.Column="1" Text="historische Daten" HorizontalAlignment="Right" Foreground="Yellow"/>
+
+
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="FTP-Download:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding LogReadHistFtpFolder}" Margin="10,0"/>
+
+		<TextBlock Grid.Row="4" Grid.Column="1" Text="Klima:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding LogImportHistAir}" Margin="10,0"/>
+
+		<TextBlock Grid.Row="5" Grid.Column="1" Text="Boden:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding LogImportHistSoil}" Margin="10,0"/>
+		
+		<!--<TextBlock Grid.Row="6" Grid.Column="1" Text="Windgeschwindigkeiten:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding LogImportHistSoil}" Margin="5,0"/>-->
+
+		<TextBlock Grid.Row="6" Grid.Column="1" Text=" Prognosewerte berechnen:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding LogCreatePrognosis}" Margin="10,0"/>
+
+
+		<TextBlock Grid.Row="8" Grid.Column="1" Text="neue Daten" HorizontalAlignment="Right" Foreground="Yellow"/>
+		
+		<TextBlock Grid.Row="9" Grid.Column="1" Text="FTP-Download:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="9" Grid.Column="2" Text="{Binding LogReadActFtpFolder}" Margin="10,0"/>
+
+		<TextBlock Grid.Row="10" Grid.Column="1" Text="Klima:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="10" Grid.Column="2" Text="{Binding LogImportActAir}" Margin="10,0"/>
+
+		<TextBlock Grid.Row="11" Grid.Column="1" Text="Boden:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="11" Grid.Column="2" Text="{Binding LogImportActSoil}" Margin="10,0"/>
+
+		<TextBlock Grid.Row="12" Grid.Column="1" Text="Daten übernehmen:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="12" Grid.Column="2" Text="{Binding LogCreateSimulationYear}" Margin="10,0"/>
+
+		<TextBlock Grid.Row="14" Grid.Column="2" Text="{Binding CompletedMsg}" Margin="5,0" FontSize="22" Foreground="{Binding CompletedColor}" Visibility="{Binding VisCompleted}" />
+		
+		
+		<Button Grid.Row="15" Grid.ColumnSpan="3" Width="150" Height="35" Margin="0,15" Content="Schließen" Click="CmdClose"   />
+		<Button Grid.Row="15" Grid.ColumnSpan="3" Width="150" Height="35" Margin="0,15" Content="Abbrechen" Background="#202020"  
+				 Command="{Binding Path=CancelCommand}"   Visibility="{Binding VisCancel}"  />
+		
+
+	</Grid>
+	
+	
+</Window>

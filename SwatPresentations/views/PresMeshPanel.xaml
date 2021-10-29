@@ -1,0 +1,75 @@
+﻿<local:SwatPresentation x:Class="SwatPresentations.PresMeshPanel"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+		xmlns:local="clr-namespace:SwatPresentations"
+		MinHeight="350" MinWidth="900"
+		x:Name="root"
+		Loaded="panel_Loaded"	
+		Foreground="White"
+								
+ >
+
+	<UserControl.Resources>
+		<!--  Das verwendete Theme hat kein Template für ContextMenü -->
+		<!--<Style x:Key="MyContextMenuStyle" TargetType="{x:Type ContextMenu}">
+			<Setter Property="OverridesDefaultStyle" Value="True"/>
+			<Setter Property="SnapsToDevicePixels" Value="True"/>
+			--><!--Setter Property="Foreground" Value="{StaticResource TextBrush}"/--><!--
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ContextMenu}">
+						<Border 
+								Background="{StaticResource ContextMenueBackgroundBrush}"
+								BorderBrush="{StaticResource NormalBrush}" Padding="4"
+								BorderThickness="2">
+							<StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+
+
+		<ContextMenu x:Key="contextMenu"  Style="{StaticResource MyContextMenuStyle}"  >
+
+			<MenuItem Header="Drucken/PDF erstellen..." 				Command="{Binding Path=PrintCommand}">
+				<MenuItem.Icon>
+					<Image Source="/SwatPresentations;component/Resources/Images/print.png" Height="16"  Style="{StaticResource ButtonImageStyle}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>-->
+
+	</UserControl.Resources>
+
+	<Border SizeChanged="BorderSizeChanged">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition  Height="100"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+
+			<DockPanel Grid.Row="0"	>
+				<!--<Image Name="MenueBtn" DockPanel.Dock="Right" Source="../Resources/Images/menu.png" Height="32" Width="48"  Margin="0,5,15,5"
+								MouseUp="Image_MouseUp" ToolTip="Menü öffnen" ContextMenu="{DynamicResource contextMenu}"/>-->
+				<StackPanel Name="xSliderStackPanel" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left" Margin="25,0,25,0">
+					<TextBlock  Text="Minimum" Margin="0,0,10,0" VerticalAlignment="Center"/>
+					<Canvas   Width="250" Height="50" VerticalAlignment="Center"/>
+					<TextBlock  Text="Maximum" Margin="10,0,0,0" VerticalAlignment="Center"/>
+				</StackPanel>
+				<TextBlock	Margin="2,15,2,20" x:Name="_title" FontSize="18" FontWeight="Medium"  
+						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" />
+			</DockPanel>
+			
+			<Border Grid.Row="1">
+				<ScrollViewer   VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+					<UniformGrid Name="_xMeshPanel"  Columns="4" VerticalAlignment="Top"/>
+				</ScrollViewer>
+			</Border>
+	
+		</Grid>
+	</Border>
+</local:SwatPresentation>

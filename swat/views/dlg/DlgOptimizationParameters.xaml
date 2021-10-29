@@ -1,0 +1,131 @@
+﻿<Window x:Class="swat.views.dlg.DlgOptimizationParameters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:swat.views.dlg"
+             mc:Ignorable="d" 
+				xmlns:ui="clr-namespace:TTP.UiUtils;assembly=TtpUiUtils"
+				Width="825" Height="800"
+				Foreground="White"
+				FontFamily="Calibri" FontSize="15"	
+				WindowStartupLocation="CenterScreen">
+	<Window.Resources>
+
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/SwatTheme;component/SwatTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+			<!--<ui:EnumBooleanConverter x:Key="enumBooleanConverter"	/>-->
+
+		</ResourceDictionary>
+
+	</Window.Resources>
+
+	<Window.CommandBindings>
+		<CommandBinding Command="ApplicationCommands.New" Executed="Transmit" CanExecute="CanTransmit" />
+		<CommandBinding Command="ApplicationCommands.Close" Executed="CloseDlg" CanExecute="CanCloseDlg" />
+	</Window.CommandBindings>
+
+
+	<Grid Background="#6080a0">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="80"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="30"/>
+
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="70"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="420"/>
+			<ColumnDefinition Width="*"/>
+
+		</Grid.ColumnDefinitions>
+
+			
+				<TextBlock Text="Modelloptimierung"   Foreground="Black" FontSize="26" Margin="20,10"/>
+
+
+		<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="20,0">
+			<TextBlock Text="Bewertungszeitraum: "   Foreground="Black" VerticalAlignment="Center" />
+			<ui:DateTimeControl HorizontalAlignment="Center"   VerticalAlignment="Center" 
+									ShowCheckBox="False" Checked="True" Format="Custom" CustomFormat="dd.MM.yyyy"  ShowDropDown="False"
+									Value="{Binding Path=EvalRangeStart}"/>
+			<TextBlock Width="30" Margin="5,0" VerticalAlignment="Center" TextAlignment="Right" Foreground="Black"> bis:</TextBlock>
+			<ui:DateTimeControl HorizontalAlignment="Center"   VerticalAlignment="Center" 
+									ShowCheckBox="False" Checked="True" Format="Custom" CustomFormat="dd.MM.yyyy"  ShowDropDown="False"
+									Value="{Binding Path=EvalRangeEnd}"/>
+		</StackPanel>
+		<CheckBox Grid.Row="2" Margin="20,0" IsChecked="{Binding UseRelationEval}" VerticalAlignment="Center"  Foreground="Black" >Evaluierung mit Fehler-Relationen </CheckBox>
+		<TextBlock Grid.Row="3" Margin="20,0" Text="wählen Sie bis zu zehn Parameter mit Startwerten"   Foreground="DarkBlue"  VerticalAlignment="Center"/>
+		
+		
+			<!--<StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,25,0,0">
+				<TextBlock Text="Bewertungszeitraum"   Foreground="DarkBlue" FontSize="18"/>
+				<StackPanel Orientation="Horizontal" Margin="20,0, 10,0" VerticalAlignment="Top">
+					<TextBlock Width="30" Margin="5,0" VerticalAlignment="Center" TextAlignment="Right" Foreground="Black"> vom:</TextBlock>
+					<ui:DateTimeControl HorizontalAlignment="Center" Margin="0,20, 0, 20"  VerticalAlignment="Center" 
+									ShowCheckBox="False" Checked="True" Format="Custom" CustomFormat="dd.MM.yyyy"  ShowDropDown="False"
+									Value="{Binding Path=EvalRangeStart}"/>
+					<TextBlock Width="30" Margin="5,0" VerticalAlignment="Center" TextAlignment="Right" Foreground="Black"> bis:</TextBlock>
+					<ui:DateTimeControl HorizontalAlignment="Center" Margin="0,20, 0, 20"  VerticalAlignment="Center" 
+									ShowCheckBox="False" Checked="True" Format="Custom" CustomFormat="dd.MM.yyyy"  ShowDropDown="False"
+									Value="{Binding Path=EvalRangeEnd}"/>
+				</StackPanel>
+			</StackPanel>-->
+
+
+		<StackPanel	Grid.Row="5"	Orientation="Horizontal">
+			<Button Width="150" Height="35" Margin="25,15"  Command="ApplicationCommands.Close" Background="#202020">Abbrechen</Button>
+			<Button Width="150" Height="35"	Margin="15" Command="ApplicationCommands.New" Background="#202020">Übernehmen</Button>
+		</StackPanel>
+
+
+
+
+
+		<DataGrid  Name="_dgParameters" Grid.Row="4" Grid.ColumnSpan="2"  ItemsSource="{Binding ParameterTable}"  HeadersVisibility="Column"
+			VerticalGridLinesBrush="Gray"
+			Background="Gray"  BorderBrush="LightGray"
+			Margin="2,0"
+			IsReadOnly="False"
+			CanUserAddRows="False"
+			CanUserDeleteRows="False"
+			CanUserReorderColumns="False"
+			SelectionUnit="Cell"
+			SelectionMode="Extended"
+			SelectedItem="{Binding SelectedItem}"
+			ColumnHeaderStyle="{StaticResource HeaderStyle}"  
+			CellStyle="{StaticResource MyDataGridCell}" 
+			AutoGenerateColumns="False"
+			CellEditEnding="dgCellEditEnding" 
+			BeginningEdit="dgBeginningEdit"
+			DataGridCell.Selected="DataGrid_GotFocus">
+
+
+
+			<DataGrid.RowStyle>
+				<Style TargetType="DataGridRow">
+					<Setter Property="Margin" Value="0,1"/>
+					<Setter Property="Foreground"	Value="{Binding RowColor}"	/>
+					<Setter Property="Background"	Value="#FF303030"></Setter>
+				</Style>
+			</DataGrid.RowStyle>
+			
+
+			<DataGrid.Columns >
+				<DataGridCheckBoxColumn Binding="{Binding	ParamSelected, UpdateSourceTrigger=PropertyChanged}" CanUserSort="False"/>
+				<DataGridTextColumn	Binding="{Binding	ParamKey}" Header="Bezeichnung"	IsReadOnly="True" CanUserSort="False"/>
+				<DataGridTextColumn  Binding="{Binding ParamValue}" Header="Wert"	MinWidth="100" CanUserSort="False"	  />
+				<DataGridTextColumn	Binding="{Binding	ParamHelp}" Header="Bedeutung" MinWidth="400" IsReadOnly="True" CanUserSort="False"/>
+			</DataGrid.Columns>
+		</DataGrid>
+
+
+
+
+
+	</Grid>
+</Window>

@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="swat.views.cmd.CmdView"
+					xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+					xmlns:local="clr-namespace:swat.views.cmd"
+					FontFamily="Calibri" FontSize="16"
+					mc:Ignorable="d" 
+					d:DesignHeight="700" d:DesignWidth="350">
+	<Grid	Background="{StaticResource CmdAreaBrush}" >
+		<DockPanel >
+			<StackPanel	Orientation="Vertical" DockPanel.Dock="Bottom">
+				<Label FontSize="12"	Margin="20,5">Release 2108</Label>
+				<StackPanel Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+					<Label FontSize="12"	>© 2021	by	</Label>
+					<TextBlock FontFamily="Segoe UI" FontSize="12"  Margin="5,-2">
+						<Hyperlink NavigateUri="mailto:d.gebelein@gmx.de" RequestNavigate="Hyperlink_RequestNavigate"  Foreground="White">Dieter Gebelein</Hyperlink>
+					</TextBlock>
+					</StackPanel>
+				<Label Content="alle	Rechte vorbehalten"	FontSize="12" Margin="33,0,0,10" />
+
+			</StackPanel>
+			<StackPanel	Orientation="Vertical" Margin="15,10" DockPanel.Dock="Top" >
+				<StackPanel	Orientation="Vertical" Margin="10,20,0,20">
+					<!--<Image Source="/swat;component/Resources/Images/swat.ico" Width="50"></Image>-->
+					<Label FontSize="48"	Foreground="DeepSkyBlue" HorizontalAlignment="left">Swat</Label>
+					<TextBlock Foreground="DeepSkyBlue"	  HorizontalAlignment="left"	  Margin="0,0,0,0"> Gemüsefliegen-Prognose</TextBlock>
+				</StackPanel>
+
+				<StackPanel	Orientation="Vertical" Margin="0,20,0,10" >
+					<Label VerticalAlignment="Center" HorizontalAlignment="Left" Width="120" Margin="0,0,10,0"	 >Projekt: </Label>
+					<TextBlock VerticalAlignment="Center" FontSize="24" Text="{Binding WorkspaceName}" Foreground="{Binding CurrentModelColor}"/>
+            </StackPanel>
+
+				<StackPanel	Orientation="Vertical" Margin="0,10,0,10" >
+					<Label VerticalAlignment="Center" HorizontalAlignment="Left" Width="120" Margin="0,0,10,0"	 >Modell:</Label>
+					<TextBlock VerticalAlignment="Center" FontSize="24" Text="{Binding CurrentModelName}" Foreground="{Binding CurrentModelColor}"/>
+				</StackPanel>
+
+			</StackPanel>
+			<local:MenuArea	/>
+
+		</DockPanel>
+
+	</Grid>
+</UserControl>

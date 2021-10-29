@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="swat.views.sheets.ViewHelp"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:swat.views.sheets"
+				 xmlns:Custom="http://schemas.awesomium.com/winfx" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+		<!--<WebBrowser Name="helpBrowser" Navigating="helpBrowser_Navigating"></WebBrowser>-->
+	<!--<DockPanel>
+		<ToolBar DockPanel.Dock="Top">
+			--><!--<Button Command="NavigationCommands.BrowseBack">
+				<Image Source="/WpfTutorialSamples;component/Images/arrow_left.png" Width="16" Height="16" />
+			</Button>
+			<Button Command="NavigationCommands.BrowseForward">
+				<Image Source="/WpfTutorialSamples;component/Images/arrow_right.png" Width="16" Height="16" />
+			</Button>
+			<Separator />-->
+			<!--<TextBox Name="txtUrl" Width="300" KeyUp="txtUrl_KeyUp" />-->
+			<!--<Button Command="NavigationCommands.GoToPage">
+				<Image Source="/WpfTutorialSamples;component/Images/world_go.png" Width="16" Height="16" />
+			</Button>--><!--
+		</ToolBar>
+		<WebBrowser Name="helpBrowser" Navigating="helpBrowser_Navigating"></WebBrowser>
+		</DockPanel>-->
+	<Border BorderThickness="1" BorderBrush="White">
+
+		<WebBrowser Name="helpBrowser" Navigating="helpBrowser_Navigating"></WebBrowser>
+	</Border>
+
+
+		<!--<Custom:WebControl Name="_aweBrowser" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Unloaded="WindowUnloaded"/>-->
+
+</UserControl>

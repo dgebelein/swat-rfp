@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="swat.views.sheets.ViewFunctionPlotter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:swat.views.sheets"
+             mc:Ignorable="d" 
+				 
+				 FontSize="15" FontFamily="Calibri"
+             d:DesignHeight="650" d:DesignWidth="1000"
+				 Background="#507090">
+	
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="200"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="230"/>
+
+		</Grid.RowDefinitions>
+
+		<!--Auswahlmenü Funktionen-->
+		<Border>
+			<StackPanel Orientation="Vertical">
+				<Button Grid.Row="1" Height="35"  Width="120"  Margin="0,50,0,10" Command="{Binding Path=ShowTransitionCommand}"  Background="#202020"  Content="Transition" />
+				<Button Grid.Row="1" Height="35"  Width="120"  Margin="0,10,0,10" Command="{Binding Path=ShowDevRatesCommand}"  Background="#202020"  Content="Entwicklungsrate" />
+				<Button Grid.Row="1" Height="35"  Width="120"  Margin="0,10,0,10" Command="{Binding Path=ShowAestivCommand}"  Background="#202020"  Content="Ästivation" />
+				<Button Grid.Row="1" Height="35"  Width="120"  Margin="0,10,0,10" Command="{Binding Path=ShowFertilityCommand}"  Background="#202020"  Content="Reproduktion" />
+				
+
+			</StackPanel>
+
+		</Border>
+
+		<!--Parameter-->
+		
+		<Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0" BorderBrush="red">
+			<ScrollViewer HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="85,0,0,0">
+				<StackPanel Orientation="Vertical" VerticalAlignment="Center">
+					<TextBlock Text="{Binding Path=ParamTitle}" Foreground="WhiteSmoke"  FontSize="18" Margin="20,0,20,0"/>
+					<CheckBox Visibility="{Binding Path=CheckBoxVisibility}"  IsChecked="{Binding Path=ShowKumSum}" Margin="20,50,20,0">Kumulierte Summe anzeigen</CheckBox>
+				</StackPanel>
+				<StackPanel Orientation="Vertical" Margin="50,10,50,10" Visibility="{Binding  Path=SVisibility[0]}" >
+					<TextBlock Text="{Binding Path=SHeader[0]}" Foreground="White" Margin="0,0,0,10"/>
+					<StackPanel Orientation="Horizontal"  >
+						<Slider Name="S0" IsSnapToTickEnabled="True"  Orientation="Vertical" TickPlacement="TopLeft" Height="150"
+							  Minimum="{Binding Path=SMinimum[0]}" Maximum="{Binding Path=SMaximum[0]}" TickFrequency="{Binding Path=STick[0]}" Value="{Binding Path=S0Value}" />
+						<TextBox Text="{Binding ElementName=S0, Path=Value, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right" Width="40" Height="30" />
+					</StackPanel>
+				</StackPanel>
+
+					<StackPanel Orientation="Vertical" Margin="50,10,50,10" Visibility="{Binding  Path=SVisibility[1]}" >
+						<TextBlock Text="{Binding Path=SHeader[1]}" Foreground="White" Margin="0,0,0,10"/>
+						<StackPanel Orientation="Horizontal"  >
+							<Slider Name="S1" IsSnapToTickEnabled="True"  Orientation="Vertical" TickPlacement="TopLeft" Height="150"
+							  Minimum="{Binding Path=SMinimum[1]}" Maximum="{Binding Path=SMaximum[1]}" TickFrequency="{Binding Path=STick[1]}" Value="{Binding Path=S1Value}" />
+							<TextBox Text="{Binding ElementName=S1, Path=Value, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right" Width="40" Height="30" />
+						</StackPanel>
+					</StackPanel>
+
+				<StackPanel Orientation="Vertical" Margin="50,10,50,10" Visibility="{Binding  Path=SVisibility[2]}" >
+					<TextBlock Text="{Binding Path=SHeader[2]}" Foreground="White" Margin="0,0,0,10"/>
+					<StackPanel Orientation="Horizontal"  >
+						<Slider Name="S2" IsSnapToTickEnabled="True"  Orientation="Vertical" TickPlacement="TopLeft" Height="150"
+							  Minimum="{Binding Path=SMinimum[2]}" Maximum="{Binding Path=SMaximum[2]}" TickFrequency="{Binding Path=STick[2]}" Value="{Binding Path=S2Value}" />
+						<TextBox Text="{Binding ElementName=S2, Path=Value, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right" Width="40" Height="30" />
+					</StackPanel>
+				</StackPanel>
+
+				<StackPanel Orientation="Vertical" Margin="50,10,50,10" Visibility="{Binding  Path=SVisibility[3]}" >
+					<TextBlock Text="{Binding Path=SHeader[3]}" Foreground="White" Margin="0,0,0,10"/>
+					<StackPanel Orientation="Horizontal"  >
+						<Slider Name="S3" IsSnapToTickEnabled="True"  Orientation="Vertical" TickPlacement="TopLeft" Height="150"
+							  Minimum="{Binding Path=SMinimum[3]}" Maximum="{Binding Path=SMaximum[3]}" TickFrequency="{Binding Path=STick[3]}" Value="{Binding Path=S3Value}" />
+						<TextBox Text="{Binding ElementName=S3, Path=Value, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right" Width="40" Height="30" />
+					</StackPanel>
+				</StackPanel>
+
+				<StackPanel Orientation="Vertical" Margin="50,10,50,10" Visibility="{Binding  Path=SVisibility[4]}" >
+					<TextBlock Text="{Binding Path=SHeader[4]}" Foreground="White" Margin="0,0,0,10"/>
+					<StackPanel Orientation="Horizontal"  >
+						<Slider Name="S4" IsSnapToTickEnabled="True"  Orientation="Vertical" TickPlacement="TopLeft" Height="150"
+							  Minimum="{Binding Path=SMinimum[4]}" Maximum="{Binding Path=SMaximum[4]}" TickFrequency="{Binding Path=STick[4]}" Value="{Binding Path=S4Value}" />
+						<TextBox Text="{Binding ElementName=S4, Path=Value, UpdateSourceTrigger=PropertyChanged}"  TextAlignment="Right" Width="40" Height="30" />
+					</StackPanel>
+					
+				</StackPanel>
+			</StackPanel>
+			</ScrollViewer>
+		</Border>
+
+
+		
+		<Border Grid.Column="1" BorderThickness="1" BorderBrush="White">
+			<ContentControl Grid.Row="2" Content="{Binding ViewPlotter}"  DataContext="{Binding DC_FunctionPlotter}"/>
+		</Border>
+
+	</Grid>
+		
+	
+</UserControl>

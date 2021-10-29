@@ -1,0 +1,171 @@
+﻿<local:SwatPresentation x:Class="SwatPresentations.PresMonitoring"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+		xmlns:local="clr-namespace:SwatPresentations"
+		MinHeight="350" MinWidth="400"
+		x:Name="root" 
+		ContextMenu="{DynamicResource contextMenu}"
+ >
+
+	<UserControl.Resources>
+
+
+		<Style x:Key="YAxisStyle" TargetType="{x:Type Canvas}">
+			<Setter Property="Cursor" Value="ScrollNS" />
+		</Style>
+
+		<Style x:Key="TimeAxisStyle" TargetType="{x:Type Canvas}">
+			<Setter Property="Cursor" Value="ScrollWE" />
+		</Style>
+
+		<Style x:Key="StartTimeAxisStyle" TargetType="{x:Type Border}">
+			<Setter Property="Cursor" Value="ScrollW" />
+		</Style>
+
+		<Style x:Key="EndTimeAxisStyle" TargetType="{x:Type Border}">
+			<Setter Property="Cursor" Value="ScrollE" />
+		</Style>
+
+		<!--  Das verwendete Theme hat kein Template für ContextMenü -->
+		<Style x:Key="MyContextMenuStyle" TargetType="{x:Type ContextMenu}">
+			<Setter Property="OverridesDefaultStyle" Value="True"/>
+			<Setter Property="SnapsToDevicePixels" Value="True"/>
+			<!--Setter Property="Foreground" Value="{StaticResource TextBrush}"/-->
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ContextMenu}">
+						<Border 
+								Background="{StaticResource ContextMenueBackgroundBrush}"
+								BorderBrush="{StaticResource NormalBrush}" Padding="4"
+								BorderThickness="2">
+							<StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+
+
+		<ContextMenu x:Key="contextMenu"  Style="{StaticResource MyContextMenuStyle}"  >
+
+			<!--<MenuItem Header="Notizen" 				Command="{Binding Path=NotesCommand}">
+				<MenuItem.Icon>
+					<Image Source="../Resources/Images/notes.png" Height="16"  Style="{StaticResource ButtonImageStyle}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+			<Separator/>-->
+			<MenuItem Header="Drucken/PDF erstellen..." 				Command="{Binding Path=PrintCommand}">
+				<MenuItem.Icon>
+					<Image Source="/SwatPresentations;component/Resources/Images/print.png" Height="16"  Style="{StaticResource ButtonImageStyle}"/>
+				</MenuItem.Icon>
+			</MenuItem>
+		</ContextMenu>
+
+	</UserControl.Resources>
+
+
+	<Border BorderThickness="0" BorderBrush="GreenYellow">
+		<Grid Margin="0" ClipToBounds="False" MinHeight="250" MinWidth="350" SnapsToDevicePixels="True" x:Name="_drawing" Background="#FF00005F">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="75"/>
+				<ColumnDefinition Name="column1" Width="*"/>
+				<ColumnDefinition Width="75"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="10"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="75"/>
+
+			</Grid.RowDefinitions>
+
+			<Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
+				<DockPanel  HorizontalAlignment="Stretch">
+					<Image DockPanel.Dock="Right" Source="../Resources/Images/menu.png" Height="32" Width="48"  Margin="0,5,15,5"
+							 MouseUp="Image_MouseUp" ToolTip="Menü öffnen"
+					/>
+					<!-- Dieser Button ist ein fokusierbares Dummy-Element, das gebraucht wird, um den veschwundenen MouseWheel-EventHandler
+					  wieder zu aktivieren, wenn die Grafik durch einen Link des Webbrowsers erzeugt wurde	-->
+					<!--<Button x:Name="_xFbtn" Width="0" Height="0"/>-->
+
+					<TextBlock	Margin="2,15,2,20" x:Name="_title" Grid.Column="1" Grid.Row="0" 
+								RenderTransformOrigin="0.5,0.5" FontSize="18" FontWeight="Medium" 
+								HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" />
+
+				</DockPanel>
+				<!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					-->
+				<!-- Dieser Button ist ein fokusierbares Dummy-Element, das gebraucht wird, um den veschwundenen MouseWheel-EventHandler
+					  wieder zu aktivieren, wenn die Grafik durch einen Link des Webbrowsers erzeugt wurde	-->
+				<!--
+					<Button x:Name="_xFbtn" Width="0" Height="0"/>
+
+					<TextBlock	Margin="2,15,2,20" x:Name="_title" Grid.Column="1" Grid.Row="0" 
+								RenderTransformOrigin="0.5,0.5" FontSize="18" FontWeight="Medium" 
+								HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" />
+				</StackPanel>-->
+			</Grid>
+
+			<Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Name="_xLegend" >
+				<Grid ShowGridLines="false"  Cursor="Arrow">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+
+					<Border Grid.ColumnSpan="2" BorderBrush="Transparent" Background="Transparent" />
+
+					<StackPanel Grid.Column="0"
+								Name="_xLeftLegend" Orientation="Vertical" 
+								MouseDown="_xLeftLegend_MouseDown"/>
+
+
+					<StackPanel Grid.Column="1" 
+								Name="_xRightLegend" Orientation="Vertical"
+								MouseDown="_xRightLegend_MouseDown"/>
+				</Grid>
+			</Grid>
+
+
+			<Grid Name="_xLeftAxisGrid" Grid.Row="2" Grid.Column="0" Grid.RowSpan="3" />
+			<Canvas Name="_xLeftAxisCanvas" Grid.Row="2" Grid.Column="0" Grid.RowSpan="3" 
+				Style="{StaticResource YAxisStyle}"
+				MouseWheel="YZoom"/>
+
+			<Grid Name="_xRightAxisGrid" Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" />
+			<Canvas	Name="_xRightAxisCanvas" Grid.Row="2" Grid.Column="2" Grid.RowSpan="3"/>
+
+
+			<Grid Name="_xTimeAxisGrid" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" />
+			<Canvas Name="_xTimeAxisCanvas" 
+				  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+				  Style="{StaticResource TimeAxisStyle}"
+				  MouseWheel="TimeShift"/>
+			<Border Grid.Row="4" Grid.Column="0" 
+				  Height="75" Width="70" Background="Transparent" 
+				  Style="{StaticResource StartTimeAxisStyle}"
+				  MouseWheel="TimeShiftStart"/>
+			<Border Grid.Row="4" Grid.Column="2" 
+				  Height="75" Width="70" Background="Transparent" 
+				  Style="{StaticResource EndTimeAxisStyle}"
+				  MouseWheel="TimeShiftEnd"/>
+
+			<Grid Name="_xChartGrid" Grid.Row="3" Grid.Column="1"   ClipToBounds="True" SizeChanged="ChartSizeChanged" SnapsToDevicePixels="True" />
+			<Canvas	Name="_xChartCanvas" 
+					Grid.Row="3" Grid.Column="1" 
+					Cursor="Cross"
+					ClipToBounds="True" SnapsToDevicePixels="True"
+					MouseLeftButtonDown="_xChartCanvas_OnMouseLeftButtonDown"
+					MouseLeftButtonUp="_xChartCanvas_OnMouseLeftButtonUp"
+					MouseMove="_xChartCanvas_OnMouseMove"
+					MouseWheel="TimeShift" />
+
+
+		</Grid>
+	</Border>
+
+</local:SwatPresentation>
