@@ -218,7 +218,7 @@ namespace swat.vm
 		{
 			get
 			{
-				int n = Workspace.SimParameters.GetNumChangedParams("dr",Workspace.DefaultParameters);
+				int n = Workspace.DefaultParameters.GetNumChangedParams("dr",Workspace.DataSetParameters);
 				return ( n == 0)? "Standard-Voreinstellungen": $"{n} Parameter";
 			}
 		}
@@ -227,7 +227,7 @@ namespace swat.vm
 		{
 			get
 			{
-				int n = Workspace.SimParameters.GetNumChangedParams("pr", Workspace.DefaultParameters);
+				int n = Workspace.DefaultParameters.GetNumChangedParams("pr", Workspace.DataSetParameters);
 				return (n == 0) ? "Standard-Voreinstellungen" : $"{n} Parameter";
 			}
 		}
@@ -236,7 +236,7 @@ namespace swat.vm
 		{
 			get
 			{
-				int n = Workspace.SimParameters.GetNumChangedParams("da", Workspace.DefaultParameters);
+				int n = Workspace.DefaultParameters.GetNumChangedParams("da", Workspace.DataSetParameters);
 				return (n == 0) ? "Standard-Voreinstellungen" : $"{n} Parameter";
 			}
 		}

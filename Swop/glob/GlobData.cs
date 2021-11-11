@@ -165,7 +165,7 @@ namespace Swop.glob
 
 				default: _model = null; break;
 			}
-			_modelParameters = _model.DefaultParams;
+			_modelParameters = _model.CodedParams;
 
 			_firstOptIndex = instructions.FirstOptIndex;
 			_lastOptIndex = instructions.LastOptIndex;

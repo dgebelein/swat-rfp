@@ -39,7 +39,7 @@ namespace SwopReview
 
 				default: model = null; break;
 			}
-			_setParams = model.DefaultParams;
+			_setParams = model.CodedParams;
 			
 			//Lokale Parameter
 			foreach(string s in _data.OptSets[setId].LocalParams)

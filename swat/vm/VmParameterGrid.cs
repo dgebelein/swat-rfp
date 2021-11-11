@@ -28,7 +28,7 @@ namespace swat.vm
 
 		VmBase _parentPanel;
 
-		SimParamData _parameters;
+		SimParamData _workParameters;
 		SimParamData _defaultParameters;
 
 
@@ -53,9 +53,8 @@ namespace swat.vm
 			_importCommand = new RelayCommand(param => this.ImportParameters());
 			_notesCommand = new RelayCommand(param => this.ShowNotes());
 
-
 			_defaultParameters = Workspace.DefaultParameters.Clone();
-			_parameters = Workspace.CurrentWorkingParameters;
+			_workParameters = Workspace.CurrentWorkingParameters;
 			
 			InitTable();
 		}
@@ -83,11 +82,10 @@ namespace swat.vm
 			_dtParams.Columns.Add("ParamHelp", typeof(String));
 			_dtParams.Columns.Add("RowColor", typeof(String));
 
-
-			foreach (string s in _parameters.ParamDict.Keys)
+			foreach (string s in _workParameters.ParamDict.Keys)
 			{
 				DataRow row = _dtParams.NewRow();
-				SimParamElem elem = _parameters.ParamDict[s];
+				SimParamElem elem = _workParameters.ParamDict[s];
 				if (elem.Legit > legitCode) // nur Parameter mit entsprechender Berechtigung anzeigen
 					continue;
 
@@ -157,9 +155,9 @@ namespace swat.vm
 		public void UpdateParameters()
 		{
 			Workspace.HasValidPopulationData = false;
-			Workspace.SimParameters.AddParamData(_parameters,_isdefaulted);
-			Workspace.CurrentModel.InitModelParameters(Workspace.SimParameters);
-			Workspace.SimParameters.WriteToFile();
+			Workspace.DataSetParameters.AddParamData(_workParameters,_isdefaulted);
+			Workspace.CurrentModel.InitModelParameters(Workspace.DataSetParameters);
+			Workspace.DataSetParameters.WriteToFile();
 			_isAnyParameterChanged = false;
 			_isdefaulted = false;
 
@@ -170,9 +168,9 @@ namespace swat.vm
 		{
 			get
 			{
-				foreach (string s in _parameters.ParamDict.Keys)
+				foreach (string s in _workParameters.ParamDict.Keys)
 				{
-					if (_parameters.ParamDict[s].IsChanged)
+					if (_workParameters.ParamDict[s].IsChanged)
 						return true;
 				}
 				return false;
@@ -184,14 +182,14 @@ namespace swat.vm
 			Workspace.CurrentModel.InitModelParameters(Workspace.DefaultParameters); // neu 5.1.21
 			SimParamData sd = new SimParamData();
 
-			foreach (string key in _parameters.ParamDict.Keys)
+			foreach (string key in _workParameters.ParamDict.Keys)
 			{
 				SimParamElem e = (SimParamElem)_defaultParameters.ParamDict[key].Clone();
 				//if (_parameters.ParamDict[key].IsChanged)
 				//	e.IsChanged = true;
 				sd.ParamDict.Add(key, e);
 			}
-			_parameters = sd;
+			_workParameters = sd;
 
 			_isdefaulted = true;
 			_isAnyParameterChanged = true;
@@ -203,11 +201,11 @@ namespace swat.vm
 		public string SetAndValidateEditText(string key, string txt)
 		{
 			// todo: Plausibilitätskontrolle Parameter
-			SimParamElem origParam = _parameters.ParamDict[key];
+			SimParamElem origParam = _workParameters.ParamDict[key];
 			SimParamElem defParam = _defaultParameters.ParamDict[key];
 
 
-			object obj = Workspace.SimParameters.GetConvertedElement(key, txt.Replace(',','.'));
+			object obj = Workspace.CodedModelParameters.GetConvertedElement(key, txt.Replace(',','.'));
 			if (obj != null)
 			{ 
 				if (obj.ToString() != origParam.Obj.ToString())
@@ -218,7 +216,7 @@ namespace swat.vm
 				if(obj.ToString() == defParam.Obj.ToString())
 				{
 					origParam.IsChanged = false;
-					_parameters.SetToUnchanged(key);
+					_workParameters.SetToUnchanged(key);
 				}
 				else
 					origParam.IsChanged = true;
@@ -231,13 +229,13 @@ namespace swat.vm
 
 		public int GetIndex(string key)
 		{
-			return _parameters.ParamDict.Keys.ToList().IndexOf(key);
+			return _workParameters.ParamDict.Keys.ToList().IndexOf(key);
 		}
 
 
 		public bool IsChangedParameter(string key)
 		{
-			return _parameters.ParamDict[key].IsChanged;
+			return _workParameters.ParamDict[key].IsChanged;
 		}
 
 		#endregion
@@ -251,13 +249,14 @@ namespace swat.vm
 			string paraFile = DlgImportParameters.Show(GetParameterFileList(), Workspace.CurrentModelName);
 			if(paraFile != null)
 			{
-				SimParamData paras = Workspace.CurrentDefaultParameters;
+				SimParamData paras = Workspace.CurrentWorkingParameters;
 				paras.Filename = paraFile + WorkspaceData.ExtSimParameters;
 				paras.ReadFromFile();
 
 				string prefix = Workspace.CurrentModel.GetParamPrefix();
 				Dictionary<string, SimParamElem> paraDict = paras.GetParamDict(prefix);
-				Workspace.CurrentWorkingParameters.AddItemDictionary(paraDict);
+				_workParameters.AddItemDictionary(paraDict);
+				//Workspace.DataSetParameters.AddItemDictionary(paraDict);
 				_isAnyParameterChanged = true;
 				_isdefaulted = false;
 				InitTable();

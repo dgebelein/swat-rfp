@@ -22,6 +22,7 @@ namespace swat.iodata
 		FlyType _currentFlyType;
 		List<string> _flyNames;
 
+
 		public const string ExtWorkspace = ".swat";
 		public const string ExtWeather = ".swat-wea";
 		public const string ExtSimParameters = ".swat-par";
@@ -81,37 +82,40 @@ namespace swat.iodata
 
 		private void CreateSimParas() // mit Standardparametern initialisieren
 		{
-			SimParameters = new SimParamData();
+			CodedModelParameters = new SimParamData();
 			int numModels = Enum.GetNames(typeof(FlyType)).Length;
 
 			for (int i = 0; i < numModels; i++)
 			{
 				ModelBase model = CreateModel((FlyType)i); 
-				SimParameters.AddParamData(model.DefaultParams);
+				CodedModelParameters.AddParamData(model.CodedParams);
 			}
 		}
 
 
 		void InitChangedDefaultParams()
 		{
+			DefaultParameters = CodedModelParameters.Clone();
 			string fnDefParams = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat-default.swat-par"); 
-			if (!SimParameters.ReadFromFile(fnDefParams, true))
+			if (!DefaultParameters.ReadFromFile(fnDefParams, true))
 			{
 				DlgMessage.Show("Initialisierungs-Fehler: ", "Datei 'swat-default.swat-par' nicht im Programm-Ordner gefunden", SwatPresentations.MessageLevel.Error);
 			}
 
-			var list = SimParameters.ParamDict.Keys.ToList();
+			var list = DefaultParameters.ParamDict.Keys.ToList();
 			foreach (var key in list)
 			{
-				SimParameters.ParamDict[key].IsChanged = false;
+				DefaultParameters.ParamDict[key].IsChanged = false;
 			}
 
-			DefaultParameters = SimParameters.Clone();
+			DataSetParameters = DefaultParameters.Clone();
+
 		}
 
 		#endregion
 
 		#region Properties
+
 
 		public static string GetFilename(string location, int year)
 		{
@@ -130,7 +134,7 @@ namespace swat.iodata
 			set
 			{
 				_currentFlyType = value;
-				_currentModel = CreateModel(_currentFlyType, SimParameters);
+				_currentModel = CreateModel(_currentFlyType, DataSetParameters);
 			}
 		}
 
@@ -175,17 +179,19 @@ namespace swat.iodata
 
 
 
-		public SimParamData CurrentDefaultParameters
-		{
-			get {	return _currentModel.DefaultParams;}
-		}
+		//public SimParamData CurrentDefaultParameters
+		//{
+		//	get {	return _currentModel.CodedParams;}
+		//}
 
 		public SimParamData CurrentWorkingParameters
 		{
-			get { return SimParameters.GetModelParams(_currentModel.GetParamPrefix()); } 
+			get { return DataSetParameters.GetModelParams(_currentModel.GetParamPrefix()); }
 		}
 
-		public SimParamData SimParameters { get; private set; }
+
+		public SimParamData CodedModelParameters { get; private set; }
+		public SimParamData DataSetParameters { get; private set; }
 
 		public bool HasValidWeatherData
 		{
@@ -429,11 +435,12 @@ namespace swat.iodata
 					break;
 				}
 			}
-			
-			SimParameters.Filename = SimParaFile;
-			if ( !SimParameters.ReadFromFile())
+
+			DataSetParameters = DefaultParameters.Clone();
+			DataSetParameters.Filename = SimParaFile;
+			if ( !DataSetParameters.ReadFromFile())
 			{
-				IOError += SimParameters.ErrorMsg;
+				IOError += DataSetParameters.ErrorMsg;
 			}
 			
 			return (string.IsNullOrEmpty(IOError))? ErrorType.OK : ErrorType.Warning;
@@ -457,14 +464,14 @@ namespace swat.iodata
 				}
 			}
 
-			if(SimParameters.HasChangedParams)
+			if(DataSetParameters.HasChangedParams)
 			{
 				if (SimParaFile == null)
 					SimParaFile = $"{Name}" + ExtSimParameters;
 
-				SimParameters.Filename = SimParaFile;
-				if (!SimParameters.WriteToFile())
-					IOError += SimParameters.ErrorMsg;
+				DataSetParameters.Filename = SimParaFile;
+				if (!DataSetParameters.WriteToFile())
+					IOError += DataSetParameters.ErrorMsg;
 			}
 		}
 
@@ -496,7 +503,7 @@ namespace swat.iodata
 			//var watch = System.Diagnostics.Stopwatch.StartNew();
 
 			
-			_currentModel = CreateModel(CurrentFlyType, SimParameters);
+			_currentModel = CreateModel(CurrentFlyType, DataSetParameters);
 			_currentModel.RunSimulation();
 
 			//watch.Stop();

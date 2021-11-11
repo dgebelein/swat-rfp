@@ -292,7 +292,7 @@ namespace SwopReview
 
 				default: model = null; break;
 			}
-			DefaultParameters = model.DefaultParams;
+			DefaultParameters = model.CodedParams;
 
 			int sl = GetLineNo("[Default-Parameters]");
 			if(sl<0)

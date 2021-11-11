@@ -194,9 +194,9 @@ namespace swat.vm
 		void AcceptOptimization()
 		{
 			Workspace.HasValidPopulationData = false;
-			Workspace.SimParameters.AddParamData(_opData.BestParameters);
-			Workspace.CurrentModel.InitModelParameters(Workspace.SimParameters);
-			Workspace.SimParameters.WriteToFile();
+			Workspace.DataSetParameters.AddParamData(_opData.BestParameters);
+			Workspace.CurrentModel.InitModelParameters(Workspace.DataSetParameters);
+			Workspace.DataSetParameters.WriteToFile();
 			_canUpdateParameters = false;
 			//_vmSwat.UpdateMenuContent(); todo: Hinweis auf abspeichern veränderter Parameter
 			
@@ -353,7 +353,7 @@ namespace swat.vm
 				return origParam.Obj.ToString();
 			}
 
-			object obj = Workspace.SimParameters.GetConvertedElement(key, txt.Replace(',', '.'));
+			object obj = Workspace.DataSetParameters.GetConvertedElement(key, txt.Replace(',', '.'));
 			if (obj != null)
 			{
 				if (obj.ToString() != origParam.Obj.ToString())

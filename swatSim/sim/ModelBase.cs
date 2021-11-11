@@ -288,7 +288,7 @@ namespace swatSim
 		//	get { return _workingParams; }
 		//}
 
-		public SimParamData DefaultParams
+		public SimParamData CodedParams
 		{
 			get { return GetDefaultParams().Copy(); }
 		}
