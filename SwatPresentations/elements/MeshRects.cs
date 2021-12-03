@@ -25,12 +25,12 @@ namespace SwatPresentations
 
 		#region Constructor
 
-		public MeshRects(List<PresentationRect> rects)
-		{
-			_rects = rects;
-			_rectangles = new Rectangle[_rects.Count];
-			_colorBrushes = CreateBrushes();
-		}
+		//public MeshRects(List<PresentationRect> rects)
+		//{
+		//	_rects = rects;
+		//	_rectangles = new Rectangle[_rects.Count];
+		//	_colorBrushes = CreateBrushes();
+		//}
 
 		public MeshRects(List<PresentationRect> rects, SolidColorBrush[] brushes)
 		{
@@ -101,7 +101,6 @@ namespace SwatPresentations
 				double v = (mr.ZValue - colorScaleInfo.ActualScaleMin) /( (colorScaleInfo.ActualScaleMax - colorScaleInfo.ActualScaleMin)*zoom) * 255 ;
 				v = Math.Min(v, 254);
 				return _colorBrushes[(int)v];
-				//return new SolidColorBrush(ColorTools.GetShortRainbow(v));
 			}
 		}
 

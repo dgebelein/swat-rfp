@@ -147,13 +147,16 @@ namespace SwatPresentations
 				ColorBrushes = MeshRects.CreateBrushes();
 
 			_chartMesh = chart;
-			_meshRects = new MeshRects(_dataRects);
+			_meshRects = new MeshRects(_dataRects, ColorBrushes);
 			_meshRects.Draw(chart, _zAxisInfo);
 		}
 
 		public void DrawColorZoomedMeshRects()
 		{
+			//_chartMesh.SetVisMode(Visibility.Collapsed);
 			_meshRects.DrawColorZoomed(_zAxisInfo, ColorZoom);
+			//_chartMesh.SetVisMode(Visibility.Visible);
+
 		}
 
 		public override void CreateXLegend(Grid grid, Brush textColor)

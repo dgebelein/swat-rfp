@@ -84,6 +84,11 @@ namespace SwatPresentations
 
 		}
 
+		//public void SetVisMode(Visibility vis)
+		//{
+		//	_canvas.Visibility = vis;
+		//}
+
 		public void SetXScaling() //Double scaleXMin, Double scaleXMax, Double firstXTick, Double deltaXTicks)
 		{
 			_scaleXMin = 0;

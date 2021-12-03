@@ -89,7 +89,9 @@ namespace SwatPresentations
 				Maximum = 1.0,
 				Width = width,
 				Orientation = Orientation.Horizontal,
-				Value = ColorZoom
+				Value = ColorZoom,
+				TickFrequency = 10 // hat  ohne IsSnapToTickEnabled nur Auswirkung auf Tastaturbedienung
+				
 			};
 
 			Canvas.SetLeft(_zoomSlider, startX);
