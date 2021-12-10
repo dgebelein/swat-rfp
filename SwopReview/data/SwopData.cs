@@ -228,7 +228,7 @@ namespace SwopReview
 		void ReadWorkMode()
 		{
 			int sl = GetLineNo("[Mode]");
-			if (sl < 0)
+			if (sl < 0) //  default bei fehlender Angabe
 			{
 				WorkMode = SwopWorkMode.OPTI;
 				return;

@@ -20,8 +20,9 @@ namespace swatSim
 
 	public enum SwopWorkMode
 	{
-		OPTI,   //Optimierung
-		COMBI   //Parameterkombinationen 
+		OPTI,			// Optimierung
+		OPTISHRINK, // Beschleunigte Optimierung
+		COMBI       //Parameterkombinationen 
 	}
 	public enum DevStage:int
 	{

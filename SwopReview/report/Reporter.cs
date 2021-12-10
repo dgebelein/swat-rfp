@@ -53,6 +53,9 @@ namespace SwopReview
 		void AddTitle()
 		{
 			_gtr.WriteElement("h1","SWOP-Log: "+ _data.SwopLogName);
+			
+			_gtr.WriteElement("h2", "Mode: "+_data.WorkMode);
+
 
 			if (!string.IsNullOrWhiteSpace(_data.Description))
 				_gtr.WriteElement("h4", _data.Description);

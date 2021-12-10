@@ -268,7 +268,7 @@ namespace Swop.glob
 				return false;
 			}
 
-			return (WorkMode == SwopWorkMode.OPTI) ?
+			return ((WorkMode == SwopWorkMode.OPTI)|| (WorkMode == SwopWorkMode.OPTISHRINK)) ?
 				AddOptiParameter(para, elems) :
 				AddCombiParameter(para, elems);
 		}
@@ -534,7 +534,7 @@ namespace Swop.glob
 			int n = 0;
 			foreach (var key in opList)
 			{
-				if(WorkMode== SwopWorkMode.OPTI)
+				if ((WorkMode == SwopWorkMode.OPTI)||(WorkMode == SwopWorkMode.OPTISHRINK))
 				{
 					pt.AppendLine($"  #P{n + 1}:{key}"); 
 				}

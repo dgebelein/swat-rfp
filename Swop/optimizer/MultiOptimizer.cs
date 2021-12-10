@@ -51,6 +51,10 @@ namespace Swop.optimizer
 		double[] _bestEvals;
 		double _bestEvalValue;
 		double _bestVariedEvalValue;
+		double _optiShrinkValue;
+		double _optiShrinkValuePrev;
+		double _movingShrink;
+
 		int _evalStep;
 		int _optiCounter;
 		
@@ -434,7 +438,7 @@ namespace Swop.optimizer
 				_optiCounter = -1; 
 				var solution = NelderMeadSolver.Solve(x => (EvaluateMultiModelParameters(x)), factors, _solverLowLimits, _solverHighLimits);
 
-				_globData.EndText = "Solver regulär beendet"; ; // reguläres Ende durch Min-Differenz Solver
+				_globData.EndText = "Solver regulär beendet"; ; // reguläres Ende durch Min-Differenz Solver - kommt aber kaum jemals vor
 				_optimizer.ReportProgress(100);
 			}
 			catch (TerminationCheckerException)
@@ -505,9 +509,9 @@ namespace Swop.optimizer
 
 		}
 
-		bool CheckForTermination(double evalResult, int numFactors)
+		bool CheckForOptiTermination(double evalResult, int numFactors)
 		{
-			if (_optiCounter < 0)
+			if (_optiCounter < 0) // wird zum Start auf -1 gesetzt
 			{
 				_bestVariedEvalValue = evalResult;
 				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
@@ -522,13 +526,47 @@ namespace Swop.optimizer
 				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
 
 			}
-			int maxNoChangeCounter = (_isFirstLap) ?			//  abh. v. Anzahl der Optimierungsparameter, mindestens aber 10 Durchläufe
+			int maxNoChangeCounter = (_isFirstLap) ?        //  abh. v. Anzahl der Optimierungsparameter, mindestens aber 10 Durchläufe
 				Math.Max(10, (numFactors * numFactors * 4)) : // Initialdurchlauf etwas ausführlicher
 				Math.Max(10, (numFactors * numFactors));
 
 			_globData.RemainingSteps = (maxNoChangeCounter - _optiCounter).ToString();
-				
+
 			return (_optiCounter > maxNoChangeCounter);
+		}
+
+		bool CheckForOptiShrinkTermination(double evalResult, int numFactors)
+		{
+			if (_optiCounter <= 0) // wird zum Start auf -1 gesetzt
+			{
+				_bestVariedEvalValue = evalResult;
+				_optiShrinkValue = _optiShrinkValuePrev = _movingShrink = evalResult;
+				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
+			}
+
+			int divi = numFactors + 1;
+			double diff = Math.Abs(_optiShrinkValue - _optiShrinkValuePrev);
+			_movingShrink = (_movingShrink * (divi - 1) + diff) / divi;
+			_optiCounter++;
+
+
+			if (evalResult < _bestVariedEvalValue)
+			{
+				_bestVariedEvalValue = evalResult;
+				_optiCounter = 0;
+				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
+			}
+
+			_globData.RemainingSteps = "Shrink  " + _movingShrink.ToString("F4", CultureInfo.InvariantCulture);
+
+			return (_optiCounter > divi) && (_movingShrink < 0.025);
+		}
+
+		bool CheckForTermination(double evalResult, int numFactors)
+		{
+			return (_globData.WorkMode == SwopWorkMode.OPTI) ?
+				CheckForOptiTermination(evalResult, numFactors) :
+				CheckForOptiShrinkTermination(evalResult, numFactors);
 		}
 
 		double EvaluateMultiModelParameters(double[] solverFactors)
