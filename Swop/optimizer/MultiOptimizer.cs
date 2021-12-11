@@ -537,7 +537,7 @@ namespace Swop.optimizer
 
 		bool CheckForOptiShrinkTermination(double evalResult, int numFactors)
 		{
-			if (_optiCounter <= 0) // wird zum Start auf -1 gesetzt
+			if (_optiCounter < 0) // wird zum Start auf -1 gesetzt
 			{
 				_bestVariedEvalValue = evalResult;
 				_optiShrinkValue = _optiShrinkValuePrev = _movingShrink = evalResult;
@@ -554,6 +554,7 @@ namespace Swop.optimizer
 			{
 				_bestVariedEvalValue = evalResult;
 				_optiCounter = 0;
+				_optiShrinkValue = _optiShrinkValuePrev = _movingShrink = evalResult;
 				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
 			}
 

@@ -72,21 +72,21 @@ namespace swatSim
 
 
 			p.InitItem("dr.DevLarvaTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Larve: Temperaturmaximum", 3);
-			p.InitItem("dr.DevLarvaTopt", 27.0, typeof(double), 20.0, 34.0, "Entwicklung Larve: Temperaturoptimum", 3);
+			p.InitItem("dr.DevLarvaTopt", 27.0, typeof(double), 20.0, 29.9, "Entwicklung Larve: Temperaturoptimum", 3);
 			p.InitItem("dr.DevLarvaQ", 1.73, typeof(double), 1.1, 4.0, "Entwicklung Larve: Temperatur-Spezifität", 3);
 			p.InitItem("dr.DevLarvaL", 0.009, typeof(double), 0.0, 0.1, "Entwicklung Larve: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevLarvaKmax", 0.09, typeof(double), 0.05, 0.25, "Entwicklung Larve: max. tägl. Entwicklungsrate", 3);
 
 
-			p.InitItem("dr.DevPupaTmax", 30.0, typeof(double), 28.0, 40.0, "Entwicklung Puppe: Temperaturmaximum", 3);
-			p.InitItem("dr.DevPupaTopt", 22.5, typeof(double), 20.0, 30.0, "Entwicklung Puppe: Temperaturoptimum", 3);
+			p.InitItem("dr.DevPupaTmax", 30.0, typeof(double), 30.0, 40.0, "Entwicklung Puppe: Temperaturmaximum", 3);
+			p.InitItem("dr.DevPupaTopt", 22.5, typeof(double), 20.0, 29.9, "Entwicklung Puppe: Temperaturoptimum", 3);
 			p.InitItem("dr.DevPupaQ", 1.88, typeof(double), 1.1, 4.0, "Entwicklung Puppe: Temperatur-Spezifität", 3);
 			p.InitItem("dr.DevPupaL", 0.008, typeof(double), 0.0, 0.1, "Entwicklung Puppe: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevPupaKmax", 0.073, typeof(double), 0.05, 0.2, "Entwicklung Puppe: max. tägl. Entwicklungsrate", 3);
 
 
-			p.InitItem("dr.DevFlyTmax", 35.0, typeof(double), 32.0, 45.0, "Entwicklung Fliege: Temperaturmaximum", 3);
-			p.InitItem("dr.DevFlyTopt", 30.0, typeof(double), 20.0, 32.0, "Entwicklung Fliege: Temperaturoptimum", 3);
+			p.InitItem("dr.DevFlyTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Fliege: Temperaturmaximum", 3);
+			p.InitItem("dr.DevFlyTopt", 30.0, typeof(double), 20.0, 29.9, "Entwicklung Fliege: Temperaturoptimum", 3);
 			p.InitItem("dr.DevFlyQ", 1.67, typeof(double), 1.1, 4.0, "Entwicklung Fliege: Temperatur-Spezifität", 3);
 			p.InitItem("dr.DevFlyL", 0.006, typeof(double), 0.0, 0.1, "Entwicklung Fliege: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevFlyKmax", 0.072, typeof(double), 0.05, 0.2, "Entwicklung Fliege: max. tägl. Entwicklungsrate", 3);
