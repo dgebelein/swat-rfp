@@ -276,7 +276,7 @@ namespace Swop.glob
 		{
 			ErrMsg = "";
 			ErrLineNo = 0;
-			SwopMode = SwopWorkMode.OPTI;
+			SwopMode = SwopWorkMode.LEAST;
 
 			try
 			{

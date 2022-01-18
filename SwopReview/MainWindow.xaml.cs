@@ -19,14 +19,14 @@ namespace SwopReview
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		public readonly VmSR Vm;
+		public readonly VmMenu Vm;
 
 		public MainWindow()
 		{
 			this.WindowState = System.Windows.WindowState.Maximized;
 			InitializeComponent();
 			SwopData sd = new SwopData();
-			Vm = new VmSR(sd, CmdView);
+			Vm = new VmMenu(sd, CmdView);
 			DataContext = Vm;
 		}
 	}

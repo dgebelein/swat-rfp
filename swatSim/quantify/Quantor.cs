@@ -28,8 +28,8 @@ namespace swatSim
 		double[] _prognLarvae;
 		int[] _eggMonitoringPeriods;
 		int[] _adultMonitoringPeriods;
-		int _numMonitoringsEggs;
-		int _numMonitoringsAdults;
+		//int _numMonitoringsEggs;
+		//int _numMonitoringsAdults;
 		bool _hasEggs;
 		bool _hasAdults;
 
@@ -80,9 +80,8 @@ namespace swatSim
 				_pd = pd,
 				_md = monData,
 				_evalMethod = evalMethod,
-				_doCreateReport = doCreateReport &&(evalMethod!= EvalMethod.Nothing),
+				//_doCreateReport = doCreateReport &&(evalMethod!= EvalMethod.Nothing),
 				_lastQuantIndex = (monData.FirstVirtMonitoring > 0) ? monData.FirstVirtMonitoring - 1 : 366
-
 			};
 
 			quantor._doCreateReport = doCreateReport;
@@ -312,20 +311,20 @@ namespace swatSim
 		}
 
 
-		private void CalcMonitoringNums()
-		{
-			_numMonitoringsEggs = 0;
-			_numMonitoringsAdults = 0;
+		//private void CalcMonitoringNums()
+		//{
+		//	_numMonitoringsEggs = 0;
+		//	_numMonitoringsAdults = 0;
 
-			for (int i = 0; i < _lastQuantIndex; i++)
-			{
-				if (!double.IsNaN(_md.Eggs[i]) && (_md.Eggs[i] >= 0))
-					_numMonitoringsEggs++;
-				if (!double.IsNaN(_md.Adults[i]) && (_md.Adults[i] >= 0))
-					_numMonitoringsAdults++;
-			}
+		//	for (int i = 0; i < _lastQuantIndex; i++)
+		//	{
+		//		if (!double.IsNaN(_md.Eggs[i]) && (_md.Eggs[i] >= 0))
+		//			_numMonitoringsEggs++;
+		//		if (!double.IsNaN(_md.Adults[i]) && (_md.Adults[i] >= 0))
+		//			_numMonitoringsAdults++;
+		//	}
 
-		}
+		//}
 
 		double[] GetOptimizedScalingFactors(double[] oldScalingFactors)
 		{
@@ -342,7 +341,7 @@ namespace swatSim
 			_evalStep = 0;
 			bool earlyTermination = false;
 
-			CalcMonitoringNums();
+			//CalcMonitoringNums();
 
 			if (_doCreateReport)
 				ReportOptimizationHeader(workingFactors.Length);
@@ -439,7 +438,7 @@ namespace swatSim
 
 		double GetEvalValue(DevStage stage, double[] generationScales, int lastIndex)
 		{
-			int maxCounter = generationScales.Length;
+			//int maxCounter = generationScales.Length;
 
 			// normFactors enthalten Multiplikatoren ab 1. Generation
 			// Prognoseberechnung braucht aber auch Multiplikator für Überwinterungsgeneration

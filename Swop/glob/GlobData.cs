@@ -230,7 +230,7 @@ namespace Swop.glob
 
 			if (!string.IsNullOrEmpty(locParamFilename))
 			{
-				if (param.ReadFromFile(Path.Combine(GetPathSwop, locParamFilename),true))
+				if (param.ReadFromFile(Path.Combine(GetPathSwop, locParamFilename)))
 				{
 					_locParams.Add(param);
 				}
@@ -268,7 +268,7 @@ namespace Swop.glob
 				return false;
 			}
 
-			return ((WorkMode == SwopWorkMode.OPTI)|| (WorkMode == SwopWorkMode.OPTISHRINK)) ?
+			return ((WorkMode == SwopWorkMode.LEAST)|| (WorkMode == SwopWorkMode.SHRINK)) ?
 				AddOptiParameter(para, elems) :
 				AddCombiParameter(para, elems);
 		}
@@ -534,7 +534,7 @@ namespace Swop.glob
 			int n = 0;
 			foreach (var key in opList)
 			{
-				if ((WorkMode == SwopWorkMode.OPTI)||(WorkMode == SwopWorkMode.OPTISHRINK))
+				if ((WorkMode == SwopWorkMode.LEAST) ||(WorkMode == SwopWorkMode.SHRINK))
 				{
 					pt.AppendLine($"  #P{n + 1}:{key}"); 
 				}

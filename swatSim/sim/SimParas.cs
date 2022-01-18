@@ -274,8 +274,9 @@ namespace swatSim
 				_paramDict[key].IsChanged = false;
 		}
 
-		private void SetValue(string section, string line)
+		private void SetValue(string section, string line, Dictionary<string, SimParamElem> keyDict = null)
 		{
+			Dictionary<string, SimParamElem> myDict = (keyDict == null) ? _paramDict : keyDict;
 			if (string.IsNullOrEmpty(section))
 			{
 				_warnings.Add($"Eintrag ohne zugehörige Sektion: {line}");
@@ -290,13 +291,13 @@ namespace swatSim
 			}
 
 			string key = section + '.' + elems[0].Trim();
-			if (!_paramDict.ContainsKey(key))
+			if (!myDict.ContainsKey(key))
 			{
 				_warnings.Add($"unbekannter Parameter: {section}.{line}");
 				return;
 			}
 
-			SimParamElem param = _paramDict[key];
+			SimParamElem param = myDict[key];
 
 			object val = GetConvertedElement(key, elems[1].Trim());
 			if (val == null)
@@ -372,32 +373,26 @@ namespace swatSim
 			}
 		}
 
-		public bool ReadFromFile() // von swat aufgerufen
+		public bool ReadFromFile() 
 		{
 			string path = (string)Application.Current.Properties["PathParameters"];
 			string pathName = Path.Combine(path, Filename);
-			return ReadFromFile(pathName,false);
+			return File.Exists(pathName) ? ReadFromFile(pathName) : true;
+
+			//if (File.Exists(pathName))
+			//return ReadFromFile(pathName,false);
 		}
 
-		public bool ReadFromFile(string explicitFile, bool mustExist) // wird direkt nur von swop aufgerufen
+		public bool ReadFromFile(string explicitFile) 
 		{
 			_warnings.Clear();
 			if (Filename == null)
-				Filename= Path.GetFileName(explicitFile);
+				Filename = Path.GetFileName(explicitFile);
 
-			//string path = (string)Application.Current.Properties["PathParameters"];
-			//string pathName = Path.Combine(path, Filename);
-			
 			if (!File.Exists(explicitFile))
 			{
-				if (!mustExist)
-					return true;
-				else
-				{
 					_warnings.Add($"Datei '{Filename}' nicht gefunden");
 					return false;
-				}
-				
 			}
 
 			string[] lines;
@@ -435,7 +430,60 @@ namespace swatSim
 			return (_warnings.Count == 0);
 		}
 
-		public bool ReadFromString(string line) // von SwopReview aufgerufen
+
+		//public bool ReadFromFile(string explicitFile, bool mustExist) // wird direkt nur von swop aufgerufen
+		//{
+		//	_warnings.Clear();
+		//	if (Filename == null)
+		//		Filename = Path.GetFileName(explicitFile);
+
+		//	if (!File.Exists(explicitFile))
+		//	{
+		//		if (!mustExist)
+		//			return true;
+		//		else
+		//		{
+		//			_warnings.Add($"Datei '{Filename}' nicht gefunden");
+		//			return false;
+		//		}
+		//	}
+
+		//	string[] lines;
+		//	try
+		//	{
+		//		lines = File.ReadAllLines(explicitFile, Encoding.UTF8);
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		_warnings.Add($"Datei '{explicitFile}' konnte nicht gelesen werden.\r\nGrund: {e.Message}");
+		//		return false;
+		//	}
+
+		//	string section = "";
+		//	char[] cTrim = { '[', ' ', ']' };
+
+		//	foreach (string line in lines)
+		//	{
+		//		if (line.Trim().StartsWith(";"))
+		//			continue;
+
+		//		Regex regex = new Regex(@"^\[.*\]$");
+		//		Match match = regex.Match(line);
+		//		if (match.Success)
+		//		{
+		//			section = match.Value.Trim(cTrim);
+		//			continue;
+		//		}
+		//		if (String.IsNullOrEmpty(line.Trim()))
+		//			continue;
+		//		SetValue(section, line);
+
+		//	}
+		//	_mustSave = false;
+		//	return (_warnings.Count == 0);
+		//}
+
+		public bool ReadFromString(string line, Dictionary<string, SimParamElem> keyDict = null) // von  Swop u. SwopReview aufgerufen
 		{
 			string s = line.Trim();
 			int posPoint = s.IndexOf('.');
@@ -447,9 +495,8 @@ namespace swatSim
 
 			string section = s.Substring(0, posPoint);
 
-			SetValue(section, s.Substring(posPoint + 1));
+			SetValue(section, s.Substring(posPoint + 1), keyDict);
 			return true;
-
 		}
 
 		#endregion

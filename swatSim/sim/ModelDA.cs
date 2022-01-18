@@ -239,12 +239,13 @@ namespace swatSim
 						break;
 
 				}
-				//Double BioAge = 0.0;
-				//for (int i = 0; i <= 1400; i++)
-				//{
-				//	_tableTransition[stage, i] = SimFunctions.Sigmoid(BioAge, t);
-				//	BioAge += 0.001;
-				//}
+				Double BioAge = 0.0;
+				for (int i = 0; i <= 1400; i++)
+				{
+					_tableTransition[stage, i] = SimFunctions.Sigmoid(BioAge, t);
+					BioAge += 0.001;
+				}
+
 			}
 		}
 

@@ -230,7 +230,7 @@ namespace SwopReview
 			int sl = GetLineNo("[Mode]");
 			if (sl < 0) //  default bei fehlender Angabe
 			{
-				WorkMode = SwopWorkMode.OPTI;
+				WorkMode = SwopWorkMode.LEAST;
 				return;
 			}
 
@@ -802,6 +802,14 @@ namespace SwopReview
 
 			MinimumError = errorList.Min();
 			MaximumError = errorList.Max();
+		}
+		public int GetBestCommonErrorId()
+		{
+			if((CommonErrors== null) ||(CommonErrors.Length==0))
+				return -1;
+			else 
+				return Array.IndexOf(CommonErrors, CommonErrors.Min());
+
 		}
 		#endregion
 

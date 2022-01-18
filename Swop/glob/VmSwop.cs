@@ -50,7 +50,7 @@ namespace Swop.glob
 		public string PrologText{	get {return SwopData.PrologText;}}
 		public Visibility VisOptimization 
 		{	
-			get { if ((SwopData.WorkMode == SwopWorkMode.OPTI) || (SwopData.WorkMode == SwopWorkMode.OPTISHRINK))
+			get { if ((SwopData.WorkMode == SwopWorkMode.LEAST) || (SwopData.WorkMode == SwopWorkMode.SHRINK))
 						return Visibility.Visible;
 					else
 						return Visibility.Collapsed; 
@@ -76,7 +76,7 @@ namespace Swop.glob
 
 		void AbortExecution()
 		{
-			if ((SwopData.WorkMode == SwopWorkMode.OPTI) || (SwopData.WorkMode == SwopWorkMode.OPTISHRINK))
+			if ((SwopData.WorkMode == SwopWorkMode.LEAST) || (SwopData.WorkMode == SwopWorkMode.SHRINK))
 				_optimizer.AbortExecution();
 			else
 				_combiner.AbortExecution();
@@ -91,7 +91,7 @@ namespace Swop.glob
 
 		void ExecuteOptimization()
 		{
-			if ((SwopData.WorkMode == SwopWorkMode.OPTI) || (SwopData.WorkMode == SwopWorkMode.OPTISHRINK))
+			if ((SwopData.WorkMode == SwopWorkMode.LEAST) || (SwopData.WorkMode == SwopWorkMode.SHRINK))
 				_optimizer.ExecuteOptimization();
 			else
 				_combiner.ExecuteCombination();
@@ -123,7 +123,7 @@ namespace Swop.glob
 
 				if (_canExecute)
 				{
-					if ((SwopData.WorkMode == SwopWorkMode.OPTI) || (SwopData.WorkMode == SwopWorkMode.OPTISHRINK))
+					if ((SwopData.WorkMode == SwopWorkMode.LEAST) || (SwopData.WorkMode == SwopWorkMode.SHRINK))
 					{
 						_optimizer = new MultiOptimizer(SwopData, OptimizerProgressChanged, OptimizerCompleted);
 						SwopData.CreatePrologDisplayText(_optimizer);

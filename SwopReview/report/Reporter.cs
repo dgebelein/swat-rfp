@@ -231,21 +231,24 @@ namespace SwopReview
 
 			foreach (SwopSet ss in _data.OptSets)
 			{
-				int step = GetBestErrorId(ss);
-
-				List<string> row = new List<string>
-				{
-					ss.SetIndex.ToString(),
-					ss.Monitoring,
-					ss.StartErrValue.ToString("0.###", CultureInfo.InvariantCulture),
-					ss.ErrValues[step].ToString("0.###", CultureInfo.InvariantCulture),
-					(ss.ErrValues[step]/ss.StartErrValue).ToString("0.00", CultureInfo.InvariantCulture),
-					step.ToString(),
-					_data.StepLaps[step],
-					GetStepParamString(step)
-				};
-				tableRows.Add(row);
+				int step = ss.GetBestErrorId();// GetBestErrorId(ss);
+				if(step >= 0)
+				{ 
+					List<string> row = new List<string>
+					{
+						ss.SetIndex.ToString(),
+						ss.Monitoring,
+						ss.StartErrValue.ToString("0.###", CultureInfo.InvariantCulture),
+						ss.ErrValues[step].ToString("0.###", CultureInfo.InvariantCulture),
+						(ss.ErrValues[step]/ss.StartErrValue).ToString("0.00", CultureInfo.InvariantCulture),
+						step.ToString(),
+						_data.StepLaps[step],
+						GetStepParamString(step)
+					};
+					tableRows.Add(row);
+				}
 			}
+
 			int bestCommonStep = GetBestStep();
 			List<string> rowCom = new List<string>
 				{
@@ -374,7 +377,7 @@ namespace SwopReview
 
 		}
 
-		int GetBestErrorId(SwopSet ss)
+		public static int GetBestErrorId(SwopSet ss)
 		{
 			double minVal = ss.ErrValues[0];
 			int id = 0;

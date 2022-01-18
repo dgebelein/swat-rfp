@@ -185,8 +185,6 @@ namespace swat.vm
 			foreach (string key in _workParameters.ParamDict.Keys)
 			{
 				SimParamElem e = (SimParamElem)_defaultParameters.ParamDict[key].Clone();
-				//if (_parameters.ParamDict[key].IsChanged)
-				//	e.IsChanged = true;
 				sd.ParamDict.Add(key, e);
 			}
 			_workParameters = sd;
@@ -256,7 +254,6 @@ namespace swat.vm
 				string prefix = Workspace.CurrentModel.GetParamPrefix();
 				Dictionary<string, SimParamElem> paraDict = paras.GetParamDict(prefix);
 				_workParameters.AddItemDictionary(paraDict);
-				//Workspace.DataSetParameters.AddItemDictionary(paraDict);
 				_isAnyParameterChanged = true;
 				_isdefaulted = false;
 				InitTable();

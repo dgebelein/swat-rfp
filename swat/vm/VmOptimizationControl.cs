@@ -198,8 +198,6 @@ namespace swat.vm
 			Workspace.CurrentModel.InitModelParameters(Workspace.DataSetParameters);
 			Workspace.DataSetParameters.WriteToFile();
 			_canUpdateParameters = false;
-			//_vmSwat.UpdateMenuContent(); todo: Hinweis auf abspeichern veränderter Parameter
-			
 		}
 
 		void ReportOptimization()

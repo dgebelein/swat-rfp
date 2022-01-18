@@ -15,7 +15,7 @@ using TTP.UiUtils;
 
 namespace SwopReview
 {
-	public class VmSR :VmBase
+	public class VmMenu :VmBase
 	{
 		#region variable
 
@@ -76,7 +76,7 @@ namespace SwopReview
 
 		#region Construction
 
-		public VmSR(SwopData sd, UserControl view): base(sd, view)
+		public VmMenu(SwopData sd, UserControl view): base(sd, view)
 		{
 			_openFileCommand = new RelayCommand(param => this.OpenSwopFile());
 			_printReportCommand = new RelayCommand(param => this.PrintReport());
@@ -530,7 +530,10 @@ namespace SwopReview
 
 			int setId = GetSelectedSimResultSet();
 
-			ViewVisualDataContext = new VmSimResult(_swopData,setId);
+			VmSimResult simResult = new VmSimResult(_swopData, setId);
+			if (simResult != null)
+				ViewVisualDataContext = simResult;
+
 		}
 
 		int GetSelectedSimResultSet()// achtung: common fällt weg desh. 1 Set zu viel

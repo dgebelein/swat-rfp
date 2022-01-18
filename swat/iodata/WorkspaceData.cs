@@ -97,7 +97,7 @@ namespace swat.iodata
 		{
 			DefaultParameters = CodedModelParameters.Clone();
 			string fnDefParams = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat-default.swat-par"); 
-			if (!DefaultParameters.ReadFromFile(fnDefParams, true))
+			if (!DefaultParameters.ReadFromFile(fnDefParams))
 			{
 				DlgMessage.Show("Initialisierungs-Fehler: ", "Datei 'swat-default.swat-par' nicht im Programm-Ordner gefunden", SwatPresentations.MessageLevel.Error);
 			}

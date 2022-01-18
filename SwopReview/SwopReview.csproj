@@ -54,6 +54,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SwatPresentations\bin\Debug\TtpCommand3.dll</HintPath>
     </Reference>
+    <Reference Include="TtpEngine3, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\TTP\TTP-V3\engine3\engine3\bin\Debug\TtpEngine3.dll</HintPath>
+    </Reference>
     <Reference Include="TtpUiUtils">
       <HintPath>..\swat\bin\Debug\TtpUiUtils.dll</HintPath>
     </Reference>
@@ -66,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="data\SimData.cs" />
     <Compile Include="data\SwopSet.cs" />
     <Compile Include="report\HtmlGenerator.cs" />
     <Compile Include="report\ParamCreator.cs" />
@@ -80,7 +85,8 @@
     <Compile Include="vm\VmColorMesh.cs" />
     <Compile Include="vm\VmPanelMesh.cs" />
     <Compile Include="vm\VmReport.cs" />
-    <Compile Include="vm\VmSR.cs" />
+    <Compile Include="vm\VmSimResult.cs" />
+    <Compile Include="vm\VmMenu.cs" />
     <Compile Include="vm\VmPlot.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

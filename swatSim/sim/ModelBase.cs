@@ -49,10 +49,22 @@ namespace swatSim
 		public bool CanSimulate { get; protected set; }
 
 		protected Random _random;
-		
+
 		#endregion
 
 		#region statics
+		public static string GetWeatherExt(FlyType mt)
+		{
+			// wegen evtl.Erweiterung: versch. Fliegen_versch wetter-Formate
+			//switch (mt)
+			//{
+			//	case FlyType.DR: return ".swat-mdr";
+			//	case FlyType.PR: return ".swat-mpr";
+			//	case FlyType.DA: return ".swat-mda";
+			//	default: throw (new Exception("Modeltype???"));
+			//}
+			return (".swat-wea");
+		}
 		public static string GetMonitoringExt(FlyType mt)
 		{
 			switch(mt)
@@ -82,7 +94,7 @@ namespace swatSim
 
 		#region Construction + Init
 
-		protected ModelBase( string name, WeatherData weather, PopulationData population, SimParamData explicitParams = null, SimParamData locationParams = null)
+		protected ModelBase(string name, WeatherData weather, PopulationData population, SimParamData explicitParams = null, SimParamData locationParams = null)
 		{
 			_name = name;
 			_weather= weather;

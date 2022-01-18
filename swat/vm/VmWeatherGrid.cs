@@ -217,7 +217,6 @@ namespace swat.vm
 			}
 			else
 			{
-				//Workspace.CurrentModel.InitModelParameters(); //wegen Simulationszeitraum
 				Workspace.CurrentModel.InitModelParameters(Workspace.DefaultParameters); //neu 5.1.21
 				Workspace.InvalidatePopulationData();
 			}

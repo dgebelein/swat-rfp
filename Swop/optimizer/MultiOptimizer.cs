@@ -565,7 +565,7 @@ namespace Swop.optimizer
 
 		bool CheckForTermination(double evalResult, int numFactors)
 		{
-			return (_globData.WorkMode == SwopWorkMode.OPTI) ?
+			return (_globData.WorkMode == SwopWorkMode.LEAST) ?
 				CheckForOptiTermination(evalResult, numFactors) :
 				CheckForOptiShrinkTermination(evalResult, numFactors);
 		}

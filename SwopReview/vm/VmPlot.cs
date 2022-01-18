@@ -19,8 +19,6 @@ namespace SwopReview
 		#region variable
 		PresentationsData _graphData;
 		RelayCommand _printCommand;
-		//readonly Brush[] _colors = { Brushes.CornflowerBlue, Brushes.Crimson, Brushes.DarkOrange, Brushes.SpringGreen, Brushes.Gold, Brushes.Fuchsia, Brushes.HotPink,														Brushes.Indigo, Brushes.Cyan };
-
 
 		#endregion
 

@@ -94,5 +94,16 @@ namespace SwopReview
 			}
 			return true;
 		}
+
+		public SimParamData GetBestCommonParameters(int setId)
+		{
+			return null;
+		}
+
+		public SimParamData GetBestSetParameters(int setId)
+		{
+			return null;
+		}
+
 	}
 }

@@ -26,7 +26,7 @@ namespace SwopReview.views
 		{
 			get 
 			{
-				return (((VmSR)(DataContext)).SwpData);
+				return (((VmMenu)(DataContext)).SwpData);
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace SwopReview.views
 		{
 			if (DataContext == null)
 				return;
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 
@@ -131,7 +131,7 @@ namespace SwopReview.views
 		{
 			if (DataContext == null)
 				return;
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 			List<string> paras = vm.SwpData.OptParameters;
@@ -170,7 +170,7 @@ namespace SwopReview.views
 		{
 			if (DataContext == null)
 				return;
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 			List<SwopSet> sets = vm.SwpData.OptSets;
@@ -200,7 +200,7 @@ namespace SwopReview.views
 		{
 			if (DataContext == null)
 				return;
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 			List<string> laps = vm.SwpData.LapNames;
@@ -229,7 +229,7 @@ namespace SwopReview.views
 
 		public List<string> GetSelectedPlotLaps()
 		{
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			List<string> allLaps = vm.SwpData.LapNames;
 
 			List<string> selectedLaps = new List<string>();
@@ -367,7 +367,7 @@ namespace SwopReview.views
 			if(!MySwopData.OptParameters.Contains(param))
 				param = null;
 			
-			((VmSR)(DataContext)).SelectedMeshParameter = param;
+			((VmMenu)(DataContext)).SelectedMeshParameter = param;
 			ShowResultAction(false);
 		}
 
@@ -418,7 +418,7 @@ namespace SwopReview.views
 			if (DataContext == null)
 				return;
 
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 
@@ -431,7 +431,7 @@ namespace SwopReview.views
 			if (DataContext == null)
 				return;
 
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 
@@ -470,7 +470,7 @@ namespace SwopReview.views
 		{
 			if (DataContext == null)
 				return;
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 			List<SwopSet> sets = vm.SwpData.OptSets;
@@ -492,7 +492,7 @@ namespace SwopReview.views
 		{
 			if (DataContext == null)
 				return;
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
 			List<string> laps = vm.SwpData.LapNames;
@@ -521,7 +521,7 @@ namespace SwopReview.views
 
 		public List<string> GetSelectedMeshLaps()
 		{
-			VmSR vm = ((VmSR)(DataContext));
+			VmMenu vm = ((VmMenu)(DataContext));
 			List<string> allLaps = vm.SwpData.LapNames;
 
 			List<string> selectedLaps = new List<string>();
@@ -537,6 +537,44 @@ namespace SwopReview.views
 			}
 
 			return selectedLaps;
+		}
+
+		#endregion
+
+		#region SimResult
+
+		public void InitSimResultMenu(Action<bool> ShowResult)
+		{
+			if (ShowResult != null)
+			{
+				this.ShowResultAction = ShowResult;
+				return;
+			}
+
+			_simResultSetSelector.Children.Clear();
+			CreateSimResultSetPanel();
+		}
+
+		public bool IsSimResultSetSelected(int setNo)
+		{
+			return (((RadioButton)(_simResultSetSelector.Children[setNo])).IsChecked == true);
+		}
+
+		void CreateSimResultSetPanel()
+		{
+			if (DataContext == null)
+				return;
+			VmMenu vm = ((VmMenu)(DataContext));
+			if (!vm.SwpData.HasValidData)
+				return;
+			List<SwopSet> sets = vm.SwpData.OptSets;
+
+			//_meshSetSelector.Children.Add(CreateRadio("Common (all Sets)", "meshSets", true, true));
+			int p = 1;
+			foreach (SwopSet sw in sets)
+			{
+				_simResultSetSelector.Children.Add(CreateRadio($"S{p++}: {sw.Monitoring}", "meshSets", false, true));
+			}
 		}
 
 		#endregion

@@ -42,5 +42,13 @@ namespace SwopReview
 			if (index < ErrValues.Length)
 				ErrValues[index] = errValue;
 		}
+
+		public int GetBestErrorId()
+		{
+			if ((ErrValues == null) || (ErrValues.Length == 0))
+				return -1;
+			else
+				return Array.IndexOf(ErrValues, ErrValues.Min());
+		}
 	}
 }

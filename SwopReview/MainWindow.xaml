@@ -38,6 +38,9 @@
 				<TabItem Header="2D-Mesh" Foreground="White" Padding="20,0">
 					<ContentControl  Content="{Binding ViewVisual}"  DataContext="{Binding ViewVisualDataContext}"/>
 				</TabItem>
+				<TabItem Header="Sim-Results" Foreground="White" Padding="20,0">
+					<ContentControl  Content="{Binding ViewVisual}"  DataContext="{Binding ViewVisualDataContext}"/>
+				</TabItem>
 			</TabControl>
 
 			<!--<Border Grid.Column="2" BorderBrush="Gray" BorderThickness="2">
