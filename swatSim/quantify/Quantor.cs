@@ -15,11 +15,8 @@ namespace swatSim
 	public class Quantor
 	{
 		#region Var
-		public string Title { get; private set; }
-		public int FirstEvalIndex { get; set; }
-		public int LastEvalIndex { get; set; }
-		public bool UseRelationEval { get; set; }
 
+		// input data
 		MonitoringData _md;
 		PopulationData _pd;
 
@@ -28,27 +25,30 @@ namespace swatSim
 		double[] _prognLarvae;
 		int[] _eggMonitoringPeriods;
 		int[] _adultMonitoringPeriods;
-		//int _numMonitoringsEggs;
-		//int _numMonitoringsAdults;
 		bool _hasEggs;
 		bool _hasAdults;
-
 		int _lastQuantIndex;
 
+		// work data
 		EvalMethod _evalMethod;
 		int _evalStep;
 		double _bestEvalValue;
 		double[] _bestScalingFactors;
 		double[] _optimizedFactors;
+		// work data for optimisation
+		int _noChangeCounter;
+		double _lastEvalValue;
 
+		// report
 		bool _doCreateReport;
 		StringBuilder _optReport;
 
-		// interne Variable für Optimierung
-		int _noChangeCounter;
-		double _lastEvalValue;
-		
-		
+		// public variable
+		public string Title { get; private set; }
+		public int FirstEvalIndex { get; set; }
+		public int LastEvalIndex { get; set; }
+		public bool UseRelationEval { get; set; }
+
 		#endregion
 
 		#region Construction
@@ -70,7 +70,6 @@ namespace swatSim
 			}
 		}
 
-		// Achtung:md = workspace.CurrentMonitoringData.GetWithVirtualMonitoring(); Prognosisdata 
 		public static Quantor CreateNew(PopulationData pd, MonitoringData md, EvalMethod evalMethod, bool doCreateReport = false)
 		{
 			MonitoringData monData = (pd.Year == DateTime.Now.Year) ? md.GetWithVirtualMonitoring() : md;
@@ -80,7 +79,6 @@ namespace swatSim
 				_pd = pd,
 				_md = monData,
 				_evalMethod = evalMethod,
-				//_doCreateReport = doCreateReport &&(evalMethod!= EvalMethod.Nothing),
 				_lastQuantIndex = (monData.FirstVirtMonitoring > 0) ? monData.FirstVirtMonitoring - 1 : 366
 			};
 
@@ -108,9 +106,9 @@ namespace swatSim
 			string optMethodText = "";
 			switch (_evalMethod)
 			{
-				case EvalMethod.Nothing: optMethodText = "(normalisierte Generationen)"; break;
-				case EvalMethod.AbsDiff: optMethodText = "(Quantifizierung mit Beträgen)"; break;
-				case EvalMethod.Relation: optMethodText = "";break;// "(Quantifizierung mit Relationen)"; break;
+				case EvalMethod.Nothing: optMethodText = "N"; break;
+				case EvalMethod.AbsDiff: optMethodText = "B"; break;
+				case EvalMethod.Relation: optMethodText = "R"; break;
 			}
 
 			Title = (_hasEggs || _hasAdults) ?
@@ -310,22 +308,6 @@ namespace swatSim
 			}
 		}
 
-
-		//private void CalcMonitoringNums()
-		//{
-		//	_numMonitoringsEggs = 0;
-		//	_numMonitoringsAdults = 0;
-
-		//	for (int i = 0; i < _lastQuantIndex; i++)
-		//	{
-		//		if (!double.IsNaN(_md.Eggs[i]) && (_md.Eggs[i] >= 0))
-		//			_numMonitoringsEggs++;
-		//		if (!double.IsNaN(_md.Adults[i]) && (_md.Adults[i] >= 0))
-		//			_numMonitoringsAdults++;
-		//	}
-
-		//}
-
 		double[] GetOptimizedScalingFactors(double[] oldScalingFactors)
 		{
 			double[] workingFactors = IsolateNeccessaryFactors(oldScalingFactors); // Faktoren ab 1. Gen
@@ -341,22 +323,19 @@ namespace swatSim
 			_evalStep = 0;
 			bool earlyTermination = false;
 
-			//CalcMonitoringNums();
-
-			if (_doCreateReport)
-				ReportOptimizationHeader(workingFactors.Length);
+			ReportOptimizationHeader(workingFactors.Length); 
 
 			DevStage stageOptimized = (_hasEggs) ? DevStage.NewEgg : DevStage.ActiveFly;
 
 			_bestScalingFactors = new double[workingFactors.Length];
 
-			GetEvalValue(stageOptimized, workingFactors, _lastQuantIndex); // ??
-			var watch = System.Diagnostics.Stopwatch.StartNew();
+			GetEvalValue(stageOptimized, workingFactors, _lastQuantIndex); // wegen Report
 
 			_noChangeCounter = 0;
 			_bestEvalValue = double.NaN;
 			_optimizedFactors = new double[oldScalingFactors.Length];
 
+			var watch = System.Diagnostics.Stopwatch.StartNew();
 			try
 			{
 				var solution = NelderMeadSolver.Solve(
@@ -370,7 +349,7 @@ namespace swatSim
 			}
 			catch (Exception)
 			{
-				_optimizedFactors[0] = 1.0; // Skalierung für Überwinterungsgeneration wieder einfügen ???
+				_optimizedFactors[0] = 1.0; // Skalierung für Überwinterungsgeneration wieder einfügen 
 				for (int g = 0; g < _bestScalingFactors.Length; g++)
 				{
 					_optimizedFactors[g + 1] = _bestScalingFactors[g];
@@ -378,11 +357,10 @@ namespace swatSim
 				earlyTermination = true;
 
 			}
-
 			watch.Stop();
 			var calculationTime = watch.ElapsedMilliseconds;
-			if (_doCreateReport)
-				ReportOptimizationResult(_bestEvalValue, _optimizedFactors, workingFactors.Length, calculationTime, earlyTermination);
+
+			ReportOptimizationResult(_bestEvalValue, _optimizedFactors, workingFactors.Length, calculationTime, earlyTermination);
 
 			return _optimizedFactors;
 		}
@@ -410,15 +388,11 @@ namespace swatSim
 		{
 			int si = _pd.GenerationStartIndex(DevStage.NewEgg, generation);
 			return (si > _lastQuantIndex) ? 20.0 : 100.0;
-			//return 2.0;
-
-			//todo: Achtung Skalierungsbegrenzung nur für optimierungsläufe
 		}
 
 		void CalculatePrognosis(double[] scalingFactors)
 		{
 			bool hasVirtMonitorings = _pd.Year == DateTime.Now.Year;
-
 
 			if (HasEggs)
 			{
@@ -435,13 +409,8 @@ namespace swatSim
 			_prognLarvae = _pd.GetNormalizedRow(DevStage.Larva, -1, scalingFactors, lastLarvIndex);
 		}
 
-
 		double GetEvalValue(DevStage stage, double[] generationScales, int lastIndex)
 		{
-			//int maxCounter = generationScales.Length;
-
-			// normFactors enthalten Multiplikatoren ab 1. Generation
-			// Prognoseberechnung braucht aber auch Multiplikator für Überwinterungsgeneration
 			double[] popFactors = new double[generationScales.Length + 1];
 			popFactors[0] = 1.0;
 			for (int i = 0; i < generationScales.Length; i++)
@@ -462,25 +431,19 @@ namespace swatSim
 			}
 
 			double result = Evaluator.GetResidual(progn, monitoring, _evalMethod, 0, lastIndex);
-
-			if (_doCreateReport)
-				ReportOptimizationFactors(result, generationScales);
-
+			ReportOptimizationFactors(result, generationScales);
 			_evalStep++;
 
 			if (CheckForTermination(result, generationScales)) // weil der Nelder-Mead-Optimierer sonst endlos lange wg zu kleiner Grenzdifferenz arbeitet
 				throw new Exception("OptimizationBreak");
-			
-
+	
 			return result;
 		}
-
 
 		void TransmitBestScales(double evalResult, double[] scales)
 		{
 			if (double.IsNaN(_bestEvalValue))
 			{
-				//_bestScalingFactors = new double[scales.Length];
 				_bestEvalValue = evalResult;
 				_lastEvalValue = evalResult;
 				_noChangeCounter = 0;
@@ -541,6 +504,9 @@ namespace swatSim
 
 		void ReportOptimizationFactors(double result, double[] normFactors)
 		{
+			if (!_doCreateReport)
+				return;
+
 			if (_evalStep == 0)
 			{
 				_optReport.Append($"start:{result,10:f3}");
@@ -557,13 +523,10 @@ namespace swatSim
 
 		}
 		
-		// muss in Prognosisdata
 		private void ReportOptimizationHeader(int numFactors) 
 		{
-			//string methodTxt = (_evalMethod == EvalMethod.AbsDiff) ? "Fehlerbeträgen" : "Fehlerrelationen";
-			//QuantReportName = $"{_workspace.Name} {_workspace.CurrentModelName} Report Quantifizierung - Optimierung mit {methodTxt}";
-
-			//_optReport.AppendLine(QuantReportName);
+			if (!_doCreateReport)
+				return;
 			_optReport.Append(" Step      Error");
 			for (int i = 0; i < numFactors; i++)
 				_optReport.Append($"     Gen {i + 1}");
@@ -572,6 +535,9 @@ namespace swatSim
 
 		private void ReportOptimizationResult(double optResult, double[] bestFactors, int numFactors, long duration, bool byTermination)
 		{
+			if (!_doCreateReport)
+				return;
+
 			_optReport.Append($" best:{optResult,10:f3}");
 
 			for (int i = 0; i < numFactors; i++)

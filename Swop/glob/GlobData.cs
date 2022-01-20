@@ -462,10 +462,10 @@ namespace Swop.glob
 		public void WritePrologLogText()
 		{
 			StringBuilder pt = new StringBuilder();
-			pt.AppendLine("[Mode]");
+			pt.AppendLine("[SwopMode]");
 			pt.AppendLine($"  {WorkMode.ToString()}");
 
-			pt.AppendLine("[Description]");
+			pt.AppendLine("[Descr]");
 			pt.AppendLine($"  {_description}");
 
 			pt.AppendLine("[Model]");

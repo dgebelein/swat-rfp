@@ -32,16 +32,21 @@ namespace swatSim
 
 		static private double EvalFkt(double prognVal, double monVal, EvalMethod evalMethod)
 		{
-			if (evalMethod == EvalMethod.AbsDiff)
-			{
-				return Math.Abs(prognVal - monVal);
-			}
-			else
-			{
-				prognVal += 1.0;
-				monVal += 1.0;
-				return (prognVal > monVal) ? (prognVal / monVal) : (monVal / prognVal);
-			}
+
+			return (Math.Abs(prognVal - monVal));
+
+			//return Math.Sqrt(Math.Abs(prognVal - monVal));
+
+			//if (evalMethod == EvalMethod.AbsDiff)
+			//{
+			//	return Math.Sqrt(Math.Abs(prognVal - monVal));
+			//}
+			//else
+			//{
+			//	prognVal += 1.0;
+			//	monVal += 1.0;
+			//	return (prognVal > monVal) ? (prognVal / monVal) : (monVal / prognVal);
+			//}
 		}
 
 	}

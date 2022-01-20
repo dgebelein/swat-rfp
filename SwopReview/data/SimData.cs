@@ -216,6 +216,7 @@ namespace SwopReview
 			AddStartParamRow(pd, startTrend);
 			AddCommonBestParamRow(pd, GetModelTrend(_commonBestParams));
 			AddSetBestParamRow(pd, GetModelTrend(_setBestParams));
+			AddWeatherRows(pd);
 
 		}
 
@@ -293,6 +294,47 @@ namespace SwopReview
 				Color = Brushes.Coral,
 				Axis = TtpEnAxis.Left,
 				LineType = TtpEnLineType.AreaDiff
+			});
+		}
+
+		private void AddWeatherRows(PresentationsData pd)
+		{
+			//WeatherData wd = Weather;
+
+			pd.AddRow(new PresentationRow
+			{
+				Legend = "Lufttemperatur [°C]",
+				LegendIndex = 4,
+				IsVisible = false,
+				Thicknes = 1.0,
+				Color = Brushes.DeepPink,
+				Values = Weather.GetSimAirTemp(),
+				Axis = TtpEnAxis.Right,
+				LineType = TtpEnLineType.Line
+			});
+
+			pd.AddRow(new PresentationRow
+			{
+				Legend = "Bodentemperatur [°C]",
+				LegendIndex = 5,
+				IsVisible = false,
+				Thicknes = 1.0,
+				Color = Brushes.SandyBrown,
+				Values = Weather.GetSimSoilTemp(),
+				Axis = TtpEnAxis.Right,
+				LineType = TtpEnLineType.Line
+			});
+
+			pd.AddRow(new PresentationRow
+			{
+				Legend = "Niederschlag [mm]",
+				LegendIndex = 6,
+				IsVisible = false,
+				Thicknes = 1.0,
+				Color = Brushes.Turquoise,
+				Values = Weather.GetPrec(),
+				Axis = TtpEnAxis.Right,
+				LineType = TtpEnLineType.Chart
 			});
 		}
 		#endregion

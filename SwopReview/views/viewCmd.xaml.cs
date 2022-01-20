@@ -569,12 +569,12 @@ namespace SwopReview.views
 				return;
 			List<SwopSet> sets = vm.SwpData.OptSets;
 
-			//_meshSetSelector.Children.Add(CreateRadio("Common (all Sets)", "meshSets", true, true));
 			int p = 1;
 			foreach (SwopSet sw in sets)
 			{
 				_simResultSetSelector.Children.Add(CreateRadio($"S{p++}: {sw.Monitoring}", "meshSets", false, true));
 			}
+			((RadioButton)(_simResultSetSelector.Children[0])).IsChecked = true;
 		}
 
 		#endregion

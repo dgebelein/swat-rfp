@@ -209,7 +209,7 @@ namespace SwopReview
 
 		void ReadDescription()
 		{
-			int sl = GetLineNo("[Description]");
+			int sl = GetLineNo("[Descr]");
 			if (sl < 0)
 			{
 				Description = "";
@@ -227,7 +227,7 @@ namespace SwopReview
 
 		void ReadWorkMode()
 		{
-			int sl = GetLineNo("[Mode]");
+			int sl = GetLineNo("[swopmode]");
 			if (sl < 0) //  default bei fehlender Angabe
 			{
 				WorkMode = SwopWorkMode.LEAST;
