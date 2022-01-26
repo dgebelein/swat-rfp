@@ -28,7 +28,10 @@ namespace SwopReview
 
 			_gtr.WriteElement("h2", "Instructions");
 			AddSetTable();
-			AddWorkParameters();
+			if (IsCombiMode)
+				AddCombiParameters();
+			else
+				AddWorkParameters();
 
 			_gtr.WriteElement("h2", "Statistics");
 			if (_data.RunIsCancelled)
@@ -92,49 +95,33 @@ namespace SwopReview
 
 		}
 
-		void AddWorkParameters()
+		void AddCombiParameters()
 		{
 			char[] delim = new char[] { ' ', '\t' };
-			if (IsCombiMode)
 				_gtr.WriteElement("h3", "Combine Parameters");
-			else
-				_gtr.WriteElement("h3", "Optimize Parameters");
 
 
-			//Dictionary<string, SimParamElem> sd = _data.DefaultParameters.ParamDict;
-			List<string> headers = new List<string> { "Param-No", "Param-Key","Description" };
-			List<int> colWidths = new List<int> { 5, 20,0 };
+			List<string> headers = new List<string> { "Param-No", "Param-Key", "Description" };
+			List<int> colWidths = new List<int> { 5, 20, 0 };
 
 			List<List<string>> tableRows = new List<List<string>>();
 			int index = 1;
-			string desc="";
+			string desc = "";
 			string param = "";
-			foreach (string p in _data.OptParameters)
+			foreach (string p in _data.CombiParameters)
 			{
-				if (IsCombiMode)
+				string[] w = p.Split(delim, StringSplitOptions.RemoveEmptyEntries);
+				if (w.Count() > 3)
 				{
-					string[] w = p.Split(delim, StringSplitOptions.RemoveEmptyEntries);
-					if (w.Count() > 3)
-					{ 
-						param = w[0];
-						string d = _data.DefaultParameters.ParamDict.ContainsKey(param) ?
-										_data.DefaultParameters.ParamDict[param].Descr :
-									"";
-						desc = $"{d}     Min: {w[1]}   Max: {w[2]}  Steps: {w[3]}";
-						
-					}
+					param = w[0];
+					string d = _data.DefaultParameters.ParamDict.ContainsKey(param) ?
+									_data.DefaultParameters.ParamDict[param].Descr :
+								"";
+					desc = $"{d}       Min: {w[1]}    Max: {w[2]}   Steps: {w[3]}";
 
 				}
-				else // opti
-				{
-					param = p;
-					desc = _data.DefaultParameters.ParamDict.ContainsKey(p) ?
-						_data.DefaultParameters.ParamDict[p].Descr :
-						"";
-				}
 
-
-				List <string> row = new List<string>
+				List<string> row = new List<string>
 				{
 					index++.ToString(),
 					param,
@@ -145,6 +132,115 @@ namespace SwopReview
 			_gtr.WriteTable(headers, tableRows, colWidths);
 
 		}
+
+		void AddWorkParameters()
+		{
+			char[] delim = new char[] { ' ', '\t' };
+			if (IsCombiMode)
+				_gtr.WriteElement("h3", "Combine Parameters");
+			else
+				_gtr.WriteElement("h3", "Optimize Parameters");
+
+
+			List<string> headers = new List<string> { "Param-No", "Param-Key", "Description" };
+			List<int> colWidths = new List<int> { 5, 20, 0 };
+
+			List<List<string>> tableRows = new List<List<string>>();
+			int index = 1;
+			string desc = "";
+			string param = "";
+			foreach (string p in _data.OptParameters)
+			{
+				if (IsCombiMode)
+				{
+					string[] w = p.Split(delim, StringSplitOptions.RemoveEmptyEntries);
+					if (w.Count() > 3)
+					{
+						param = w[0];
+						string d = _data.DefaultParameters.ParamDict.ContainsKey(param) ?
+										_data.DefaultParameters.ParamDict[param].Descr :
+									"";
+						desc = $"{d}       Min: {w[1]}    Max: {w[2]}   Steps: {w[3]}";
+
+					}
+
+				}
+				else
+				{
+					param = p;
+					desc = _data.DefaultParameters.ParamDict.ContainsKey(p) ?
+						_data.DefaultParameters.ParamDict[p].Descr :
+						"";
+				}
+
+
+
+
+				List<string> row = new List<string>
+				{
+					index++.ToString(),
+					param,
+					desc
+				};
+				tableRows.Add(row);
+			}
+			_gtr.WriteTable(headers, tableRows, colWidths);
+		}
+
+			//void AddWorkParameters()
+			//{
+			//	char[] delim = new char[] { ' ', '\t' };
+			//	if (IsCombiMode)
+			//		_gtr.WriteElement("h3", "Combine Parameters");
+			//	else
+			//		_gtr.WriteElement("h3", "Optimize Parameters");
+
+
+			//	List<string> headers = new List<string> { "Param-No", "Param-Key","Description" };
+			//	List<int> colWidths = new List<int> { 5, 20,0 };
+
+			//	List<List<string>> tableRows = new List<List<string>>();
+			//	int index = 1;
+			//	string desc="";
+			//	string param = "";
+			//	foreach (string p in _data.OptParameters)
+			//	{
+			//		if (IsCombiMode)
+			//		{
+			//			string[] w = p.Split(delim, StringSplitOptions.RemoveEmptyEntries);
+			//			if (w.Count() > 3)
+			//			{ 
+			//				param = w[0];
+			//				string d = _data.DefaultParameters.ParamDict.ContainsKey(param) ?
+			//								_data.DefaultParameters.ParamDict[param].Descr :
+			//							"";
+			//				desc = $"{d}       Min: {w[1]}    Max: {w[2]}   Steps: {w[3]}";
+
+			//			}
+
+			//		}
+			//		else 
+			//		{
+			//			param = p;
+			//			desc = _data.DefaultParameters.ParamDict.ContainsKey(p) ?
+			//				_data.DefaultParameters.ParamDict[p].Descr :
+			//				"";
+			//		}
+
+
+
+
+			//		List <string> row = new List<string>
+			//		{
+			//			index++.ToString(),
+			//			param,
+			//			desc
+			//		};
+			//		tableRows.Add(row);
+			//	}
+			//	_gtr.WriteTable(headers, tableRows, colWidths);
+
+		
 		#endregion
 
 		#region statistics

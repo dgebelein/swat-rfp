@@ -484,7 +484,6 @@ namespace Swop.glob
 			var list = _modelParameters.ParamDict.Keys.ToList();
 			foreach (var key in list)
 			{
-				//string printKey = key;//.Substring(key.IndexOf('.') + 1);
 				if (_modelParameters.ParamDict[key].ObjType == typeof(double))
 				{
 					pt.AppendLine($"  {key} = {((double)(_modelParameters.ParamDict[key].Obj)).ToString("0.###", CultureInfo.InvariantCulture)}");

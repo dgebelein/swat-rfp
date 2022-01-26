@@ -26,9 +26,7 @@ namespace swat.vm
 		PresentationsData _graphData;
 		EvalMethod _evalMethod;
 
-		//bool _showWeather = false;
 
-		//RelayCommand _toggleShowWeatherCommand;
 
 		RelayCommand _printCommand;
 		RelayCommand _notesCommand;
@@ -37,7 +35,6 @@ namespace swat.vm
 		RelayCommand _optimizeAbsoluteCommand;
 		RelayCommand _normalizeCommand;
 		RelayCommand _saveOptReportCommand;
-		//private object _prognosis;
 
 
 		#endregion
@@ -49,7 +46,7 @@ namespace swat.vm
 			_parentPanel = parentPanel;
 			Workspace.CalculatePopulation();
 
-			_evalMethod = EvalMethod.Relation;
+			_evalMethod = EvalMethod.AbsDiff;
 			_quantor = Quantor.CreateNew(Workspace.CurrentPopulationData,Workspace.CurrentMonitoringData, _evalMethod, true);
 
 			_graphData = GeneratePresentationsData();
@@ -58,7 +55,6 @@ namespace swat.vm
 			_printCommand = new RelayCommand(param => this.Print());
 			_notesCommand = new RelayCommand(param => this.ShowNotes());
 			_saveAsCsvCommand = new RelayCommand(param => this.SaveAsCsv());
-			//_toggleShowWeatherCommand = new RelayCommand(param => this.ToggleShowWeather());
 			_optimizeRelativeCommand = new RelayCommand(param => this.OptimizeRelative(), param => this.CanOptimizeRelative);
 			_optimizeAbsoluteCommand = new RelayCommand(param => this.OptimizeAbsolute(), param => this.CanOptimizeAbsolute);
 			_normalizeCommand = new RelayCommand(param => this.Normalize(), param => this.CanNormalize);

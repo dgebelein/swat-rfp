@@ -43,6 +43,8 @@ namespace swatSim
 			// Grundlegendes
 
 			p.InitItem("da.StartPop", 1000, typeof(int), 500.0, 10000.0, "Startpopulation (Anzahl Individuen)", 1);
+			p.InitItem("da.MaxGen", 5, typeof(int), 4, 7, "maximale Generationenzahl", 3);
+
 			p.InitItem("da.StartAge",0.20, typeof(double), 0.0, 0.9, "Biol. Alter der Startpopulation", 1);
 
 			p.InitItem("da.SimStart", 59, typeof(int), 1.0, 180.0, "Simulationsstart (Tag des Jahres)", 1); // (1. März)
@@ -148,9 +150,9 @@ namespace swatSim
 			return (double)_workingParams.GetValue("da.StartAge");
 		}
 
-		public override int GetMaxGenerations()
+		public override void SetMaxGenerations()
 		{
-			return 10;
+			MaxGenerations= (int)_workingParams.GetValue("da.MaxGen");
 		}
 
 
@@ -208,46 +210,47 @@ namespace swatSim
 			_transitions[4] = (Double)_workingParams.GetValue("da.TransWiPupa");
 		}
 
-		protected override void InitTableTransition()
-		{
-			double t = 0.0;
-			for (int stage = 0; stage <= 4; stage++)
-			{
-				switch (stage)
-				{
+		//protected override void InitTableTransition()
+		//{
 
-					case 0:
-						_maxDevRates[0] = (Double)_workingParams.GetValue("da.DevEggKmax");
-						t = (Double)_workingParams.GetValue("da.TransEgg");
-						break;
-					case 1:
-						_maxDevRates[1] = (Double)_workingParams.GetValue("da.DevLarvaKmax");
-						t = (Double)_workingParams.GetValue("da.TransLarva");
-						break;
+		//	double t = 0.0;
+		//	for (int stage = 0; stage <= 4; stage++)
+		//	{
+		//		switch (stage)
+		//		{
 
-					case 2:
-						_maxDevRates[2] = (Double)_workingParams.GetValue("da.DevPupaKmax");
-						t = (Double)_workingParams.GetValue("da.TransPupa");
-						break;
-					case 3:
-						_maxDevRates[3] = (Double)_workingParams.GetValue("da.DevFlyKmax");
-						t = (Double)_workingParams.GetValue("da.TransFly");
-						break;
-					case 4:
-						_maxDevRates[4] = (Double)_workingParams.GetValue("da.DevWiPupaKmax");
-						t = (Double)_workingParams.GetValue("da.TransWiPupa");
-						break;
+		//			case 0:
+		//				_maxDevRates[0] = (Double)_workingParams.GetValue("da.DevEggKmax");
+		//				t = (Double)_workingParams.GetValue("da.TransEgg");
+		//				break;
+		//			case 1:
+		//				_maxDevRates[1] = (Double)_workingParams.GetValue("da.DevLarvaKmax");
+		//				t = (Double)_workingParams.GetValue("da.TransLarva");
+		//				break;
 
-				}
-				Double BioAge = 0.0;
-				for (int i = 0; i <= 1400; i++)
-				{
-					_tableTransition[stage, i] = SimFunctions.Sigmoid(BioAge, t);
-					BioAge += 0.001;
-				}
+		//			case 2:
+		//				_maxDevRates[2] = (Double)_workingParams.GetValue("da.DevPupaKmax");
+		//				t = (Double)_workingParams.GetValue("da.TransPupa");
+		//				break;
+		//			case 3:
+		//				_maxDevRates[3] = (Double)_workingParams.GetValue("da.DevFlyKmax");
+		//				t = (Double)_workingParams.GetValue("da.TransFly");
+		//				break;
+		//			case 4:
+		//				_maxDevRates[4] = (Double)_workingParams.GetValue("da.DevWiPupaKmax");
+		//				t = (Double)_workingParams.GetValue("da.TransWiPupa");
+		//				break;
 
-			}
-		}
+		//		}
+		//		Double BioAge = 0.0;
+		//		for (int i = 0; i <= 1400; i++)
+		//		{
+		//			_tableTransition[stage, i] = SimFunctions.Sigmoid(BioAge, t);
+		//			BioAge += 0.001;
+		//		}
+
+		//	}
+		//}
 
 		protected override void InitTableDev()
 		{

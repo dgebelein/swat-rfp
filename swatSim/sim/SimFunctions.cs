@@ -32,7 +32,7 @@ namespace swatSim
 		}
 
 
-		public static double Sigmoid(double BioAge, double beta) //verwendung prüfen
+		public static double Sigmoid(double BioAge, double beta) //verwendung?
 		{
 			return 1 / (1 + Math.Exp(-beta * (BioAge - 1)));	// Probit
 			//return (1 - Math.Exp(-Math.Pow(BioAge, beta))); //Weibul
@@ -41,10 +41,9 @@ namespace swatSim
 
 		public static double FertilityFkt(double bioAge,double startFert, double startSlope, double endFert, double endSlope, double calibFactor)
 		{
-		//	return ((1 - Math.Exp(-Math.Pow(bioAge / startFert, startSlope))) *
-		//				Math.Exp(-Math.Pow(bioAge / (1.0 - endFert), endSlope)) * calibFactor);
+
 			return ((1 - Math.Exp(-Math.Pow(bioAge / startFert, startSlope))) *
-			Math.Exp(-Math.Pow(bioAge / endFert, endSlope)) * calibFactor);
+					Math.Exp(-Math.Pow(bioAge / endFert, endSlope)) * calibFactor);
 		}
 
 		public static double AestivTemp(double random, double aestThreshold, double aestVar)
@@ -57,12 +56,11 @@ namespace swatSim
 			if (r == 1.0)
 				return 100.0;
 
-			//return aestThreshold + Math.Log(r / (1 - r)) * aestVar;
 			return aestThreshold + Logit(r) * aestVar;
 
 		}
 
-		public static double Logit(double p) // verwendung prüfen - 
+		public static double Logit(double p) 
 		{
 			try { 
 				return Math.Log(p / (1 - p));
@@ -73,10 +71,10 @@ namespace swatSim
 			}
 		}
 
-		public static double InvLogit(double x, double p)
-		{
-			return (Math.Exp((x - 1.0) * p)) / (1 + (Math.Exp((x - 1.0) * p)));
-		}
+		//public static double InvLogit(double x, double p)
+		//{
+		//	return (Math.Exp((x - 1.0) * p)) / (1 + (Math.Exp((x - 1.0) * p)));
+		//}
 		//Aufgabe: Logit Histogramm - entspricht Init der Individuen der Kurve in der Grafik?
 
 	}

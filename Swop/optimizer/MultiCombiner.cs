@@ -413,10 +413,10 @@ namespace Swop.optimizer
 					ModelBase model = CreateCombinationModel(simParams, i);
 					model.RunSimulation();
 
-					Quantor quantor = Quantor.CreateNew(model.Population, _globData.Monitorings[i], EvalMethod.Relation, false);
+					Quantor quantor = Quantor.CreateNew(model.Population, _globData.Monitorings[i], EvalMethod.AbsDiff, false);
 					DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 
-					singleEvals[i + 1] = quantor.GetRemainingError(stage, EvalMethod.Relation, FirstEvalIndex, LastEvalIndex); // optimieren:immer relationen!
+					singleEvals[i + 1] = quantor.GetRemainingError(stage, EvalMethod.Relation, _globData.FirstIndices[i], _globData.LastIndices[i]); // optimieren:immer relationen!
 				}
 				catch
 				{
@@ -424,7 +424,7 @@ namespace Swop.optimizer
 				};
 			}
 			);
-
+			
 			singleEvals[0] = 0.0;
 			double totalWeightings = 0.0;
 			for (int i = 1; i <= _globData.NumSets; i++)

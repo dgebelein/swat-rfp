@@ -64,7 +64,7 @@ namespace swat.vm
 			_acceptCommand = new RelayCommand(param => this.AcceptOptimization(), param => this.CanAcceptOptimization);
 			_reportCommand = new RelayCommand(param => this.ReportOptimization(), param => this.CanReportOptimization);
 			_notesCommand = new RelayCommand(param => this.ShowNotes());
-			UseRelationEval = true;
+			UseRelationEval = false;
 
 			ViewVisual = new ViewOptimizationControl();
 		}

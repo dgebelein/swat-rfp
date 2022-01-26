@@ -24,7 +24,7 @@ namespace swatSim
 		protected double[] _transitions;
 		protected double[] _maxDevRates;
 		protected int[] _maxEggPeriods; // für Monitoring - maximal zu berücksichtigender Zeitabstand zw. zwei Terminen
-
+		int _maxGen;
 		protected PopulationData _population;
 		protected WeatherData _weather;
 		protected string _name;
@@ -47,6 +47,14 @@ namespace swatSim
 		protected SimParamData _workingParams;
 		public bool ParaSetOK { get; set; }
 		public bool CanSimulate { get; protected set; }
+		public int MaxGenerations 
+		{
+			get { return _maxGen; }
+			protected set
+			{
+				_maxGen = value;
+			}
+		}
 
 		protected Random _random;
 
@@ -201,7 +209,7 @@ namespace swatSim
 			if (CanSimulate)
 			{
 				InitTransitions();
-				InitTableTransition();
+				//InitTableTransition();
 				InitTableDev();
 				InitTableFert();
 				InitTableFlightAct();
@@ -216,9 +224,9 @@ namespace swatSim
 		public abstract SimParamData GetDefaultParams(); // Initialisierung mit Default-Werten 
 		public abstract string GetParamPrefix();
 		protected abstract int GetStartPopulation();
-		public abstract int GetMaxGenerations();
+		public abstract void SetMaxGenerations();
 		public abstract bool PrepareWeatherData();
-		protected abstract void InitTableTransition();
+		//protected abstract void InitTableTransition();
 		protected abstract void InitTableDev();
 		protected abstract void InitTableFert();
 		protected abstract void InitTableFlightAct();
@@ -236,8 +244,10 @@ namespace swatSim
 		#region run Simulation
 		private void InitPopulationData()
 		{
-			if(_population== null)
-				_population = new PopulationData(GetMaxGenerations());
+			SetMaxGenerations();
+
+			if (_population== null)
+				_population = new PopulationData(MaxGenerations);
 
 			_population.Initialize();
 			_population.SetEggPeriods(_maxEggPeriods);

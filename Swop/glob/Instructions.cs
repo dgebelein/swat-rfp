@@ -47,36 +47,6 @@ namespace Swop.glob
 			get { return WeatherFilenames.Count;}
 		}
 
-		//private void ReadLoc(string line)
-		//{
-		//	string[] elems = line.Trim().Split(',');
-
-		//	if (elems.Length < 2)
-		//	{
-		//		ErrMsg = "Angabe fehlt";
-		//		return;
-		//	}
-
-		//	WeatherFilenames.Add(elems[0].Trim());
-		//	MonitoringFilenames.Add(elems[1].Trim());
-
-		//	if ((elems.Length > 2)&& (!string.IsNullOrEmpty(elems[2])))
-		//		LocParamFilenames.Add(elems[2].Trim());
-		//	else
-		//		LocParamFilenames.Add("");
-
-		//	if (elems.Length > 3)
-		//	{
-		//		Tuple<int, int> indices = GetLocIndices(elems[3].Trim());
-		//		FirstIndices.Add(indices.Item1);
-		//		LastIndices.Add(indices.Item2);
-		//	}
-		//	else
-		//	{
-		//		FirstIndices.Add(-1);
-		//		LastIndices.Add(-1);
-		//	}
-		//}
 
 		private string IsolateContent(string sourceLine,string key)
 		{
@@ -99,7 +69,6 @@ namespace Swop.glob
 
 		private void ReadSet(string line)
 		{
-
 			string weatherfile = IsolateContent(line, "#w:");
 			if (weatherfile== null)
 			{
@@ -166,8 +135,6 @@ namespace Swop.glob
 			{
 				EvalWeightings.Add(1.0);
 			}
-
-
 		}
 
 		private void ReadDescription(string line)
@@ -179,7 +146,7 @@ namespace Swop.glob
 		{
 			if (string.IsNullOrEmpty(line))
 			{
-				ErrMsg = "Modell- Angabe fehlt";
+				ErrMsg = "Modell-Angabe fehlt";
 				return;
 			}
 			foreach(FlyType m in Enum.GetValues(typeof(FlyType)))
@@ -197,7 +164,7 @@ namespace Swop.glob
 		{
 			if (string.IsNullOrEmpty(line))
 			{
-				ErrMsg = "SwopMode- Angabe fehlt";
+				ErrMsg = "SwopMode-Angabe fehlt";
 				return;
 			}
 			foreach (SwopWorkMode m in Enum.GetValues(typeof(SwopWorkMode)))
@@ -285,7 +252,7 @@ namespace Swop.glob
 					string line;
 					while ((line = sr.ReadLine()) != null)
 					{
-						if (line.Trim().StartsWith(";"))// Kommentar
+						if (line.Trim().StartsWith("--"))// Kommentar
 							continue;
 
 						ErrLineNo++;
@@ -297,7 +264,6 @@ namespace Swop.glob
 								case "swopmode": ReadSwopMode(elems[1]); break;
 								case "descr": ReadDescription(elems[1]); break;
 								case "model": ReadModelType(elems[1]); break;
-								//case "loc": ReadLoc(elems[1]); break; //( kann weg)
 								case "set": ReadSet(elems[1]); break;
 								case "param": ReadParam(elems[1]); break;
 								case "date": ReadDate(elems[1]); break;

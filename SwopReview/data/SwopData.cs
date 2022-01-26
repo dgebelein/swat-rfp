@@ -31,7 +31,9 @@ namespace SwopReview
 		public FlyType ModelType { get; private set; }
 		public SimParamData DefaultParameters { get; private set; }
 		
-		public List<string> OptParameters { get; private set; } 
+		public List<string> OptParameters { get; private set; }
+		public List<string> CombiParameters { get; private set; }
+
 		public List<SwopSet> OptSets { get; private set; }
 
 		public double[,] OptParamValues { get; private set; }  // step,paranum
@@ -102,6 +104,11 @@ namespace SwopReview
 			get { return (_hasData && !HasErrors); }
 		}
 
+		public bool HasMeshData
+		{
+			get { return (HasValidData && (OptParameters.Count > 1)); }
+		}
+
 		public double GetOptParamValue(int step, int paraNo)
 		{
 			return OptParamValues[step, paraNo];
@@ -168,6 +175,7 @@ namespace SwopReview
 
 			OptSets = new List<SwopSet>();
 			OptParameters = new List<string>();
+			CombiParameters = new List<string>();
 
 			_swopLogName = Filename;
 
@@ -191,6 +199,7 @@ namespace SwopReview
 			if (!HasErrors) ReadDefaultParameters();
 			if (!HasErrors) ReadSets();
 			if (!HasErrors) ReadOptParameters();
+			//if (!HasErrors && (WorkMode== SwopWorkMode.COMBI)) ReadCombiParameters();
 			if (!HasErrors) CreateParamCombinations();
 			if (!HasErrors) ReadRun();
 			if (!HasErrors) ReadStartEvals();
@@ -394,9 +403,33 @@ namespace SwopReview
 				string s = _logLines[n];
 				if (s.StartsWith("["))
 					break;
-				OptParameters.Add(GetTokenContentString(s));
+
+				string c = GetTokenContentString(s);				
+				CombiParameters.Add(c);
+				string[] p = c.Split(' ');
+				OptParameters.Add(p[0]);
+
 			}
 		}
+
+		void ReadCombiParameters()
+		{
+			int sl = GetLineNo("[Opt-Parameters]");
+			if (sl < 0)
+			{
+				ErrMessage += $"\r\nSektion [Opt-Parameters] nicht gefunden";
+				return;
+			}
+			for (int n = sl + 1; n < _logLines.Length; n++)
+			{
+				string s = _logLines[n];
+				if (s.StartsWith("["))
+					break;
+				CombiParameters.Add(GetTokenContentString(s));
+
+			}
+		}
+
 
 		void CreateParamCombinations()
 		{
@@ -608,7 +641,7 @@ namespace SwopReview
 					w += s.Weight;
 				}
 			}
-			StartCommonError *= sum / w;  // 'Total'-Angaben sind im Protokoll immer relativ -deshalb umrechnung nötig
+			StartCommonError *= sum / w;  // 'Total'-Angaben sind im Protokoll immer relativ - deshalb umrechnung nötig
 		}
 
 		void ReadBestEvals()

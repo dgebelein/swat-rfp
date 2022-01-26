@@ -11,7 +11,8 @@ using TTP.Engine3;
 namespace swatSim
 {
 
-
+	// Quantor soll für die Skalierung der Generationwn mit Eval-Method  AbsDiff arbeiten (in CreateNew)
+	//						für Bewertung für Parameteroptimierung sollte dagegen  Relation besser sein (in GetRemainingError)
 	public class Quantor
 	{
 		#region Var
@@ -19,6 +20,7 @@ namespace swatSim
 		// input data
 		MonitoringData _md;
 		PopulationData _pd;
+		EvalMethod _evalMethod;
 
 		double[] _prognAdults;
 		double[] _prognEggs;
@@ -30,11 +32,11 @@ namespace swatSim
 		int _lastQuantIndex;
 
 		// work data
-		EvalMethod _evalMethod;
 		int _evalStep;
 		double _bestEvalValue;
 		double[] _bestScalingFactors;
 		double[] _optimizedFactors;
+
 		// work data for optimisation
 		int _noChangeCounter;
 		double _lastEvalValue;
@@ -431,6 +433,7 @@ namespace swatSim
 			}
 
 			double result = Evaluator.GetResidual(progn, monitoring, _evalMethod, 0, lastIndex);
+
 			ReportOptimizationFactors(result, generationScales);
 			_evalStep++;
 

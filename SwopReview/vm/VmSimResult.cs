@@ -19,7 +19,7 @@ namespace SwopReview
 	{
 		#region variable
 		SimData _simData;
-		//PresentationsData _graphData;
+		PresentationsData _graphData;
 		RelayCommand _printCommand;
 
 		#endregion
@@ -28,10 +28,12 @@ namespace SwopReview
 
 		public VmSimResult(SwopData sd, int setId) : base(sd, null)
 		{
-			//_printCommand = new RelayCommand(param => this.Print());
+			_printCommand = new RelayCommand(param => this.Print());
+
 			_simData = new SimData(_swopData, setId);
-			PresentationsData graphData = GeneratePresentationsData(setId);
-			ViewVisual = (graphData != null ) ? PresentationCreator.Create(PresentationType.Optimization, graphData, false) : null;
+			_graphData = GeneratePresentationsData(setId);
+
+			ViewVisual = (_graphData != null ) ? PresentationCreator.Create(PresentationType.Optimization, _graphData, false) : null;
 		}
 
 
@@ -40,63 +42,35 @@ namespace SwopReview
 		#region  generierung daten 
 		private PresentationsData GeneratePresentationsData(int setId)
 		{
-			PresentationsData presData = new PresentationsData
+			 _graphData = new PresentationsData
 			{
 				Title = _swopData.SwopLogName + "  "+ _swopData.OptSets[setId].Monitoring,
 				ZoomFactor = 0,
 				ZoomFactorRight = 0,
 			};
 
-			if (!_simData.AddSimTrends(presData))
+			if (!_simData.AddSimTrends(_graphData))
 				return null;
 
-			presData.TimeRange = new TtpTimeRange(new TtpTime("1.1." + _simData.GetSimYear()), TtpEnPattern.Pattern1Year, 1);
-			presData.HighlightTimeRange = _simData.GetEvalTimeSpan();
-			return presData;
+			_graphData.TimeRange = new TtpTimeRange(new TtpTime("1.1." + _simData.GetSimYear()), TtpEnPattern.Pattern1Year, 1);
+			_graphData.HighlightTimeRange = _simData.GetEvalTimeSpan();
+			return _graphData;
 
 		}
 
-		//private bool AddSimTrends(PresentationsData presData, int setId)
-		//{ 
-		//	if(!_simData.BuildSimSources())
-		//		return false;
+		#endregion
 
-		//	_simData.AddTrends(presData);
-		//	return true;
-		//}
+		#region Properties für Binding
+		public ICommand PrintCommand { get { return _printCommand; } }
 
-		//private void AddMonitoringRow(PresentationsData pd)
-		//{
-		//	pd.AddRow(new PresentationRow
-		//	{
-		//		Legend = (hasEggs) ? "Oviposion - Monitoring" : "Flight - Monitoring",				
-		//		Values = (hasEggs) ?_simData.Monitoring.Eggs: _simData.Monitoring.Adults,
-		//		LegendIndex = 0,
-		//		IsVisible = true,
-		//		Thicknes = 1.0,
-		//		Color = Brushes.CornflowerBlue,
-		//		Axis = TtpEnAxis.Left,
-		//		LineType = TtpEnLineType.LinePoint
-		//	});
+		#endregion
 
-		//}
+		#region Methoden  aus Contextmenü
 
-		private void AddPrognStartRow()
+		private void Print()
 		{
-
-		}
-		private void AddPrognBestCommonRow()
-		{
-
-		}
-		private void AddPrognBestForSetRow()
-		{
-
-		}
-
-		private void AddWeatherRows()
-		{
-
+			SwatPresentation printPres = PresentationCreator.Create(PresentationType.Optimization, _graphData, true);
+			printPres.PrintView();
 		}
 
 		#endregion

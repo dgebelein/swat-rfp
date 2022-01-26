@@ -191,7 +191,7 @@ namespace SwopReview
 		{
 			ModelBase model = CreateSimulationModel(Weather, optParam);
 			model.RunSimulation();
-			Quantor quantor = Quantor.CreateNew(model.Population, Monitoring, EvalMethod.Relation, false);
+			Quantor quantor = Quantor.CreateNew(model.Population, Monitoring, EvalMethod.AbsDiff, false);
 			_hasEggs = quantor.HasEggs;
 			return quantor.PrognValues;
 		}
@@ -239,7 +239,7 @@ namespace SwopReview
 		private void AddStartParamRow(PresentationsData pd, double[] trend)
 		{			
 			double err = _swopData.OptSets[_setIndex].StartErrValue;
-			string legend = (_hasEggs) ? "Oviposion - calculated with startparameters" : "Flight - calculated with startparameters";
+			string legend = (_hasEggs) ? "Oviposion - calc with startparams" : "Flight - calc with startparams";
 			legend += $"    Err = {err.ToString("0.###", CultureInfo.InvariantCulture)}";
 
 			pd.AddRow(new PresentationRow
@@ -259,8 +259,8 @@ namespace SwopReview
 		{
 			double startErr = _swopData.OptSets[_setIndex].StartErrValue;
 			double bestCommonErr = _swopData.OptSets[_setIndex].BestErrValue;
-			string legend = (_hasEggs) ? "Oviposion - calculated with common best Parameters" : "Flight - calculated with common best Parameters";
-			legend += $"    Err = {bestCommonErr.ToString("0.###", CultureInfo.InvariantCulture)};   Relation = {(bestCommonErr / startErr).ToString("0.###", CultureInfo.InvariantCulture)}";
+			string legend = (_hasEggs) ? "Oviposion - calc with common best Params" : "Flight - calc with common best Params";
+			legend += $"    Err = {bestCommonErr.ToString("0.###", CultureInfo.InvariantCulture)};   Rel = {(bestCommonErr / startErr).ToString("0.###", CultureInfo.InvariantCulture)}";
 
 			pd.AddRow(new PresentationRow
 			{
@@ -281,8 +281,8 @@ namespace SwopReview
 			int step = _swopData.OptSets[_setIndex].GetBestErrorId();
 			double bestSetErr = _swopData.OptSets[_setIndex].ErrValues[step];
 
-			string legend = (_hasEggs) ? "Oviposion - calculated with best Parameters for Set" : "Flight - calculated with best Parameters for Set";
-			legend += $"     Err = {bestSetErr.ToString("0.###", CultureInfo.InvariantCulture)};   Relation={(bestSetErr/startErr).ToString("0.###", CultureInfo.InvariantCulture)}";
+			string legend = (_hasEggs) ? "Oviposion - calc with best Params for Set" : "Flight - calc with best Params for Set";
+			legend += $"     Err = {bestSetErr.ToString("0.###", CultureInfo.InvariantCulture)};   Rel ={(bestSetErr/startErr).ToString("0.###", CultureInfo.InvariantCulture)}";
 
 			pd.AddRow(new PresentationRow
 			{

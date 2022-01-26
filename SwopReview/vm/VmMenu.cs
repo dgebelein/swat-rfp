@@ -144,12 +144,12 @@ namespace SwopReview
 
 		public Visibility VisMeshPanelCommands
 		{
-			get { return (_swopData.HasValidData && _selectedViewIndex == 2) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return (_swopData.HasValidData &&   _swopData.HasMeshData && _selectedViewIndex == 2) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		public Visibility VisColorMeshCommands
 		{
-			get { return (_swopData.HasValidData && _selectedViewIndex == 3) ? Visibility.Visible : Visibility.Collapsed; }
+			get { return (_swopData.HasValidData && _swopData.HasMeshData && _selectedViewIndex == 3) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		public Visibility VisSimResultCommands
@@ -395,7 +395,7 @@ namespace SwopReview
 		{
 			get
 			{
-				if (_swopData.HasValidData)
+				if (_swopData.HasValidData && _swopData.HasMeshData)
 				{
 					List<string> optLaps = ((viewCmd)ViewVisual).GetSelectedMeshPanelLaps();
 					return (optLaps.Count > 0);
@@ -410,10 +410,8 @@ namespace SwopReview
 				return;
 
 			_swopData.ClearErrorLimits(); // Neu-Skalierung erzwingen
-			//List<string> paramSequence = ((viewCmd)ViewVisual).GetMeshPanelParameterSequence();
-			List<ParamCombi> pcl = _swopData.GetParamCombisSelected(_swopData.OptParameters, SelectedMeshParameter);
 			
-			//List<ParamCombi> pcl = _swopData.GetSequencedParamCombis(paramSequence);
+			List<ParamCombi> pcl = _swopData.GetParamCombisSelected(_swopData.OptParameters, SelectedMeshParameter);
 			bool absoluteErrors = ((viewCmd)ViewVisual).IsMeshPanelErrorAbsolute();
 			List<string> optLaps = ((viewCmd)ViewVisual).GetSelectedMeshPanelLaps();
 			int setId = GetSelectedMeshPanelSet();
@@ -454,7 +452,7 @@ namespace SwopReview
 		{
 			get 
 			{
-				if(_swopData.HasValidData)
+				if(_swopData.HasValidData && _swopData.HasMeshData)
 				{ 
 					List<string> optLaps = ((viewCmd)ViewVisual).GetSelectedMeshLaps();
 					return (optLaps.Count > 0);

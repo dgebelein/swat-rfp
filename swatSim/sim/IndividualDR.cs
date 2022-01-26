@@ -19,6 +19,9 @@ namespace swatSim
 		int diapauseIndex;
 		bool isDiapauseGen;
 		double diapauseTemp;
+		double diapauseSlope;
+
+		bool isLarvDia;
 		int diapauseDur;
 		double diapauseProb;
 
@@ -56,8 +59,10 @@ namespace swatSim
 			this.mortLarvaMaxAge = model.MortLarvaMaxAge;
 			this.fertCluster = model.FertCluster;
 
+			this.isLarvDia = model.IsLarvDia;
 			this.diapauseIndex = model.DiapauseIndex;
 			this.diapauseTemp = model.DiapauseTemp;
+			this.diapauseSlope = model.DiapauseRise;
 			this.diapauseDur = model.DiapauseDur;
 			this.diapauseProb = 0.0;
 			this.isDiapauseGen = isDiapauseGen;
@@ -88,6 +93,9 @@ namespace swatSim
 
 		public static void CreateAndLive(ModelDR model, DevStage startStage, double startAge, int startDay, int generationNo, bool isDiapauseGeneration)
 		{
+			if (generationNo >= model.MaxGenerations) // kein neues Individuum bei zu hoher Generationenanzahl (wegen Speicherüberlauf!)
+				return;
+
 			IndividualDR indiv = new IndividualDR(model, startStage, startAge, startDay, generationNo, isDiapauseGeneration);
 			indiv.transitionLimits = indiv.GetTransitionLimits();
 
@@ -145,18 +153,8 @@ namespace swatSim
 				return;
 			}
 
-			if (di >= indiv.diapauseIndex)
-			{
-				double bt = indiv.model.GetSoilTemp(di);
-				if (bt < indiv.diapauseTemp + 2.0)
-				{
-					if (bt < indiv.diapauseTemp - 2.0)
-						indiv.diapauseProb += 1.0 / indiv.diapauseDur;
-					else
-						indiv.diapauseProb += (1.0 - (bt - (indiv.diapauseTemp - 2.0)) / 4.0) / indiv.diapauseDur;
-
-				}
-			}
+			if (indiv.isLarvDia)
+				CalcDiapause(indiv, di, indiv.model.GetSoilTemp(di));
 
 			indiv.bioAge +=  indiv.model.GetDevRate(DevStage.Larva, di);
 			if (indiv.bioAge > indiv.transitionLimits[(int)DevStage.Larva])
@@ -180,34 +178,10 @@ namespace swatSim
 				return;
 			}
 
-			double bt = indiv.model.GetSoilTemp(di);
-			
-			//Ästivation
-			if ((indiv.bioAge < indiv.aestMinAge) || (indiv.bioAge > indiv.aestMaxAge))
-				indiv.isAestAsleep = false;
-			else
-			{
-				if (bt > indiv.aestTemp)
-					indiv.isAestAsleep = true;
-				else
-				{ 
-					if (bt < (indiv.aestTemp - indiv.aestDropDiff))
-						indiv.isAestAsleep = false;
-				}
-			}
+			double bt = indiv.model.GetSoilTemp(di);			
+			CalcDiapause(indiv, di, bt);
 
-			//Diapause
-			if (di >= indiv.diapauseIndex)
-			{
-				if (bt < indiv.diapauseTemp + 2.0)
-				{
-					if (bt < indiv.diapauseTemp - 2.0)
-						indiv.diapauseProb += 1.0 / indiv.diapauseDur;
-					else
-						indiv.diapauseProb += (1.0 - (bt - (indiv.diapauseTemp - 2.0)) / 4.0) / indiv.diapauseDur;
-				}
-			}
-
+			CalcAestivation(indiv, bt);
 			if (indiv.isAestAsleep)
 				return; // keine weiteren Berechnungen für diesen Tag nötig
 
@@ -281,6 +255,58 @@ namespace swatSim
 			}
 		}
 
+		// Diapause nicht durch niedrige Temperaturen ausgelöst, sondern durch hohe Temperaturen spät im Jahr verzögert, wobei
+		// die notwendige Temperaturschwelle mit der Zeit ansteigt
+		private static void CalcDiapause(IndividualDR indiv, int day, double soilTemp)
+		{
+			if (day > indiv.diapauseIndex)
+			{
+				if (indiv.diapauseProb >= 1.0) // Diapausereiz ist nicht reversibel
+					return;
+
+				double threshold = indiv.diapauseTemp + indiv.diapauseSlope * Math.Max(1.0, (day - indiv.diapauseIndex)) / indiv.diapauseDur; 
+				if (soilTemp < threshold)
+					indiv.diapauseProb += 1.0 / indiv.diapauseDur;
+				else
+				{
+					double v = Math.Min((soilTemp - threshold) / indiv.diapauseDur, 1.0 / indiv.diapauseDur);
+					indiv.diapauseProb -= v;
+					if (indiv.diapauseProb < 0.0)
+						indiv.diapauseProb = 0.0;
+				}
+			}
+
+			// alter Algorithmus: Diapauseauslöung durch Temperaturunterschreitung
+			//if (di >= indiv.diapauseIndex)
+			//{
+			//	double bt = indiv.model.GetSoilTemp(di);
+			//	if (bt < indiv.diapauseTemp + 2.0)
+			//	{
+			//		if (bt < indiv.diapauseTemp - 2.0)
+			//			indiv.diapauseProb += 1.0 / indiv.diapauseDur;
+			//		else
+			//			indiv.diapauseProb += (1.0 - (bt - (indiv.diapauseTemp - 2.0)) / 4.0) / indiv.diapauseDur;
+
+			//	}
+			//}
+		}
+
+
+		private static void CalcAestivation(IndividualDR indiv, double soilTemp)
+		{
+			if ((indiv.bioAge < indiv.aestMinAge) || (indiv.bioAge > indiv.aestMaxAge))
+				indiv.isAestAsleep = false;
+			else
+			{
+				if (soilTemp > indiv.aestTemp)
+					indiv.isAestAsleep = true;
+				else
+				{
+					if (soilTemp < (indiv.aestTemp - indiv.aestDropDiff))
+						indiv.isAestAsleep = false;
+				}
+			}
+		}
 		#endregion
 
 	}

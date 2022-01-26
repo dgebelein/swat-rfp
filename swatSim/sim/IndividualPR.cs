@@ -97,6 +97,9 @@ namespace swatSim
 
 		public static void CreateAndLive(ModelPR model, DevStage startStage, double startAge, int startDay, int generationNo, bool isDiapauseGeneration)
 		{
+			if (generationNo >= model.MaxGenerations) // kein neues Individuum bei zu hoher Generationenanzahl
+				return;
+
 			IndividualPR indiv = new IndividualPR(model, startStage, startAge, startDay, generationNo, isDiapauseGeneration);
 			indiv.transitionLimits = indiv.GetTransitionLimits();
 

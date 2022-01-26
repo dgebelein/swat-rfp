@@ -467,7 +467,7 @@ namespace swat.optimizer
 			try
 			{
 				model.RunSimulation();
-				_quantor = Quantor.CreateNew(model.Population, _workspace.CurrentMonitoringData, evalMethod, false);  
+				_quantor = Quantor.CreateNew(model.Population, _workspace.CurrentMonitoringData, EvalMethod.AbsDiff, false);  
 
 				DevStage stage = _quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 				actEval = _quantor.GetRemainingError(stage, evalMethod, FirstEvalIndex, LastEvalIndex); // optimieren:auswahl zulassen!
