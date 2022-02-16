@@ -117,6 +117,9 @@ namespace SwatPresentations
 					break;
 				case TtpEnLineType.Chart:
 					trendPath = CreateAnalogBoxesPath(chart, 0.0); break;
+				case TtpEnLineType.Limit:
+					trendPath = CreateMarkerPath(chart); break;
+
 				default: break;
 			}
 
@@ -314,6 +317,37 @@ namespace SwatPresentations
 			};
 			return trendBoxes;
 
+		}
+
+		private Path CreateMarkerPath(ChartGrid chart)
+		{
+			double h = chart.ScaleYLMax / 10.0;
+			StreamGeometry sg = new StreamGeometry();
+			using (StreamGeometryContext sgc = sg.Open())
+			{
+				for (int n = 0; n < _points.Length; n++)
+				{
+					if (Double.IsNaN(_points[n].Y))
+						continue;
+
+					Point startp = new Point(chart.NormalizeX(n), chart.NormalizeY(0, Row.Axis));
+					Point endp = new Point(chart.NormalizeX(n), chart.NormalizeY(h, Row.Axis));
+
+					sgc.BeginFigure(startp, false, false);
+					sgc.LineTo(endp, true, false);
+				}
+			}
+
+			sg.Freeze();
+
+			Path trendLine = new Path
+			{
+				Stroke = Row.Color,
+				StrokeThickness = 2.0,
+				Data = sg
+			};
+
+			return trendLine;
 		}
 
 		#endregion

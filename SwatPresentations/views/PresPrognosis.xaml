@@ -52,9 +52,9 @@
 
 		<ContextMenu x:Key="contextMenuOpt"  Style="{StaticResource MyContextMenuStyle}"  >
 
-			<MenuItem  Header="Quantifizierung mit Fehlerrelationen"	Command="{Binding Path=OptimizeRelativeCommand}"/>
-			<MenuItem  Header="Quantifizierung mit Fehlerbeträgen"	Command="{Binding Path=OptimizeAbsoluteCommand}"/>
-			<MenuItem  Header="normalisierte Generationen  anzeigen"	Command="{Binding Path=NormalizeCommand}"/>
+			<MenuItem  Header="Quantifizierung mit Fehlerrelationen"	Command="{Binding Path=QuantRelativeCommand}"/>
+			<MenuItem  Header="Quantifizierung mit Fehlerbeträgen"	Command="{Binding Path=QuantAbsoluteCommand}"/>
+			<MenuItem  Header="normalisierte Generationen  anzeigen"	Command="{Binding Path=QuantNormalizeCommand}"/>
 			<MenuItem Header="Quantifizierungs-Report als Text-Datei speichern"	Command="{Binding Path=SaveOptReportCommand}">
 				<MenuItem.Icon>
 					<Image Source="/SwatPresentations;component/Resources/Images/save.png" Height="16" Style="{StaticResource ButtonImageStyle}" />

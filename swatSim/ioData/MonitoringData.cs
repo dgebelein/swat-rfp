@@ -263,7 +263,7 @@ namespace swatSim
 		#endregion
 
 		#region IO
-		private double ScanExpr(string expr)
+		private double ScanExpr(string expr) //todo: Komma-Separator an internat. gegebenheiten anpassen
 		{
 			if (!double.TryParse(expr.Replace('.', ','), out double result))
 				result = double.NaN;

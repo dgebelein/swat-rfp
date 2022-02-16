@@ -530,7 +530,7 @@ namespace Swop.optimizer
 				Math.Max(10, (numFactors * numFactors * 4)) : // Initialdurchlauf etwas ausführlicher
 				Math.Max(10, (numFactors * numFactors));
 
-			_globData.RemainingSteps = (maxNoChangeCounter - _optiCounter).ToString();
+			_globData.RemainingSteps = "Steps Remaining: " + (maxNoChangeCounter - _optiCounter).ToString();
 
 			return (_optiCounter > maxNoChangeCounter);
 		}
@@ -541,13 +541,18 @@ namespace Swop.optimizer
 			{
 				_bestVariedEvalValue = evalResult;
 				_optiShrinkValue = _optiShrinkValuePrev = _movingShrink = evalResult;
-				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
+				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);// Anzeige aktualisieren
 			}
+			else
+				_optiShrinkValue = evalResult;
+
 
 			int divi = numFactors + 1;
 			double diff = Math.Abs(_optiShrinkValue - _optiShrinkValuePrev);
 			_movingShrink = (_movingShrink * (divi - 1) + diff) / divi;
+			_optiShrinkValuePrev = _optiShrinkValue;			
 			_optiCounter++;
+
 
 
 			if (evalResult < _bestVariedEvalValue)
@@ -558,7 +563,7 @@ namespace Swop.optimizer
 				_globData.LapEval = evalResult.ToString("F4", CultureInfo.InvariantCulture);
 			}
 
-			_globData.RemainingSteps = "Shrink  " + _movingShrink.ToString("F4", CultureInfo.InvariantCulture);
+			_globData.RemainingSteps = "Shrink-Value:  " + _movingShrink.ToString("F4", CultureInfo.InvariantCulture);
 
 			return (_optiCounter > divi) && (_movingShrink < 0.025);
 		}
@@ -600,7 +605,7 @@ namespace Swop.optimizer
 			}
 
 			CreateActionDisplayText(_modelEvals[0]);
-			_globData.TotalBestEval = _bestEvalValue.ToString("F4", CultureInfo.InvariantCulture);
+			_globData.TotalBestEval = $"Total-Best: {_bestEvalValue.ToString("F4", CultureInfo.InvariantCulture)}";
 			LogActionText(optParams);
 
 			_optimizer.ReportProgress(50);
@@ -626,7 +631,7 @@ namespace Swop.optimizer
 					 ModelBase model = CreateOptimizationModel(simParams, i);
 					 model.RunSimulation();
 
-					 Quantor quantor = Quantor.CreateNew(model.Population, _globData.Monitorings[i], EvalMethod.AbsDiff, false); 
+					 Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[i], EvalMethod.AbsDiff, false); 
 					 DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 
 					 singleEvals[i + 1] = quantor.GetRemainingError(stage, EvalMethod.Relation, _globData.FirstIndices[i], _globData.LastIndices[i]); // optimieren:immer relationen!
@@ -642,7 +647,8 @@ namespace Swop.optimizer
 			double totalWeightings = 0.0;
 			for (int i = 1; i <= _globData.NumSets; i++)
 			{
-				singleEvals[0] += _globData.EvalWeightings[i-1] * singleEvals[i]/_startEvals[i]; // achtung Indizes!
+				//Eval-Wert immer in Relation zu Startfehler, weil Datensätze mit großen  Fängen tendenziell größere Fehlerwerte liefern
+				singleEvals[0] += _globData.EvalWeightings[i-1] * singleEvals[i]/_startEvals[i]; // achtung Indizes!  
 				totalWeightings += _globData.EvalWeightings[i - 1];
 			}
 			singleEvals[0] /= totalWeightings;

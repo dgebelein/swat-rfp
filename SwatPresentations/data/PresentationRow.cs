@@ -12,6 +12,7 @@ namespace SwatPresentations
 	public class PresentationRow
 	{
 		public string Legend { get; set; }
+		public string LegendTooltip { get; set; }
 		public bool IsVisible { get; set; }
 		public Brush Color { get; set; }
 		public double Thicknes { get; set; }

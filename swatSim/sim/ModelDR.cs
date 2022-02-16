@@ -36,6 +36,7 @@ namespace swatSim
 
 
 			p.InitItem("dr.SimStart", 59, typeof(int), 1.0, 180.0, "Simulationsstart (Tag des Jahres)", 1); // (1. März)
+			p.InitItem("dr.StartAge", 0.20, typeof(double), 0.0, 0.9, "Biol. Alter der Startpopulation", 3);
 
 			p.InitItem("dr.UseOnlyAir", false, typeof(bool), 0.0, 1.0, "nur Lufttemperatur nutzen?", 1);
 			p.InitItem("dr.SummerSoilRel", 0.5, typeof(double), 0.0, 1.0, "Mischungsverh. Boden-/Lufttemp ab 1.6.", 1); //0= 0%Boden, 100%Luft; 0.5= (Boden +Luft)/2; 1= 100% Boden
@@ -66,31 +67,31 @@ namespace swatSim
 			p.InitItem("dr.TransFly", 0.14, typeof(double), 0.0, 0.2, "Faktor Transition Adult->Tod", 3);
 
 			//Entwicklungsparameter
-			//p.InitItem("dr.DevEggTmax", 40.0, typeof(double), 30.0, 45.0, "Entwicklung Ei: Temperaturmaximum", 3);
-			//p.InitItem("dr.DevEggTopt", 25.0, typeof(double), 15.0, 29.0, "Entwicklung Ei: Temperaturoptimum", 3);
-			//p.InitItem("dr.DevEggQ", 1.88, typeof(double), 1.1, 4.0, "Entwicklung Ei: Temperatur-Spezifität", 3);
-			//p.InitItem("dr.DevEggL", 0.024, typeof(double), 0.0, 0.1, "Entwicklung Ei: Konvexität linke Flanke", 3);
+			p.InitItem("dr.DevEggTmax", 40.0, typeof(double), 30.0, 45.0, "Entwicklung Ei: Temperaturmaximum", 3);
+			p.InitItem("dr.DevEggTopt", 25.0, typeof(double), 15.0, 29.0, "Entwicklung Ei: Temperaturoptimum", 3);
+			p.InitItem("dr.DevEggQ", 1.88, typeof(double), 1.1, 4.0, "Entwicklung Ei: Temperatur-Spezifität", 3);
+			p.InitItem("dr.DevEggL", 0.024, typeof(double), 0.0, 0.1, "Entwicklung Ei: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevEggKmax", 0.375, typeof(double), 0.1, 0.5, "Entwicklung Ei: max. tägl. Entwicklungsrate", 3);
 
 
-			//p.InitItem("dr.DevLarvaTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Larve: Temperaturmaximum", 3);
-			//p.InitItem("dr.DevLarvaTopt", 27.0, typeof(double), 20.0, 29.9, "Entwicklung Larve: Temperaturoptimum", 3);
-			//p.InitItem("dr.DevLarvaQ", 1.73, typeof(double), 1.1, 4.0, "Entwicklung Larve: Temperatur-Spezifität", 3);
-			//p.InitItem("dr.DevLarvaL", 0.009, typeof(double), 0.0, 0.1, "Entwicklung Larve: Konvexität linke Flanke", 3);
+			p.InitItem("dr.DevLarvaTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Larve: Temperaturmaximum", 3);
+			p.InitItem("dr.DevLarvaTopt", 27.0, typeof(double), 20.0, 29.9, "Entwicklung Larve: Temperaturoptimum", 3);
+			p.InitItem("dr.DevLarvaQ", 1.73, typeof(double), 1.1, 4.0, "Entwicklung Larve: Temperatur-Spezifität", 3);
+			p.InitItem("dr.DevLarvaL", 0.009, typeof(double), 0.0, 0.1, "Entwicklung Larve: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevLarvaKmax", 0.09, typeof(double), 0.025, 0.25, "Entwicklung Larve: max. tägl. Entwicklungsrate", 3);
 
 
-			//p.InitItem("dr.DevPupaTmax", 30.0, typeof(double), 30.0, 40.0, "Entwicklung Puppe: Temperaturmaximum", 3);
-			//p.InitItem("dr.DevPupaTopt", 22.5, typeof(double), 20.0, 29.9, "Entwicklung Puppe: Temperaturoptimum", 3);
-			//p.InitItem("dr.DevPupaQ", 1.88, typeof(double), 1.1, 4.0, "Entwicklung Puppe: Temperatur-Spezifität", 3);
-			//p.InitItem("dr.DevPupaL", 0.008, typeof(double), 0.0, 0.1, "Entwicklung Puppe: Konvexität linke Flanke", 3);
+			p.InitItem("dr.DevPupaTmax", 30.0, typeof(double), 30.0, 40.0, "Entwicklung Puppe: Temperaturmaximum", 3);
+			p.InitItem("dr.DevPupaTopt", 22.5, typeof(double), 20.0, 29.9, "Entwicklung Puppe: Temperaturoptimum", 3);
+			p.InitItem("dr.DevPupaQ", 1.88, typeof(double), 1.1, 4.0, "Entwicklung Puppe: Temperatur-Spezifität", 3);
+			p.InitItem("dr.DevPupaL", 0.008, typeof(double), 0.0, 0.1, "Entwicklung Puppe: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevPupaKmax", 0.073, typeof(double), 0.025, 0.2, "Entwicklung Puppe: max. tägl. Entwicklungsrate", 3);
 
 
-			//p.InitItem("dr.DevFlyTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Fliege: Temperaturmaximum", 3);
-			//p.InitItem("dr.DevFlyTopt", 30.0, typeof(double), 20.0, 29.9, "Entwicklung Fliege: Temperaturoptimum", 3);
-			//p.InitItem("dr.DevFlyQ", 1.67, typeof(double), 1.1, 4.0, "Entwicklung Fliege: Temperatur-Spezifität", 3);
-			//p.InitItem("dr.DevFlyL", 0.006, typeof(double), 0.0, 0.1, "Entwicklung Fliege: Konvexität linke Flanke", 3);
+			p.InitItem("dr.DevFlyTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Fliege: Temperaturmaximum", 3);
+			p.InitItem("dr.DevFlyTopt", 30.0, typeof(double), 20.0, 29.9, "Entwicklung Fliege: Temperaturoptimum", 3);
+			p.InitItem("dr.DevFlyQ", 1.67, typeof(double), 1.1, 4.0, "Entwicklung Fliege: Temperatur-Spezifität", 3);
+			p.InitItem("dr.DevFlyL", 0.006, typeof(double), 0.0, 0.1, "Entwicklung Fliege: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevFlyKmax", 0.072, typeof(double), 0.025, 0.2, "Entwicklung Fliege: max. tägl. Entwicklungsrate", 3);
 
 			p.InitItem("dr.DevWiPupaTmax", 30.52, typeof(double), 29.0, 40.0, "Entwicklung Winterpuppe: Temperaturmaximum", 3);
@@ -100,10 +101,16 @@ namespace swatSim
 			p.InitItem("dr.DevWiPupaKmax", 0.1029, typeof(double), 0.05, 0.25, "Entwicklung Winterpuppe: max. tägl. Entwicklungsrate", 3);
 
 			//experimentell alle Stadien
-			p.InitItem("dr.DevTmax", 30.52, typeof(double), 30.0, 40.0, "Entwicklung Stadien: Temperaturmaximum", 3);
-			p.InitItem("dr.DevTopt", 25.03, typeof(double), 20.0, 29.0, "Entwicklung Stadien: Temperaturoptimum", 3);
-			p.InitItem("dr.DevQ", 1.56, typeof(double), 1.1, 2.0, "Entwicklung Stadien: Temperatur-Spezifität", 3);
-			p.InitItem("dr.DevL", 0.0313, typeof(double), 0.01, 0.05, "Entwicklung Stadien: Konvexität linke Flanke", 3);
+
+			p.InitItem("dr.UseEqualDevForm", false, typeof(bool), 0.0, 1.0, "für alle Stadien gleiche Entwicklungsfunktion?", 3);
+			p.InitItem("dr.DevEqTmax", 30.42, typeof(double), 30.0, 40.0, "Entwicklung Stadien: Temperaturmaximum", 3);
+			p.InitItem("dr.DevEqTopt", 25.18, typeof(double), 20.0, 29.0, "Entwicklung Stadien: Temperaturoptimum", 3);
+			p.InitItem("dr.DevEqQ", 1.50, typeof(double), 1.1, 2.0, "Entwicklung Stadien: Temperatur-Spezifität", 3);
+			p.InitItem("dr.DevEqL", 0.016, typeof(double), 0.01, 0.05, "Entwicklung Stadien: Konvexität linke Flanke", 3);
+			p.InitItem("dr.DevEqEggKmax", 0.25, typeof(double), 0.1, 0.5, "Entwicklung Ei: max. tägl. Entwicklungsrate", 3);
+			p.InitItem("dr.DevEqLarvaKmax", 0.088, typeof(double), 0.025, 0.25, "Entwicklung Larve: max. tägl. Entwicklungsrate", 3);
+			p.InitItem("dr.DevEqPupaKmax", 0.05, typeof(double), 0.025, 0.2, "Entwicklung Puppe: max. tägl. Entwicklungsrate", 3);
+			p.InitItem("dr.DevEqFlyKmax", 0.05, typeof(double), 0.025, 0.2, "Entwicklung Fliege: max. tägl. Entwicklungsrate", 3);
 
 			//Fertilität
 			p.InitItem("dr.FertPrae", 0.22, typeof(double), 0.0, 0.5, "Fertilität: Prä-Oviposition", 3);
@@ -119,8 +126,8 @@ namespace swatSim
 			//p.InitItem("dr.WrInc", 0.20, typeof(double),0.1,0.9, "Anstieg Flughemmung pro zusätzl. m/s");
 
 			//Diapause
-			p.InitItem("dr.IsDia", true, typeof(bool), 0.0, 1.0, "Puppen: Diapause (Winterruhe) berechnen?", 3);
-			p.InitItem("dr.IsLarvDia", true, typeof(bool), 0.0, 1.0, "Larven sensitiv für Diapauseanreiz?", 3);
+			p.InitItem("dr.IsDia", false, typeof(bool), 0.0, 1.0, "Puppen: Diapause (Winterruhe) berechnen?", 3);
+			p.InitItem("dr.IsLarvDia", false, typeof(bool), 0.0, 1.0, "Larven sensitiv für Diapauseanreiz?", 3);
 			p.InitItem("dr.DiaDate", 243, typeof(int), 200.0, 300.0, "frühester Eintritt in Diapause (Tag des Jahres)", 3);
 			p.InitItem("dr.DiaThr", 10.0, typeof(double), 5.0, 20.0, "Temperaturschwelle für Verhindern d. Diapause", 3);
 			p.InitItem("dr.DiaRise", 5.0, typeof(double), 1.0, 20.0, "Max-Betrag des Anstiegs d. Temp-schwelle für Diapause", 3);
@@ -128,13 +135,14 @@ namespace swatSim
 
 
 			//Ästivation
-			p.InitItem("dr.IsAest", true, typeof(bool), 0.0, 1.0, "Ästivation(Sommerruhe) berechnen?", 3);
+			p.InitItem("dr.IsAest", false, typeof(bool), 0.0, 1.0, "Ästivation(Sommerruhe) berechnen?", 3);
 			p.InitItem("dr.AestThr", 23.97, typeof(double), 15.0, 35.0, "Temperaturschwelle für Auslösen d. Ästivation", 3);
 			p.InitItem("dr.AestVar", 2.43, typeof(double), 0.0, 3.0, "Streuungsfaktor Ästivation", 3);     
 			p.InitItem("dr.AestDropDiff", 4.43, typeof(double), 0.0, 5.0, "Differenz für Aufheben d. Ästivation", 3);
 			p.InitItem("dr.AestMinAge", 0.0, typeof(double), 0.0, 0.25, "Minimum biol. Alter für Ästivation", 3);
 			p.InitItem("dr.AestMaxAge", 1.0, typeof(double), 0.25, 1.4, "Maximum biol. Alter für Ästivation", 3);
 
+			p.InitItem("dr.OviSurvProb", 1.0, typeof(double), 0.5, 1.0, "Wahrscheinl., dass ein abgelegtes Ei an nächsten Tag noch da ist", 3);
 
 			return p;
 		}
@@ -259,6 +267,12 @@ namespace swatSim
 			return (int)_workingParams.GetValue("dr.StartPop");
 		}
 
+		protected override double GetStartAge()
+		{
+			return ((bool)_workingParams.GetValue("dr.UseEqualDevForm")) ? // Start-Alter (für Winterpuppen) nur bei gleicher Entwicklungsfunktion verwenden - sonst mit 0 beginnen
+				(double)_workingParams.GetValue("dr.StartAge") :
+				0.0;
+		}
 
 		public override void SetMaxGenerations()
 		{
@@ -322,64 +336,100 @@ namespace swatSim
 
 		//protected override void InitTableTransition()
 		//{
-			//double t = 0.0;
-			//for (int stage=0; stage <=4; stage++)
-			//{
-			//	switch (stage)
-			//	{
- 
-			//		case 0:
-			//			_maxDevRates[0] = (Double)_workingParams.GetValue("dr.DevEggKmax");
-			//			t = (Double)_workingParams.GetValue("dr.TransEgg");
-			//			break;
-			//		case 1:
-			//			_maxDevRates[1] = (Double)_workingParams.GetValue("dr.DevLarvaKmax");
-			//			t = (Double)_workingParams.GetValue("dr.TransLarva");
-			//			break;
+		//double t = 0.0;
+		//for (int stage=0; stage <=4; stage++)
+		//{
+		//	switch (stage)
+		//	{
 
-			//		case 2:
-			//			_maxDevRates[2] = (Double)_workingParams.GetValue("dr.DevPupaKmax");
-			//			t = (Double)_workingParams.GetValue("dr.TransPupa");
-			//			break;
-			//		case 3:
-			//			_maxDevRates[3] = (Double)_workingParams.GetValue("dr.DevFlyKmax");
-			//			t = (Double)_workingParams.GetValue("dr.TransFly");
-			//			break;
-			//		case 4:
-			//			_maxDevRates[4] = (Double)_workingParams.GetValue("dr.DevWiPupaKmax");
-			//			t = (Double)_workingParams.GetValue("dr.TransWiPupa");
-			//			break;
+		//		case 0:
+		//			_maxDevRates[0] = (Double)_workingParams.GetValue("dr.DevEggKmax");
+		//			t = (Double)_workingParams.GetValue("dr.TransEgg");
+		//			break;
+		//		case 1:
+		//			_maxDevRates[1] = (Double)_workingParams.GetValue("dr.DevLarvaKmax");
+		//			t = (Double)_workingParams.GetValue("dr.TransLarva");
+		//			break;
 
-			//	}
-			//	Double BioAge = 0.0;
-			//	for(int i = 0; i<= 1400; i++)
-			//	{
-			//		_tableTransition[stage, i] = SimFunctions.Sigmoid(BioAge, t);
-			//		BioAge += 0.001;
-   //         }
-			//}
+		//		case 2:
+		//			_maxDevRates[2] = (Double)_workingParams.GetValue("dr.DevPupaKmax");
+		//			t = (Double)_workingParams.GetValue("dr.TransPupa");
+		//			break;
+		//		case 3:
+		//			_maxDevRates[3] = (Double)_workingParams.GetValue("dr.DevFlyKmax");
+		//			t = (Double)_workingParams.GetValue("dr.TransFly");
+		//			break;
+		//		case 4:
+		//			_maxDevRates[4] = (Double)_workingParams.GetValue("dr.DevWiPupaKmax");
+		//			t = (Double)_workingParams.GetValue("dr.TransWiPupa");
+		//			break;
+
+		//	}
+		//	Double BioAge = 0.0;
+		//	for(int i = 0; i<= 1400; i++)
+		//	{
+		//		_tableTransition[stage, i] = SimFunctions.Sigmoid(BioAge, t);
+		//		BioAge += 0.001;
+		//         }
+		//}
 		//}
 
 		protected override void InitTableDev()
 		{
+			bool UseEqualDevForm = (bool)_workingParams.GetValue("dr.UseEqualDevForm");
 
-			double devTmax = (Double)_workingParams.GetValue("dr.DevTmax");
-			double devTopt = (Double)_workingParams.GetValue("dr.DevTopt");
-			double devQ = (Double)_workingParams.GetValue("dr.DevQ");
-			double devL = (Double)_workingParams.GetValue("dr.DevL");
+			if (UseEqualDevForm)
+				InitTableEqualDev();
+			else
+				InitTableSeparateDev();
+		}
 
-			// nur für Winterpuppen eigene Funktionsparameter
-			double wipupaTmax = (Double)_workingParams.GetValue("dr.DevWiPupaTmax");
-			double wipupaTopt = (Double)_workingParams.GetValue("dr.DevWiPupaTopt");
-			double wipupaQ = (Double)_workingParams.GetValue("dr.DevWiPupaQ");
-			double wipupaL = (Double)_workingParams.GetValue("dr.DevWiPupaL");
-			double wipupaKmax = (Double)_workingParams.GetValue("dr.DevWiPupaKmax");
+			//double devTmax = (Double)_workingParams.GetValue("dr.DevTmax");
+			//double devTopt = (Double)_workingParams.GetValue("dr.DevTopt");
+			//double devQ = (Double)_workingParams.GetValue("dr.DevQ");
+			//double devL = (Double)_workingParams.GetValue("dr.DevL");
+
+			//// nur für Winterpuppen eigene Funktionsparameter
+			////double wipupaTmax = (Double)_workingParams.GetValue("dr.DevWiPupaTmax");
+			////double wipupaTopt = (Double)_workingParams.GetValue("dr.DevWiPupaTopt");
+			////double wipupaQ = (Double)_workingParams.GetValue("dr.DevWiPupaQ");
+			////double wipupaL = (Double)_workingParams.GetValue("dr.DevWiPupaL");
+			////double wipupaKmax = (Double)_workingParams.GetValue("dr.DevWiPupaKmax");
+
+			//// alle anderen Stadien unterscheiden sich nur durch Entwicklungsdauer
+			//double eggKmax = (Double)_workingParams.GetValue("dr.DevEggKmax");
+			//double larvaKmax = (Double)_workingParams.GetValue("dr.DevLarvaKmax");
+			//double pupaKmax = (Double)_workingParams.GetValue("dr.DevPupaKmax");
+			//double flyKmax = (Double)_workingParams.GetValue("dr.DevFlyKmax");
+
+
+			//for (int i = _firstSimIndex; i < _lastSimIndex; i++)
+			//{
+			//	double airTemp = _simAirTemps[i];
+			//	_tableDev[(int)DevStage.Fly, i] = SimFunctions.ONeal(airTemp, devTmax, devTopt, devQ, devL, flyKmax);
+
+			//	double soilTemp = _simSoilTemps[i];
+			//	_tableDev[(int)DevStage.Egg, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, eggKmax);
+			//	_tableDev[(int)DevStage.Larva, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, larvaKmax);
+			//	_tableDev[(int)DevStage.Pupa, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, pupaKmax);
+			//	_tableDev[(int)DevStage.WiPupa, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, pupaKmax); //experimentell: zusammen mit StartAge
+
+			//	//_tableDev[(int)DevStage.WiPupa, i] = SimFunctions.ONeal(soilTemp, wipupaTmax, wipupaTopt, wipupaQ, wipupaL, wipupaKmax);
+
+
+		private void InitTableEqualDev()
+		{
+
+			double devTmax = (Double)_workingParams.GetValue("dr.DevEqTmax");
+			double devTopt = (Double)_workingParams.GetValue("dr.DevEqTopt");
+			double devQ = (Double)_workingParams.GetValue("dr.DevEqQ");
+			double devL = (Double)_workingParams.GetValue("dr.DevEqL");
 
 			// alle anderen Stadien unterscheiden sich nur durch Entwicklungsdauer
-			double eggKmax = (Double)_workingParams.GetValue("dr.DevEggKmax");
-			double larvaKmax = (Double)_workingParams.GetValue("dr.DevLarvaKmax");
-			double pupaKmax = (Double)_workingParams.GetValue("dr.DevPupaKmax");
-			double flyKmax = (Double)_workingParams.GetValue("dr.DevFlyKmax");
+			double eggKmax = (Double)_workingParams.GetValue("dr.DevEqEggKmax");
+			double larvaKmax = (Double)_workingParams.GetValue("dr.DevEqLarvaKmax");
+			double pupaKmax = (Double)_workingParams.GetValue("dr.DevEqPupaKmax");
+			double flyKmax = (Double)_workingParams.GetValue("dr.DevEqFlyKmax");
 
 
 			for (int i = _firstSimIndex; i < _lastSimIndex; i++)
@@ -391,8 +441,59 @@ namespace swatSim
 				_tableDev[(int)DevStage.Egg, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, eggKmax);
 				_tableDev[(int)DevStage.Larva, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, larvaKmax);
 				_tableDev[(int)DevStage.Pupa, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, pupaKmax);
+				_tableDev[(int)DevStage.WiPupa, i] = SimFunctions.ONeal(soilTemp, devTmax, devTopt, devQ, devL, pupaKmax); //Achtung: zusammen mit StartAge initialisieren
+			}
+
+		}
+
+		private void InitTableSeparateDev()
+		{
+			double eggTmax = (Double)_workingParams.GetValue("dr.DevEggTmax");
+			double eggTopt = (Double)_workingParams.GetValue("dr.DevEggTopt");
+			double eggQ = (Double)_workingParams.GetValue("dr.DevEggQ");
+			double eggL = (Double)_workingParams.GetValue("dr.DevEggL");
+			double eggKmax = (Double)_workingParams.GetValue("dr.DevEggKmax");
+
+
+			double larvaTmax = (Double)_workingParams.GetValue("dr.DevLarvaTmax");
+			double larvaTopt = (Double)_workingParams.GetValue("dr.DevLarvaTopt");
+			double larvaQ = (Double)_workingParams.GetValue("dr.DevLarvaQ");
+			double larvaL = (Double)_workingParams.GetValue("dr.DevLarvaL");
+			double larvaKmax = (Double)_workingParams.GetValue("dr.DevLarvaKmax");
+
+
+			double pupaTmax = (Double)_workingParams.GetValue("dr.DevPupaTmax");
+			double pupaTopt = (Double)_workingParams.GetValue("dr.DevPupaTopt");
+			double pupaQ = (Double)_workingParams.GetValue("dr.DevPupaQ");
+			double pupaL = (Double)_workingParams.GetValue("dr.DevPupaL");
+			double pupaKmax = (Double)_workingParams.GetValue("dr.DevPupaKmax");
+
+
+			double flyTmax = (Double)_workingParams.GetValue("dr.DevFlyTmax");
+			double flyTopt = (Double)_workingParams.GetValue("dr.DevFlyTopt");
+			double flyQ = (Double)_workingParams.GetValue("dr.DevFlyQ");
+			double flyL = (Double)_workingParams.GetValue("dr.DevFlyL");
+			double flyKmax = (Double)_workingParams.GetValue("dr.DevFlyKmax");
+
+
+			double wipupaTmax = (Double)_workingParams.GetValue("dr.DevWiPupaTmax");
+			double wipupaTopt = (Double)_workingParams.GetValue("dr.DevWiPupaTopt");
+			double wipupaQ = (Double)_workingParams.GetValue("dr.DevWiPupaQ");
+			double wipupaL = (Double)_workingParams.GetValue("dr.DevWiPupaL");
+			double wipupaKmax = (Double)_workingParams.GetValue("dr.DevWiPupaKmax");
+
+			for (int i = _firstSimIndex; i < _lastSimIndex; i++)
+			{
+				double airTemp = _simAirTemps[i];
+				_tableDev[(int)DevStage.Fly, i] = SimFunctions.ONeal(airTemp, flyTmax, flyTopt, flyQ, flyL, flyKmax);
+
+				double soilTemp = _simSoilTemps[i];
+				_tableDev[(int)DevStage.Egg, i] = SimFunctions.ONeal(soilTemp, eggTmax, eggTopt, eggQ, eggL, eggKmax);
+				_tableDev[(int)DevStage.Larva, i] = SimFunctions.ONeal(soilTemp, larvaTmax, larvaTopt, larvaQ, larvaL, larvaKmax);
+				_tableDev[(int)DevStage.Pupa, i] = SimFunctions.ONeal(soilTemp, pupaTmax, pupaTopt, pupaQ, pupaL, pupaKmax);
 				_tableDev[(int)DevStage.WiPupa, i] = SimFunctions.ONeal(soilTemp, wipupaTmax, wipupaTopt, wipupaQ, wipupaL, wipupaKmax);
 			}
+
 		}
 
 		//protected override void InitTableDev()
@@ -445,11 +546,6 @@ namespace swatSim
 		//	}
 		//}
 
-		//protected override void InitTableDiapause()
-		//{
-		//	// todo: Diapause implementieren
-		//	//throw new NotImplementedException();
-		//}
 
 		protected override void InitTableFert()
 		{

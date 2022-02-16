@@ -398,7 +398,7 @@ namespace Swop.optimizer
 
 				//CreateBestValuesText();
 				//CreateBestLogText();
-				_globData.TotalBestEval = _bestEvalValue.ToString("F4", CultureInfo.InvariantCulture); // kann weg?
+				_globData.TotalBestEval = $"Total-Best: {_bestEvalValue.ToString("F4", CultureInfo.InvariantCulture)}"; ; // kann weg?
 			}
 		}
 
@@ -413,7 +413,7 @@ namespace Swop.optimizer
 					ModelBase model = CreateCombinationModel(simParams, i);
 					model.RunSimulation();
 
-					Quantor quantor = Quantor.CreateNew(model.Population, _globData.Monitorings[i], EvalMethod.AbsDiff, false);
+					Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[i], EvalMethod.AbsDiff, false);
 					DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 
 					singleEvals[i + 1] = quantor.GetRemainingError(stage, EvalMethod.Relation, _globData.FirstIndices[i], _globData.LastIndices[i]); // optimieren:immer relationen!

@@ -99,9 +99,11 @@ namespace swatSim
 		{
 			if (generationNo >= model.MaxGenerations) // kein neues Individuum bei zu hoher Generationenanzahl
 				return;
-
+			
+			model.IncIndividualNum();
 			IndividualPR indiv = new IndividualPR(model, startStage, startAge, startDay, generationNo, isDiapauseGeneration);
 			indiv.transitionLimits = indiv.GetTransitionLimits();
+
 
 			while (indiv.isAlive)
 			{

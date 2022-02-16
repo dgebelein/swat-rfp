@@ -41,6 +41,7 @@ namespace SwatPresentations
 		{
 			InitializeComponent();
 
+			Title = $"Nachricht {System.Diagnostics.Process.GetCurrentProcess().ProcessName}";
 			_messageHeader = messageHeader;
 			_messageDetail = messageDetail;
 			

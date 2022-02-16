@@ -19,7 +19,7 @@ namespace swatSim
 		public bool IsSelected{ get; set; }
 		public double MinVal  { get; set; }
 		public double MaxVal  { get; set; }
-		public int Legit		 { get; set; }
+		public int Legit		 { get; set; } // entscheidet darüber, ob der Parameter für den Programmnutzer sichtbar ist
 
 
 		public virtual object Clone()
@@ -411,7 +411,7 @@ namespace swatSim
 
 			foreach (string line in lines)
 			{
-				if (line.Trim().StartsWith(";"))
+				if (line.Trim().StartsWith("--"))
 					continue;
 
 				Regex regex = new Regex(@"^\[.*\]$");

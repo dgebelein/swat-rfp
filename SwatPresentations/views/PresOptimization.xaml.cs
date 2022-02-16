@@ -25,6 +25,7 @@ namespace SwatPresentations
 		private SolidColorBrush _highlightColor;
 		private PresentationRow _retrievalRow;
 		private bool _isWeatherRetrieving;
+		int _visRotator = 0;
 
 		#endregion
 
@@ -105,6 +106,11 @@ namespace SwatPresentations
 		{
 			_title.Text = SourceData.Title;
 			_title.Foreground = _textColor;
+			if (!string.IsNullOrEmpty(SourceData.TitleToolTip))
+			{
+				ToolTipService.SetShowDuration(_title,20000);
+				_title.ToolTip = SourceData.TitleToolTip;
+			}
 
 			// Zeitachse
 			_timeAxis = new TimeAxis(_xChartCanvas, _xTimeAxisCanvas, _xLeftAxisCanvas.Width, _xRightAxisCanvas.Width, _textColor, SourceData.TimeRange);
@@ -156,32 +162,6 @@ namespace SwatPresentations
 				_vrAxis.Draw();
 
 				SourceData.Draw(_chartGrid);
-				// linke Achse
-				//Double deltaTick = (zoomedScaleMax - SourceData.LeftAxisInfo.ActualScaleMin) / 10.0;
-				//_vlAxis.SetParameters(true,
-				//			SourceData.LeftAxisInfo.ActualScaleMin,
-				//			zoomedScaleMax,
-				//			SourceData.LeftAxisInfo.ActualScaleMin,
-				//			deltaTick);
-				//_chartGrid.SetYScaling(TtpEnAxis.Left,
-				//							SourceData.LeftAxisInfo.ActualScaleMin,
-				//							zoomedScaleMax,
-				//							SourceData.LeftAxisInfo.ActualScaleMin,
-				//							deltaTick);
-
-				//// rechts und links immer gleich skalieren
-				//_chartGrid.SetYScaling(TtpEnAxis.Right,
-				//			SourceData.LeftAxisInfo.ActualScaleMin,
-				//			zoomedScaleMax,
-				//			SourceData.LeftAxisInfo.ActualScaleMin,
-				//			deltaTick);
-
-				//_vlAxis.Draw();// mit Achsbemaßung
-
-
-
-				////Trendlinien
-				//SourceData.Draw(_chartGrid);
 
 				PresentationEventArgs args = new PresentationEventArgs
 				{
@@ -205,9 +185,7 @@ namespace SwatPresentations
 			if ((e.ClickCount >= 2) && (e.LeftButton == MouseButtonState.Pressed))
 			{
 				_isDoubleClick = true;
-				SourceData.ToggleVisibilty(1);
-				SourceData.ToggleVisibilty(2);
-				ShowChart();
+				RotateVisibility(true);
 				return;
 			}
 
@@ -221,6 +199,40 @@ namespace SwatPresentations
 				ShowDataRetrieval(e.GetPosition(_xChartCanvas));
 			}
 
+		}
+
+		private void RotateVisibility(bool down)
+		{
+			//Anzahl Reihen für linke Achse ermitteln ( erste Reihe ist Monitoring und wird nicht berücksichtigt)
+			int numLeftRows = 0;
+			for (int n = 1; n < SourceData.NumRows; n++)
+			{
+				if (SourceData.GetRow(n).Axis == TtpEnAxis.Left)
+					numLeftRows++;
+			}
+			if (down)
+				_visRotator--;
+			else
+				_visRotator++;
+
+			_visRotator %= numLeftRows;
+
+			int v = 0;
+			for (int n = 1; n < SourceData.NumRows; n++)
+			{
+				PresentationRow row = SourceData.GetRow(n);
+				if (row.Axis == TtpEnAxis.Left)
+				{ 
+					row.IsVisible = (v == _visRotator) ? true : false;
+					v++;
+				}
+			}
+			ShowChart();
+		}
+
+		private void VisRotate(object sender, MouseWheelEventArgs e)
+		{
+			RotateVisibility(e.Delta > 0);
 		}
 
 		private void _xChartCanvas_OnMouseMove(object sender, MouseEventArgs e)

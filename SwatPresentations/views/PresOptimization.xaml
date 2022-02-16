@@ -50,17 +50,18 @@
 
 
 		<ContextMenu x:Key="contextMenu"  Style="{StaticResource MyContextMenuStyle}"  >
-			<!--<MenuItem Header="Notizen" 				Command="{Binding Path=NotesCommand}">
-				<MenuItem.Icon>
-					<Image Source="../Resources/Images/notes.png" Height="16"  Style="{StaticResource ButtonImageStyle}"/>
-				</MenuItem.Icon>
-			</MenuItem>
-			<Separator/>-->
 			<MenuItem Header="Drucken/PDF erstellen..." 				Command="{Binding Path=PrintCommand}">
 				<MenuItem.Icon>
 					<Image Source="/SwatPresentations;component/Resources/Images/print.png" Height="16"  Style="{StaticResource ButtonImageStyle}"/>
 				</MenuItem.Icon>
 			</MenuItem>
+			<Separator Visibility="{Binding VisQuantCommands}"/>
+
+			<MenuItem  Header="Quantifizierung mit Fehlerrelationen"	Command="{Binding Path=QuantRelativeCommand}" Visibility="{Binding VisQuantCommands}"/>
+			<MenuItem  Header="Quantifizierung mit Fehlerbeträgen"	Command="{Binding Path=QuantAbsoluteCommand}" Visibility="{Binding VisQuantCommands}"/>
+			<MenuItem  Header="normalisierte Generationen  anzeigen"	Command="{Binding Path=QuantNormalizeCommand}" Visibility="{Binding VisQuantCommands}"/>
+			
+			
 		</ContextMenu>
 
 	</UserControl.Resources>
@@ -153,7 +154,7 @@
 					MouseLeftButtonDown="_xChartCanvas_OnMouseLeftButtonDown"
 					MouseLeftButtonUp="_xChartCanvas_OnMouseLeftButtonUp"
 					MouseMove="_xChartCanvas_OnMouseMove"
-					MouseWheel="TimeShift" />
+					MouseWheel="VisRotate" />
 
 
 		</Grid>

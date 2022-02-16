@@ -173,6 +173,7 @@ namespace SwopReview.views
 			VmMenu vm = ((VmMenu)(DataContext));
 			if (!vm.SwpData.HasValidData)
 				return;
+
 			List<SwopSet> sets = vm.SwpData.OptSets;
 
 			_plotSetSelector.Children.Add(CreateCheckbox("Common (all Sets)", true, true));
@@ -610,21 +611,21 @@ namespace SwopReview.views
 			return btn;
 		}
 
-		TextBox CreateParameterTextBox(string txt)
-		{
-			TextBox tb = new TextBox
-			{
-				Text = txt,
-				IsReadOnly= true,
-				AllowDrop = true,
-				Margin = new Thickness(5)
-			};
-			tb.MouseDoubleClick += OnParamButtonClick;
-			//tb.MouseMove += ParameterMouseMove;
-			//tb.Drop += ParameterDrop;
+		//TextBox CreateParameterTextBox(string txt)
+		//{
+		//	TextBox tb = new TextBox
+		//	{
+		//		Text = txt,
+		//		IsReadOnly= true,
+		//		AllowDrop = true,
+		//		Margin = new Thickness(5)
+		//	};
+		//	tb.MouseDoubleClick += OnParamButtonClick;
+		//	//tb.MouseMove += ParameterMouseMove;
+		//	//tb.Drop += ParameterDrop;
 
-			return tb;
-		}
+		//	return tb;
+		//}
 
 		Button CreateParameterButton(string txt)
 		{

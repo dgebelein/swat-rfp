@@ -62,6 +62,7 @@ namespace SwopReview
 
 		#region Properties für Binding
 		public ICommand PrintCommand { get { return _printCommand; } }
+		public Visibility VisQuantCommands { get { return Visibility.Collapsed; } } // entfernt die quantifizierungsmethoden aus contextmenü
 
 		#endregion
 

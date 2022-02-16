@@ -40,7 +40,7 @@ namespace swatSim
 
 		public string Title { get; set; }
 		public int Year { get; set; }
-
+		public Int64 NumIndividuals { get; set; }
 		public bool HasValidData { get; set; }
 
 		#endregion
@@ -50,19 +50,7 @@ namespace swatSim
 		public PopulationData(int maxGen)
 		{
 			_maxGen = maxGen;
-			//eggs = new Int64[maxGen, 366];
-			//larvals = new Int64[maxGen, 366];
-			//pupas = new Int64[maxGen, 366];
-			//flies = new Int64[maxGen, 366];
-			//wipupas = new Int64[maxGen, 366];
-			//newEggs = new Int64[maxGen, 366];
-			//activeFlies = new Int64[maxGen, 366];
 
-			//eggAc = new Int64[maxGen, maxAc, 366];
-			//larvalAc = new Int64[maxGen, maxAc, 366];
-			//pupaAc = new Int64[maxGen, maxAc, 366];
-			//flyAc = new Int64[maxGen, maxAc, 366];
-			//pupaAestAc = new Int64[maxGen, maxAc, 366];
 
 
 			Initialize();
@@ -84,23 +72,13 @@ namespace swatSim
 			pupaAc = new Int64[_maxGen, maxAc, 366];
 			flyAc = new Int64[_maxGen, maxAc, 366];
 			pupaAestAc = new Int64[_maxGen, maxAc, 366];
+			NumIndividuals = 0;
 
 			_normalisationFactors = null;
 			_numGenerations = -1;
 			HasValidData = false;
 		}
 
-		//public static PopulationData CreateNew(string name, int year, int maxGen)
-		//{
-		//	PopulationData pop = new PopulationData(maxGen)
-		//	{
-		//		Title = name + " - Populationsdynamik",
-		//		Year = year,
-		//		//Model = modelType,
-		//		//Filename = Path.Combine(WorkspaceData.GetPathMonitoring, $"{location}-{year}" + ModelBase.GetMonitoringExt(modelType))
-		//	};
-		//	return pop;
-		//}
 		#endregion
 
 		#region Datenzugriff
@@ -154,6 +132,20 @@ namespace swatSim
 				_maxEggPeriods[i] = periods[i];
 		}
 
+		public int[] MaxEggPeriods
+		{
+			get { return _maxEggPeriods; }
+		}
+
+		public double[] NormalisationFactors
+		{
+			get
+			{
+				CalcNormalisation();
+				return _normalisationFactors;
+			}
+		}
+
 		public Int64 GetVal(DevStage stage, int generation, int dayIndex)
 		{
 			if (generation >= _maxGen)
@@ -175,9 +167,6 @@ namespace swatSim
 					return	newEggs[generation, dayIndex];
 				case DevStage.ActiveFly:
 					return activeFlies[generation, dayIndex];
-				//case DevStage.AestPup:
-				//	return activeFlies[generation, dayIndex];
-
 			}
 			return 0;
 		}
@@ -244,7 +233,6 @@ namespace swatSim
 			return GetNormalizedRow(stage, generation,_normalisationFactors);
 		}
 
-
 		public double[] GetAgeClasses(DevStage stage, int day)
 		{
 			if (_normalisationFactors == null)
@@ -306,21 +294,6 @@ namespace swatSim
 
 		}
 
-		private bool SimToEndOfYear()
-		{
-			return Year < DateTime.Today.Year;
-
-			//double[] p = GetValRow(DevStage.NewEgg, -1);
-
-			//for (int i=365;i>270;i--)
-			//{
-			//	if (p[i] > 0.0)
-			//		return true;
-			//}
-			//return false;
-
-		}
-
 		private void CalcNormalisation()
 		{
 			_normalisationFactors = new double[_maxGen];
@@ -337,24 +310,22 @@ namespace swatSim
 			}
 
 			//eventuelle letzte "rein rechnerische" Generation mit verschwindend geringen Individuenzahlen ignorieren
-			//if(SimToEndOfYear()) // nur wenn ganzes Jahr durchgerechnet wurde - nicht Prognose!
-			//{
 			for(int numGen = GetNumGenerations(); numGen > 3; numGen--)
 			{
-				//if ((numGen > 3) && ((_normalisationFactors[numGen] / _normalisationFactors[numGen - 1]) > 10))
 				if ((_normalisationFactors[numGen] / _normalisationFactors[numGen - 1]) > 5)
 					_normalisationFactors[numGen] = 0.0;
 			}
-			//}
-
-
 		}
+		#endregion
+
+		#region Berechnungen
 
 		public int GetNumGenerations()
 		{
-			if (_numGenerations >= 0)
+			if (_numGenerations >= 0) // schon berechnet?
 				return _numGenerations;
 
+			// ansonsten aus Array-Belegung ermitteln
 			_numGenerations = 0;
 			for (int g = 0; g < _maxGen; g++)
 			{
@@ -376,20 +347,6 @@ namespace swatSim
 			return _numGenerations;
 		}
 
-		public double[] NormalisationFactors
-		{
-			get
-			{
-				//if (_normalisationFactors == null)
-					CalcNormalisation();
-				return _normalisationFactors;
-			}
-		}
-
-		public  int[] MaxEggPeriods
-		{
-			get { return _maxEggPeriods; }
-		}
 		
 		public int GenerationStartIndex(DevStage stage, int generation)
 		{
@@ -436,7 +393,7 @@ namespace swatSim
 						for (int g = 0; g <= numGenerations; g++)
 						{
 							DevStage st = (DevStage)s;
-							sw.Write($"{st.ToString()}{g};");
+							sw.Write($"{st}{g};");
 						
 						}
 					}

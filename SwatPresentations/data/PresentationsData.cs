@@ -15,19 +15,22 @@ namespace SwatPresentations
 		#region Variable
 
 		private TtpTimeRange _timeRange;
-		protected List<PresentationRow> _dataRows;	
+		protected List<PresentationRow> _dataRows;
 		
+
 		protected TtpScaleInfo _leftAxisInfo;
 		protected TtpScaleInfo _rightAxisInfo;
 		protected TtpScaleInfo _xAxisInfo;
 
 		public string Title { get; set; }
+		public string TitleToolTip { get; set; }
 		public string YLegend { get; set; }
 		public int ZoomFactor { get; set; }
 		public int ZoomFactorRight { get; set; }
 		public bool IsZoomed { get; set; }  // zoom mit Maus in Scatterplot
 		public TtpTime DisplayTime { get; set; }
 		public TtpTimeRange HighlightTimeRange { get; set; }
+		public PresentationRow MarkerRow {get;set;}
 
 		public Double ZoomX0 { get; set; }
 		//{
@@ -148,7 +151,10 @@ namespace SwatPresentations
 			_dataRows.Add(row);
 		}
 
-
+		//public void AddTimeMarker(TtpTime marker)
+		//{
+		//	_timeMarkers.Add(marker);
+		//}
 
 		public PresentationRow GetRow(int num)
 		{
@@ -264,6 +270,13 @@ namespace SwatPresentations
 					TrendLine tl = new TrendLine(TimeRange, row);
 					tl.Draw(chart);
 				}
+			}
+
+			if (MarkerRow !=null)
+			{
+				TrendLine tl = new TrendLine(TimeRange, MarkerRow);
+				tl.Draw(chart);
+
 			}
 		}
 

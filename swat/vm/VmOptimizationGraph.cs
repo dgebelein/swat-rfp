@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using TTP.UiUtils;
 
@@ -48,6 +49,7 @@ namespace swat.vm
 		#region Properties für Binding
 
 		public ICommand PrintCommand { get { return _printCommand; } }
+		public Visibility VisQuantCommands { get { return Visibility.Collapsed; } } // entfernt die quantifizierungsmethoden aus contextmenü
 
 		#endregion
 

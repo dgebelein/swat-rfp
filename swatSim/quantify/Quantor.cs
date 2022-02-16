@@ -18,6 +18,7 @@ namespace swatSim
 		#region Var
 
 		// input data
+		ModelBase _model;
 		MonitoringData _md;
 		PopulationData _pd;
 		EvalMethod _evalMethod;
@@ -72,12 +73,13 @@ namespace swatSim
 			}
 		}
 
-		public static Quantor CreateNew(PopulationData pd, MonitoringData md, EvalMethod evalMethod, bool doCreateReport = false)
+		public static Quantor CreateNew(ModelBase model, PopulationData pd, MonitoringData md, EvalMethod evalMethod, bool doCreateReport = false)
 		{
 			MonitoringData monData = (pd.Year == DateTime.Now.Year) ? md.GetWithVirtualMonitoring() : md;
 
 			Quantor quantor = new Quantor
 			{
+				_model=model,
 				_pd = pd,
 				_md = monData,
 				_evalMethod = evalMethod,
@@ -271,12 +273,44 @@ namespace swatSim
 			return monRanges;
 		}
 
-		private double GetRangeSum(double[] popValues, int index, int length)
+		private double GetRangeSum(double[] popValues, int index, int length, double ovipSurv)
 		{
+			//double sum = 0.0;
+			//if(ovipSurv <1.0)
+			//{ 
+			//	for (int i = 0; i < length; i++)
+			//	{
+			//		double stillThere= Math.Pow(ovipSurv,i) * popValues[index - i];
+			//		sum += stillThere;
+			//	}
+			//}
+			//else
+			//{
+			//	for (int i = 0; i < length; i++)
+			//	{
+			//		sum += popValues[index - i];
+			//	}
+
+			//}
+			//return sum;
+			//  nur bis zum Vortag des Monitoringtermins integrieren
+			// Eiablagen oder Fänge am Monitoringtermin selbst sind erst beim nächsten Termin zu finden 
 			double sum = 0.0;
-			for (int i = 0; i < length; i++)
+			if (ovipSurv < 1.0)
 			{
-				sum += popValues[index - i];
+				for (int i = 1; i <= length; i++)
+				{
+					double stillThere = Math.Pow(ovipSurv, i) * popValues[index - i];
+					sum += stillThere;
+				}
+			}
+			else
+			{
+				for (int i = 1; i <= length; i++)
+				{
+					sum += popValues[index - i];
+				}
+
 			}
 			return sum;
 		}
@@ -286,12 +320,14 @@ namespace swatSim
 			double[] prognValues = new double[366];
 			int lastIndex = (withVirtMonitorings) ? 365 : _lastQuantIndex;
 
+			double ovipSurv =(_hasEggs)?  _model.GetEggOvipProb() :1.0; // Wahrscheinlichkeit; dass ein abgelegtes Ei auch am nächsten Tag noch gefunden werden kann
+
 			for (int i = 0; i < lastIndex; i++)
 			{
 				if (monRanges[i] < 0) //Start Monitoring
 					prognValues[i] = -1.0;
 				else
-					prognValues[i] = (monRanges[i] > 0) ? GetRangeSum(popValues, i, monRanges[i]) : double.NaN;
+					prognValues[i] = (monRanges[i] > 0) ? GetRangeSum(popValues, i, monRanges[i], ovipSurv) : double.NaN;
 			}
 			prognValues[365] = double.NaN;
 			return prognValues;
@@ -301,12 +337,12 @@ namespace swatSim
 		{
 			if (HasEggs)
 			{
-				_eggMonitoringPeriods = GetMonitoringPeriods(_md.Eggs, _pd.MaxEggPeriods);
+				_eggMonitoringPeriods = GetMonitoringPeriods(_md.Eggs, _pd.MaxEggPeriods); // Begrenzung  des zu Integrations-Zeitraums auf die  Entwicklungsdauer der Eier
 			}
 
 			if (HasAdults)
 			{
-				_adultMonitoringPeriods = GetMonitoringPeriods(_md.Adults, 10);
+				_adultMonitoringPeriods = GetMonitoringPeriods(_md.Adults, 14); // bei Gelbtafeln: max 14 Tage
 			}
 		}
 

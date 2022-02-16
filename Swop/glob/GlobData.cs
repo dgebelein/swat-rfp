@@ -513,7 +513,7 @@ namespace Swop.glob
 					foreach (var key in simList)
 					{
 						if (sim.ParamDict[key].Obj.ToString() == _modelParameters.ParamDict[key].Obj.ToString())
-							continue;
+							continue; // nur vom Modell-Standard abweichende Werte aufnehmen
 
 						if (sim.ParamDict[key].ObjType == typeof(double))
 						{

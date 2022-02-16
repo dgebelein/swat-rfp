@@ -45,7 +45,7 @@ namespace swatSim
 			p.InitItem("da.StartPop", 1000, typeof(int), 500.0, 10000.0, "Startpopulation (Anzahl Individuen)", 1);
 			p.InitItem("da.MaxGen", 5, typeof(int), 4, 7, "maximale Generationenzahl", 3);
 
-			p.InitItem("da.StartAge",0.20, typeof(double), 0.0, 0.9, "Biol. Alter der Startpopulation", 1);
+			p.InitItem("da.StartAge",0.20, typeof(double), 0.0, 0.9, "Biol. Alter der Startpopulation", 3);
 
 			p.InitItem("da.SimStart", 59, typeof(int), 1.0, 180.0, "Simulationsstart (Tag des Jahres)", 1); // (1. März)
 

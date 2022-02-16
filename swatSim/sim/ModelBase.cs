@@ -63,12 +63,12 @@ namespace swatSim
 		#region statics
 		public static string GetWeatherExt(FlyType mt)
 		{
-			// wegen evtl.Erweiterung: versch. Fliegen_versch wetter-Formate
+			// wegen evtl.Erweiterung: versch. Fliegen-versch wetter-Formate
 			//switch (mt)
 			//{
-			//	case FlyType.DR: return ".swat-mdr";
-			//	case FlyType.PR: return ".swat-mpr";
-			//	case FlyType.DA: return ".swat-mda";
+			//	case FlyType.DR: return ".swat-wdr";
+			//	case FlyType.PR: return ".swat-wpr";
+			//	case FlyType.DA: return ".swat-wda";
 			//	default: throw (new Exception("Modeltype???"));
 			//}
 			return (".swat-wea");
@@ -107,7 +107,7 @@ namespace swatSim
 			_name = name;
 			_weather= weather;
 			_population = population;
-			InitModelParameters(explicitParams, locationParams); //29.10.20
+			InitModelParameters(explicitParams, locationParams); 
 
 		}
 
@@ -209,7 +209,6 @@ namespace swatSim
 			if (CanSimulate)
 			{
 				InitTransitions();
-				//InitTableTransition();
 				InitTableDev();
 				InitTableFert();
 				InitTableFlightAct();
@@ -226,7 +225,6 @@ namespace swatSim
 		protected abstract int GetStartPopulation();
 		public abstract void SetMaxGenerations();
 		public abstract bool PrepareWeatherData();
-		//protected abstract void InitTableTransition();
 		protected abstract void InitTableDev();
 		protected abstract void InitTableFert();
 		protected abstract void InitTableFlightAct();
@@ -235,7 +233,7 @@ namespace swatSim
 
 		protected abstract void Individual(DevStage startStage, double startAge, int dayIndex, int generation, bool isDiapauseGen);
 
-		protected virtual double GetStartAge() // wird von Zwiebelfliege überschrieben
+		protected virtual double GetStartAge() // wird z.B. von Zwiebelfliege überschrieben
 		{
 			return 0.0;
 		}
@@ -258,6 +256,18 @@ namespace swatSim
 			_population.Title = popName;
 			_population.Year = _weather.Year;
 			//}
+		}
+
+		public void IncIndividualNum()
+		{
+			_population.NumIndividuals++;
+		}
+
+		public double GetEggOvipProb()
+		{
+			string key = GetParamPrefix() + ".OviSurvProb";
+			SimParamElem param = _workingParams.GetParamElem(key);
+			return (param== null) ?  1.0  : (double)_workingParams.GetValue(key);
 		}
 
 		private void CalcMaxEggPeriods()
@@ -304,11 +314,6 @@ namespace swatSim
 		#endregion
 
 		#region Properties
-
-		//public SimParamData WorkingParams
-		//{
-		//	get { return _workingParams; }
-		//}
 
 		public SimParamData CodedParams
 		{
@@ -359,11 +364,6 @@ namespace swatSim
 			get { return _population; }
 			set { _population = value; }
 		}
-
-		//public int[] MaxEggPeriods
-		//{
-		//	get { return _maxEggPeriods; }
-		//}
 
 		public double[] Transitions
 		{

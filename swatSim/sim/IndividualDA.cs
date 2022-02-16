@@ -89,6 +89,9 @@ namespace swatSim
 			if (generationNo >= model.MaxGenerations) // kein neues Individuum bei zu hoher Generationenanzahl
 				return;
 
+
+			// hier muss Individuenzähler erhöht werden
+			model.IncIndividualNum();
 			IndividualDA indiv = new IndividualDA(model, startStage, startAge, startDay, generationNo, isDiapauseGeneration);
 			indiv.transitionLimits = indiv.GetTransitionLimits();
 

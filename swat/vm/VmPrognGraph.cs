@@ -31,9 +31,9 @@ namespace swat.vm
 		RelayCommand _printCommand;
 		RelayCommand _notesCommand;
 		RelayCommand _saveAsCsvCommand;
-		RelayCommand _optimizeRelativeCommand;
-		RelayCommand _optimizeAbsoluteCommand;
-		RelayCommand _normalizeCommand;
+		RelayCommand _quantRelativeCommand;
+		RelayCommand _quantAbsoluteCommand;
+		RelayCommand _quantNormalizeCommand;
 		RelayCommand _saveOptReportCommand;
 
 
@@ -47,7 +47,7 @@ namespace swat.vm
 			Workspace.CalculatePopulation();
 
 			_evalMethod = EvalMethod.AbsDiff;
-			_quantor = Quantor.CreateNew(Workspace.CurrentPopulationData,Workspace.CurrentMonitoringData, _evalMethod, true);
+			_quantor = Quantor.CreateNew(Workspace.CurrentModel, Workspace.CurrentPopulationData,Workspace.CurrentMonitoringData, _evalMethod, true);
 
 			_graphData = GeneratePresentationsData();
 			ViewVisual = PresentationCreator.Create(PresentationType.Prognosis, _graphData, false);
@@ -55,9 +55,9 @@ namespace swat.vm
 			_printCommand = new RelayCommand(param => this.Print());
 			_notesCommand = new RelayCommand(param => this.ShowNotes());
 			_saveAsCsvCommand = new RelayCommand(param => this.SaveAsCsv());
-			_optimizeRelativeCommand = new RelayCommand(param => this.OptimizeRelative(), param => this.CanOptimizeRelative);
-			_optimizeAbsoluteCommand = new RelayCommand(param => this.OptimizeAbsolute(), param => this.CanOptimizeAbsolute);
-			_normalizeCommand = new RelayCommand(param => this.Normalize(), param => this.CanNormalize);
+			_quantRelativeCommand = new RelayCommand(param => this.QuantRelative(), param => this.CanQuantRelative);
+			_quantAbsoluteCommand = new RelayCommand(param => this.QuantAbsolute(), param => this.CanQuantAbsolute);
+			_quantNormalizeCommand = new RelayCommand(param => this.QuantNormalize(), param => this.CanQuantNormalize);
 			_saveOptReportCommand = new RelayCommand(param => this.SaveOptimizationReport(), param => this.CanSaveOptimizationReport);
 		}
 
@@ -72,15 +72,15 @@ namespace swat.vm
 
 		public ICommand SaveAsCsvCommand { get { return _saveAsCsvCommand; } }
 
-		public ICommand OptimizeRelativeCommand { get { return _optimizeRelativeCommand; } }
-		public ICommand OptimizeAbsoluteCommand { get { return _optimizeAbsoluteCommand; } }
-		public ICommand NormalizeCommand { get { return _normalizeCommand; } }
+		public ICommand QuantRelativeCommand { get { return _quantRelativeCommand; } }
+		public ICommand QuantAbsoluteCommand { get { return _quantAbsoluteCommand; } }
+		public ICommand QuantNormalizeCommand { get { return _quantNormalizeCommand; } }
 		public ICommand SaveOptReportCommand { get { return _saveOptReportCommand; } }
 
 
-		bool CanOptimizeRelative { get { return (_evalMethod != EvalMethod.Relation); } }
-		bool CanOptimizeAbsolute { get { return (_evalMethod != EvalMethod.AbsDiff); } }
-		bool CanNormalize { get { return (_evalMethod != EvalMethod.Nothing); } }
+		bool CanQuantRelative { get { return (_evalMethod != EvalMethod.Relation); } }
+		bool CanQuantAbsolute { get { return (_evalMethod != EvalMethod.AbsDiff); } }
+		bool CanQuantNormalize { get { return (_evalMethod != EvalMethod.Nothing); } }
 		bool CanSaveOptimizationReport { get { return (_evalMethod != EvalMethod.Nothing); } }
 		#endregion
 
@@ -276,23 +276,23 @@ namespace swat.vm
 		private void ExecChangedOptimization(EvalMethod em)
 		{
 			_evalMethod = em;
-			_quantor = Quantor.CreateNew(Workspace.CurrentPopulationData, Workspace.CurrentMonitoringData, _evalMethod, true);
+			_quantor = Quantor.CreateNew(Workspace.CurrentModel, Workspace.CurrentPopulationData, Workspace.CurrentMonitoringData, _evalMethod, true);
 			_graphData = GeneratePresentationsData(_graphData);
 			ViewVisual = PresentationCreator.Create(PresentationType.Prognosis, _graphData, false);
 
 		}
 
-		private void OptimizeRelative()
+		private void QuantRelative()
 		{
 			ExecChangedOptimization(EvalMethod.Relation);
 		}
 
-		private void OptimizeAbsolute()
+		private void QuantAbsolute()
 		{
 			ExecChangedOptimization(EvalMethod.AbsDiff);
 		}
 
-		private void Normalize()
+		private void QuantNormalize()
 		{
 			ExecChangedOptimization(EvalMethod.Nothing);
 		}
