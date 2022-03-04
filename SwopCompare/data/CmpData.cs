@@ -42,7 +42,7 @@ namespace SwopCompare
 
 
 		#region read command-file
-		public void LoadCommandFile()
+		public bool LoadCommandFile()
 		{
 			OpenFileDialog dlg = new OpenFileDialog
 			{
@@ -53,7 +53,10 @@ namespace SwopCompare
 			if (dlg.ShowDialog() == true)
 			{
 				ReadCommandFile(dlg.FileName);
+				return true;
 			}
+			else
+				return false;
 		}
 
 		private string[] GetCommandLines(string filename)

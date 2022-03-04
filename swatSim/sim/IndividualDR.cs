@@ -14,15 +14,18 @@ namespace swatSim
 
 		int generation;
 		int dayIndex;
+		int firstPupaDay;
+		bool isDiapauseGen;
 
 		double[] transitionLimits;
-		int diapauseIndex;
-		bool isDiapauseGen;
-		double diapauseTemp;
-		double diapauseSlope;
 
-		bool isLarvDia;
+		int diapauseMode;		
+		int diapauseIndex;
+		double diapauseTemp;
+		double diapauseRise;		
 		int diapauseDur;
+
+		bool isInDiapause;
 		double diapauseProb;
 
 		double aestTemp; 
@@ -56,13 +59,14 @@ namespace swatSim
 
 			this.transitionLimits = new double[5];
 
+			// Variable aus Performance-Gründen aus Modell übertragen!
 			this.mortLarvaMaxAge = model.MortLarvaMaxAge;
 			this.fertCluster = model.FertCluster;
 
-			this.isLarvDia = model.IsLarvDia;
+			this.diapauseMode = model.DiaMode;
 			this.diapauseIndex = model.DiapauseIndex;
 			this.diapauseTemp = model.DiapauseTemp;
-			this.diapauseSlope = model.DiapauseRise;
+			this.diapauseRise = model.DiapauseRise;
 			this.diapauseDur = model.DiapauseDur;
 			this.diapauseProb = 0.0;
 			this.isDiapauseGen = isDiapauseGen;
@@ -138,6 +142,8 @@ namespace swatSim
 			{
 				indiv.stage = DevStage.Larva;
 				indiv.bioAge = 0.0;
+				
+
 			}
 		}
 
@@ -154,14 +160,12 @@ namespace swatSim
 				return;
 			}
 
-			if (indiv.isLarvDia)
-				CalcDiapause(indiv, di, indiv.model.GetSoilTemp(di));
-
 			indiv.bioAge +=  indiv.model.GetDevRate(DevStage.Larva, di);
 			if (indiv.bioAge > indiv.transitionLimits[(int)DevStage.Larva])
 			{
 				indiv.stage = DevStage.Pupa;
 				indiv.bioAge = 0.0;
+				indiv.firstPupaDay = di;
 			}
 		}
 
@@ -170,8 +174,6 @@ namespace swatSim
 			int di = indiv.dayIndex;
 
 			double mort = indiv.model.GetMortality(DevStage.Pupa, di);
-			//if (indiv.isAestAsleep)//Mortalität während Ästivation halbieren
-			//		mort /= 2.0;
 
 			if (indiv.model.GetRandom < mort)
 			{
@@ -179,10 +181,14 @@ namespace swatSim
 				return;
 			}
 
-			double bt = indiv.model.GetSoilTemp(di);			
+			if (indiv.isInDiapause)
+				return;  // keine weiteren Berechnungen mehr nötig
+
+			double bt = indiv.model.GetSoilTemp(di);	
+
 			CalcDiapause(indiv, di, bt);
 
-			CalcAestivation(indiv, bt);
+			CalcAestivation(indiv, di);
 			if (indiv.isAestAsleep)
 				return; // keine weiteren Berechnungen für diesen Tag nötig
 
@@ -190,14 +196,14 @@ namespace swatSim
 
 			if (indiv.bioAge > indiv.transitionLimits[(int)DevStage.Pupa])
 			{
-				if (!indiv.isDiapauseGen && (indiv.model.GetRandom > indiv.diapauseProb))
+				if (indiv.model.GetRandom > indiv.diapauseProb)
 				{
 					indiv.stage = DevStage.Fly;
 					indiv.bioAge = 0.0;
 					indiv.generation++;
 				}
 				else
-					indiv.isDiapauseGen = true;
+					indiv.isInDiapause = true;
 			}
 		}
 
@@ -232,19 +238,19 @@ namespace swatSim
 			}
 
 			indiv.bioAge += indiv.model.GetDevRate(DevStage.Fly, di);
-			indiv.repro += indiv.model.GetFertility(di, indiv.bioAge);// * indiv.model.GetVpdRestr(di);
-			while(indiv.repro >= indiv.fertCluster)
+			indiv.repro += indiv.model.GetFertility(di, indiv.bioAge) *(1.0- indiv.model.GetFertInhib(di)); // * indiv.model.GetVpdRestr(di);
+			while (indiv.repro >= indiv.fertCluster)
 			{
 				for (int i=0;i< indiv.fertCluster; i++)
 				{
 					indiv.model.ReportIndivStatus(DevStage.NewEgg, di, indiv.generation, 0.0, false);
-					CreateAndLive(indiv.model, DevStage.Egg, 0.0, di, indiv.generation, (di >= indiv.diapauseIndex));
+					CreateAndLive(indiv.model, DevStage.Egg, 0.0, di, indiv.generation, (di >= indiv.model.DiapauseIndex));
 				}
 				indiv.repro -= indiv.fertCluster;
 			}
 
 			// aktive Fliegen berichten
-			if (indiv.model.GetRandom < (indiv.model.GetFlightAct(di)))
+			if (indiv.model.GetRandom < indiv.model.GetFlightAct(di))
          {
 				indiv.model.ReportIndivStatus(DevStage.ActiveFly, di, indiv.generation, 0.0, false);
 			}
@@ -256,54 +262,133 @@ namespace swatSim
 			}
 		}
 
-		// Diapause nicht durch niedrige Temperaturen ausgelöst, sondern durch hohe Temperaturen spät im Jahr verzögert, wobei
-		// die notwendige Temperaturschwelle mit der Zeit ansteigt
+		#endregion
+
+		#region Diapause
 		private static void CalcDiapause(IndividualDR indiv, int day, double soilTemp)
 		{
-			if (day > indiv.diapauseIndex)
+			if (day < indiv.diapauseIndex)
+				return;
+
+			switch(indiv.diapauseMode)
 			{
-				if (indiv.diapauseProb >= 1.0) // Diapausereiz ist nicht reversibel
+					case 1: CalcDiapauseCold(indiv, soilTemp); break;
+					case 2: CalcDiapauseWarm(indiv, day, soilTemp); break;
+					case 3: CalcDiapauseCold_T(indiv, soilTemp); break; 
+					case 4: CalcDiapauseWarm_T(indiv, day, soilTemp); break;
+					case 5: CalcDiapauseCold_Sum(indiv, soilTemp); break;
+					case 6: CalcDiapause_Trig(indiv, day);break;
+					default: break;
+				}
+		}
+
+
+		//  Diapause-Fähigkeit unabhängig vom Eiablagetermin - durch Kältereiz ausgelöst
+		private static void CalcDiapauseCold(IndividualDR indiv, double soilTemp)
+		{
+
+			if (indiv.diapauseProb >= 1.0) // vollendeter Diapausereiz soll nicht reversibel sein
+				return;
+
+			double threshold = indiv.diapauseTemp;
+			if (soilTemp < threshold)
+				indiv.diapauseProb += 1.0 / indiv.diapauseDur;
+
+		}
+
+		//  Diapause-Fähigkeit unabhängig vom Eiablagetermin - durch Wärme verhindert
+		private static void CalcDiapauseWarm(IndividualDR indiv, int day, double soilTemp)
+		{
+			if (indiv.diapauseProb >= 1.0) // vollendeter Diapausereiz soll nicht reversibel sein
+				return;
+
+			double threshold = indiv.diapauseTemp + indiv.diapauseRise / indiv.diapauseDur * (day - indiv.diapauseIndex);
+			if (soilTemp < threshold)
+				indiv.diapauseProb += 1.0 / indiv.diapauseDur;
+			else
+			{
+				//double v = Math.Min((soilTemp - threshold) / indiv.diapauseDur, 1.0 / indiv.diapauseDur);
+				//indiv.diapauseProb -= v;
+				indiv.diapauseProb -= 1.0 / indiv.diapauseDur;
+
+				if (indiv.diapauseProb < 0.0)
+					indiv.diapauseProb = 0.0;
+			}
+		}
+
+		// Diapause  durch niedrige Temperaturen ausgelöst  -  Diapause-Sensivität abhängig vom Eiablagetermin
+		private static void CalcDiapauseCold_T(IndividualDR indiv, double soilTemp)
+		{
+			if (indiv.isDiapauseGen)
+			{
+				if (indiv.diapauseProb >= 1.0) // vollendeter Diapausereiz soll nicht reversibel sein
 					return;
 
-				double threshold = indiv.diapauseTemp + indiv.diapauseSlope * Math.Max(1.0, (day - indiv.diapauseIndex)) / indiv.diapauseDur; 
+				double threshold = indiv.model.DiapauseTemp;
 				if (soilTemp < threshold)
-					indiv.diapauseProb += 1.0 / indiv.diapauseDur;
+					indiv.diapauseProb += 1.0 / indiv.model.DiapauseDur;
+			}
+		}
+
+		//  Diapause-Fähigkeit abhängig vom Eiablagetermin - durch Wärme verhindert, mit ansteigender Temperaturschwelle
+
+		private static void CalcDiapauseWarm_T(IndividualDR indiv, int day, double soilTemp)
+		{
+			if (indiv.isDiapauseGen)
+			{
+				if (indiv.diapauseProb >= 1.0) // vollendeter Diapausereiz soll nicht reversibel sein
+					return;
+
+				double threshold = indiv.model.DiapauseTemp + indiv.diapauseRise / indiv.model.DiapauseDur * (day - indiv.diapauseIndex); 
+				if (soilTemp < threshold)
+					indiv.diapauseProb += 1.0 / indiv.model.DiapauseDur;
 				else
 				{
-					double v = Math.Min((soilTemp - threshold) / indiv.diapauseDur, 1.0 / indiv.diapauseDur);
-					indiv.diapauseProb -= v;
+					//double v = Math.Min((soilTemp - threshold) / indiv.model.DiapauseDur, 1.0 / indiv.model.DiapauseDur);
+					//indiv.diapauseProb -= v;	
+					//				
+					indiv.diapauseProb -= 1.0 / indiv.model.DiapauseDur;
 					if (indiv.diapauseProb < 0.0)
 						indiv.diapauseProb = 0.0;
 				}
 			}
-
-			// alter Algorithmus: Diapauseauslöung durch Temperaturunterschreitung
-			//if (di >= indiv.diapauseIndex)
-			//{
-			//	double bt = indiv.model.GetSoilTemp(di);
-			//	if (bt < indiv.diapauseTemp + 2.0)
-			//	{
-			//		if (bt < indiv.diapauseTemp - 2.0)
-			//			indiv.diapauseProb += 1.0 / indiv.diapauseDur;
-			//		else
-			//			indiv.diapauseProb += (1.0 - (bt - (indiv.diapauseTemp - 2.0)) / 4.0) / indiv.diapauseDur;
-
-			//	}
-			//}
 		}
 
 
-		private static void CalcAestivation(IndividualDR indiv, double soilTemp)
+		//Diapause über Kältesumme - unabh. vom Eiablagetermin
+		private static void CalcDiapauseCold_Sum(IndividualDR indiv, double soilTemp)
 		{
+			if (indiv.diapauseProb >= 1.0) // vollendeter Diapausereiz soll nicht reversibel sein
+				return;
+
+			double threshold = indiv.diapauseTemp;
+			if (soilTemp < threshold)
+				indiv.diapauseProb += (threshold - soilTemp) / indiv.diapauseDur;
+		}
+
+		private static void CalcDiapause_Trig(IndividualDR indiv, int day)
+		{
+			indiv.diapauseProb = indiv.model.TableDiapause[day];
+		}
+
+		#endregion
+
+
+		#region Ästivation
+
+		private static void CalcAestivation(IndividualDR indiv, int day)
+		{
+
+			double aestTemp = indiv.model.TableAestTemp[day];
 			if ((indiv.bioAge < indiv.aestMinAge) || (indiv.bioAge > indiv.aestMaxAge))
 				indiv.isAestAsleep = false;
 			else
 			{
-				if (soilTemp > indiv.aestTemp)
+				if (aestTemp > indiv.aestTemp)
 					indiv.isAestAsleep = true;
 				else
 				{
-					if (soilTemp < (indiv.aestTemp - indiv.aestDropDiff))
+					if (aestTemp < (indiv.aestTemp - indiv.aestDropDiff))
 						indiv.isAestAsleep = false;
 				}
 			}

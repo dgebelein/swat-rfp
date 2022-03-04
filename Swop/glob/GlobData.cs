@@ -9,12 +9,6 @@ using Swop.optimizer;
 
 namespace Swop.glob
 {
-	//enum LogMode
-	//{
-	//	Prolog,
-	//	Action,
-	//	End
-	//};
 	public enum EvalType
 	{
 		Start,
@@ -177,6 +171,12 @@ namespace Swop.glob
 					return false;
 			}
 
+			for (int i = 0; i < instructions.ParameterInitials.Count; i++)
+			{
+				if (!ChangeParamInitial(instructions.ParameterInitials[i]))
+					return false;
+			}
+
 			for (int i = 0; i < instructions.ParameterKeys.Count; i++)
 			{
 				if (!AddParameter(instructions.ParameterKeys[i]))
@@ -254,6 +254,42 @@ namespace Swop.glob
 
 			return true;
 		}
+
+		private bool ChangeParamInitial(string parameterCmd)
+		{
+			char[] delim = new char[] { ' ', '\t' };
+			string[] elems = parameterCmd.Trim().Split(delim, StringSplitOptions.RemoveEmptyEntries);
+
+			SimParamElem para = _modelParameters.GetParamElem(elems[0]);
+
+			if (para == null)
+			{
+				ErrorMessage = $"ungültiger Initial-Parameter: {elems[0]}";
+				return false;
+			}
+
+			if (elems.Length < 2) // ohne Initialwert
+			{
+				ErrorMessage = $"kein Wert für Initial-Parameter: {elems[0]}";
+				return false;
+			}
+
+
+			SimParamData tmpParam = _modelParameters.Clone();
+			string s = $"{elems[0]}={elems[1]}";
+			tmpParam.ReadFromString(s);
+			if (tmpParam.HasWarnings)
+			{
+				ErrorMessage = $"Fehler für Initial-Parameter: {tmpParam.Warnings[0]}";
+				return false;
+			}
+
+			para = tmpParam.GetParamElem(elems[0]);
+			_modelParameters.AddOrReplaceItem(elems[0], para);
+			return true;
+		}
+
+
 
 		private bool AddParameter(string parameterCmd)
 		{

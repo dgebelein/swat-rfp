@@ -18,6 +18,8 @@ namespace swat
 		{
 			Properties["ExtUser"] = false;
 			Properties["SuperUser"] = false;
+			Properties["Developer"] = false;
+
 
 
 			for (int i=0; i< e.Args.Length;i++)
@@ -26,6 +28,8 @@ namespace swat
 					Properties["ExtUser"] = true;
 				if (string.Compare("-x", e.Args[i].Trim(), true) == 0)
 					Properties["SuperUser"] = true;
+				if (string.Compare("-dev", e.Args[i].Trim(), true) == 0)
+					Properties["Developer"] = true;
 			}
 
 			base.OnStartup(e);

@@ -244,23 +244,25 @@ namespace SwopReview
 				Reporter reporter = new Reporter(_swopData);
 				((VmReport)ViewReportDataContext).SetTheCode(reporter.CreateTheReport());
 				_hasCode = true;
-			}			
+				//}			
 
-			SelectedTabIndex = 0;
-			SelectedMeshParameter = null;
+				SelectedTabIndex = 0;
+				SelectedMeshParameter = null;
 
-			OnPropertyChanged("SwopLogName");
-			OnPropertyChanged("SwopLogError");
+				OnPropertyChanged("SwopLogName");
+				OnPropertyChanged("SwopLogError");
 
-			OnPropertyChanged("VisReportCommands");
-			OnPropertyChanged("VisErrorLog");
-			OnPropertyChanged("VisPlotCommands");
-			OnPropertyChanged("VisMeshPanelCommands");
-			OnPropertyChanged("VisColorMeshCommands");
-			OnPropertyChanged("VisSimResultCommands");
+				OnPropertyChanged("VisReportCommands");
+				OnPropertyChanged("VisErrorLog");
+				OnPropertyChanged("VisPlotCommands");
+				OnPropertyChanged("VisMeshPanelCommands");
+				OnPropertyChanged("VisColorMeshCommands");
+				OnPropertyChanged("VisSimResultCommands");
 
-			OnPropertyChanged("SelectedTabIndex");
-			InitMenues();
+				OnPropertyChanged("SelectedTabIndex");
+				InitMenues();
+			}
+
 		}
 
 		bool ReadLogFile(string fn)
@@ -322,10 +324,10 @@ namespace SwopReview
 				else return;
 			}
 
-			ParamCreator pc = new ParamCreator(_swopData);
+			//ParamCreator pc = new ParamCreator(_swopData);
 			foreach(int setId in GetSelectedParameterFiles())
 			{
-				if (!pc.CreateParamFile(setId, outputPath))
+				if (!ParamCreator.CreateParamFile(_swopData, setId, outputPath))
 					return;
 			}
 

@@ -24,6 +24,8 @@ namespace Swop.optimizer
 		SimParamData _modelDefParams;
 		SimParamData _bestParams;
 
+		EvalMethod _quantorMethod;
+
 		double[] _combiValues;
 		double[] _bestEvals;
 		double _bestEvalValue;
@@ -48,6 +50,7 @@ namespace Swop.optimizer
 		public MultiCombiner(GlobData globData, ProgressChangedEventHandler progressChangedMethod, RunWorkerCompletedEventHandler progressCompletedMethod)
 		{
 			_globData = globData;
+			_quantorMethod = EvalMethod.Relation;
 
 			_randomNumbers = new double[10000000]; // Erzeugung von Zufallszahlen-Folge für Multithreading
 			Random rand = new Random(96);
@@ -413,10 +416,10 @@ namespace Swop.optimizer
 					ModelBase model = CreateCombinationModel(simParams, i);
 					model.RunSimulation();
 
-					Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[i], EvalMethod.AbsDiff, false);
+					Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[i], _quantorMethod, false);
 					DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 
-					singleEvals[i + 1] = quantor.GetRemainingError(stage, EvalMethod.Relation, _globData.FirstIndices[i], _globData.LastIndices[i]); // optimieren:immer relationen!
+					singleEvals[i + 1] = quantor.GetRemainingError(stage, _quantorMethod, _globData.FirstIndices[i], _globData.LastIndices[i]); 
 				}
 				catch
 				{

@@ -88,6 +88,7 @@ namespace swat.vm
 			{
 				TimeRange = new TtpTimeRange(new TtpTime("1.1." + Workspace.SimulationYear), TtpEnPattern.Pattern1Year, 1),
 				Title = Workspace.CurrentPopulationData.Title,
+				TitleToolTip = Workspace.Notes,
 				HighlightTimeRange = GetPresentTimerange()
 			};
 

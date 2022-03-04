@@ -45,7 +45,8 @@ namespace swatSim
 
 		public SimParamData()
 		{
-			_paramDict = new Dictionary<string, SimParamElem>();
+			_paramDict = new Dictionary<string, SimParamElem>(StringComparer.InvariantCultureIgnoreCase); // case insensitive!
+			//_paramDict = new Dictionary<string, SimParamElem>(); // case sensitive
 			_warnings = new List<string>();
 		}
 
@@ -503,51 +504,81 @@ namespace swatSim
 
 		#region Schreiben
 
-		public bool WriteToFile(string filePath= null)
+		//public bool WriteToFile(string filePath = null)
+		//{
+		//	_mustSave = false; // zum Start wegen mögl Exceptions
+
+		//	string pathName = filePath;
+
+		//	if (string.IsNullOrEmpty(pathName))
+		//	{ 
+		//		string path = (string)Application.Current.Properties["PathParameters"];
+		//		pathName = Path.Combine(path, Filename);
+		//	}
+	
+		//	//Sortieren
+		//	var list = _paramDict.Keys.ToList();
+		//	list.Sort();
+
+		//	string section = "";
+		//	_warnings.Clear();
+
+		//	try
+		//	{
+		//		using (StreamWriter sw = new StreamWriter(File.Open(pathName, FileMode.Create), Encoding.UTF8))
+		//		{
+		//			foreach (var key in list)
+		//			{
+		//				if (!_paramDict[key].IsChanged)
+		//					continue;
+
+		//				string[] names = key.Split('.');
+
+
+		//				if (names[0] != section)
+		//				{
+		//					section = names[0];
+		//					sw.WriteLine($"[{section}]");
+
+		//				}
+		//				if (_paramDict[key].ObjType == typeof(double))
+		//				{
+		//					sw.WriteLine($"{names[1]} = {((double)(_paramDict[key].Obj)).ToString("0.####", CultureInfo.InvariantCulture)}");
+		//				}
+		//				else
+		//					sw.WriteLine($"{names[1]} = {((IConvertible)_paramDict[key].Obj).ToString(CultureInfo.InvariantCulture)}");
+
+		//			}
+		//			sw.Close();
+		//		}
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		_warnings.Add($"Datei '{pathName}' konnte nicht geschrieben werden.\r\nGrund: {e.Message}");
+		//		return false;
+		//	}
+
+		//	return true;
+		//}
+		public bool WriteToFile(string filePath = null)
 		{
 			_mustSave = false; // zum Start wegen mögl Exceptions
 
 			string pathName = filePath;
 
 			if (string.IsNullOrEmpty(pathName))
-			{ 
+			{
 				string path = (string)Application.Current.Properties["PathParameters"];
 				pathName = Path.Combine(path, Filename);
 			}
-	
-			//Sortieren
-			var list = _paramDict.Keys.ToList();
-			list.Sort();
 
-			string section = "";
 			_warnings.Clear();
 
 			try
 			{
 				using (StreamWriter sw = new StreamWriter(File.Open(pathName, FileMode.Create), Encoding.UTF8))
 				{
-					foreach (var key in list)
-					{
-						if (!_paramDict[key].IsChanged)
-							continue;
-
-						string[] names = key.Split('.');
-
-
-						if (names[0] != section)
-						{
-							section = names[0];
-							sw.WriteLine($"[{section}]");
-
-						}
-						if (_paramDict[key].ObjType == typeof(double))
-						{
-							sw.WriteLine($"{names[1]} = {((double)(_paramDict[key].Obj)).ToString("0.####", CultureInfo.InvariantCulture)}");
-						}
-						else
-							sw.WriteLine($"{names[1]} = {((IConvertible)_paramDict[key].Obj).ToString(CultureInfo.InvariantCulture)}");
-
-					}
+					sw.WriteLine(GetString(true));
 					sw.Close();
 				}
 			}
@@ -558,6 +589,38 @@ namespace swatSim
 			}
 
 			return true;
+		}
+
+		public string GetString(bool onlyChangedParams = true)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			var list = _paramDict.Keys.ToList();
+			list.Sort();
+
+			string section = "";
+
+			foreach (var key in list)
+			{
+				if (onlyChangedParams && (!_paramDict[key].IsChanged))
+					continue;
+
+				string[] names = key.Split('.');
+
+				if (names[0] != section)
+				{
+					section = names[0];
+					sb.AppendLine($"[{section}]");
+				}
+
+				if (_paramDict[key].ObjType == typeof(double))
+				
+					sb.AppendLine($"{names[1]} = {((double)(_paramDict[key].Obj)).ToString("0.####", CultureInfo.InvariantCulture)}");
+				else
+					sb.AppendLine($"{names[1]} = {((IConvertible)_paramDict[key].Obj).ToString(CultureInfo.InvariantCulture)}");
+			}
+
+			return sb.ToString();
 		}
 
 		#endregion

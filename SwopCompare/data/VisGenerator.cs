@@ -69,17 +69,18 @@ namespace SwopCompare
 
 			AddSimTrends(pd);
 			AddWeatherTrends(pd);
-			AddMarkers(pd);
 
 			int year = Weather.Year;
 			pd.TimeRange =  new TtpTimeRange(new TtpTime("1.1." + year), TtpEnPattern.Pattern1Year, 1);
-			pd.HighlightTimeRange = _data.CompareSets[_setIndex].EvalTimeRange; 
+			pd.HighlightTimeRange = _data.CompareSets[_setIndex].EvalTimeRange; 			
+			pd.AddMarkers(_data.CompareSets[_setIndex].Notes,year);
+
 			return pd;
 		}
 
 		private void AddSimTrends(PresentationsData pd)
 		{
-			double[] startTrend = GetModelTrend(null); // zuerst aufrufen, weil hier auf Eier/Adulte umgeschaltet wird
+			double[] startTrend = GetModelTrend(_data.CompareSets[_setIndex].CommonParams); // zuerst aufrufen, weil hier auf Eier/Adulte umgeschaltet wird
 			AddMonitoringRow(pd);
 			AddDefaultParamRow(pd, startTrend);
 			AddParameterRows(pd);
@@ -97,10 +98,12 @@ namespace SwopCompare
 
 		private void AddDefaultParamRow(PresentationsData pd, double[] trend)
 		{
+			string paraText = _data.CompareSets[_setIndex].CommonParams.GetString(true);
+
 			pd.AddRow(new PresentationRow
 			{
 				Legend = $"Para: model Default   {GetEvalString()}",
-				LegendTooltip = $"Calculated num of individuals: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{paraText}",
 				Values = trend,
 				LegendIndex = 1,
 				IsVisible = true,
@@ -113,19 +116,23 @@ namespace SwopCompare
 
 		private void AddParameterRows(PresentationsData pd)
 		{
-			for(int i=0; i<_data.CompareSets[_setIndex].ParamsList.Count; i++)
+			int numSets = _data.CompareSets[_setIndex].ParamsList.Count;
+			for (int i=0; i< numSets; i++)
 			{
 				double[] trend = GetModelTrend(_data.CompareSets[_setIndex].ParamsList[i]);
-			
+				//string paraText = _data.CompareSets[_setIndex].ParamsText[i];
+				string paraText = _data.CompareSets[_setIndex].ParamsList[i].GetString(true);
+
 				pd.AddRow(new PresentationRow
 				{
 					Legend = $"Para: {_data.CompareSets[_setIndex].CommentList[i]}  {GetEvalString()}",
-					LegendTooltip = $"Calculated num of individuals: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+					LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{paraText}",
 					Values = trend,
 					LegendIndex = i+2,
 					IsVisible = false,
 					Thicknes = 1.0,
-					Color = new SolidColorBrush(ColorTools.GetDifferentColor(i+2)),
+					Color = new SolidColorBrush(ColorTools.GetLongRainbow((double)i / numSets)),
+					//Color = new SolidColorBrush(ColorTools.GetDifferentColor(i+2)),
 					Axis = TtpEnAxis.Left,
 					LineType = TtpEnLineType.AreaDiff
 				});
@@ -173,21 +180,16 @@ namespace SwopCompare
 			});
 		}
 
-
-
 		double[] GetModelTrend(SimParamData optParam)
 		{
 			ModelBase model = _data.CreateSimulationModel(_data.ModelType, Weather, optParam);
 			model.SetRandomNumbers(_randomNumbers);
 			model.RunSimulation();
 			_lastSimIndivCalc = model.Population.NumIndividuals; 
-			 //Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, EvalMethod.AbsDiff, false);
 
 			Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, _quantorMethod, false);
 			_hasEggs = quantor.HasEggs;
 			DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
-
-			//_eval = quantor.GetRemainingError(stage, EvalMethod.Relation, 0, 365);
 
 			if(_quantorMethod != EvalMethod.Nothing)
 				_eval = quantor.GetRemainingError(stage, _quantorMethod, StartEval, LastEval);
@@ -211,44 +213,6 @@ namespace SwopCompare
 			});
 		}
 
-		private void AddMarkers(PresentationsData pd)
-		{
-			if (string.IsNullOrWhiteSpace(pd.TitleToolTip))
-				return;
-
-			double[] markers = new double[366];
-			for (int i=0; i<366;i++)
-			{
-				markers[i] = double.NaN;
-			}
-
-			int year = Weather.Year;
-			string[] mt =  Regex.Split(pd.TitleToolTip, "\r\n|\r|\n"); 
-			foreach (string line in mt)
-			{
-				int n = line.IndexOf('|');
-				if (n > 1)
-				{
-					string md = line.Substring(n + 1, 5);
-					TtpTime tm = new TtpTime($"{md}.{year}");
-					if (tm.IsValid)
-					{
-						markers[tm.DayOfYear -1] = 0.0;
-					}
-				}
-
-			}
-
-			pd.MarkerRow = new PresentationRow
-			{
-				Values = markers,
-				IsVisible = true,
-				Thicknes = 1.0,
-				Color = Brushes.DeepPink,
-				Axis = TtpEnAxis.Left,
-				LineType = TtpEnLineType.Limit
-			};
-		}
 		#endregion
 	}
 }

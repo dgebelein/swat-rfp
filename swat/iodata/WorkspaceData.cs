@@ -37,6 +37,7 @@ namespace swat.iodata
 		public string CurrentWorkspaceName { get; set; }
 		public SimParamData DefaultParameters { get; set; }
 
+		public string Notes { get; set; }
 		#endregion
 
 		#region Construction + Init
@@ -444,7 +445,24 @@ namespace swat.iodata
 			{
 				IOError += DataSetParameters.ErrorMsg;
 			}
-			
+
+			string notesName = Path.Combine(WorkspaceData.GetPathNotes, Name + " - Notes.txt");
+			if (!File.Exists(notesName))
+			{ 
+				Notes= "";
+			}
+			else { 
+				try
+				{
+					Notes=(File.ReadAllText(notesName)).Trim();
+				}
+				catch
+				{
+					Notes = "";
+				}
+			}
+
+
 			return (string.IsNullOrEmpty(IOError))? ErrorType.OK : ErrorType.Warning;
 		}
 

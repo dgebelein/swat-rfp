@@ -50,13 +50,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="TtpCommand3, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SwatPresentations\bin\Debug\TtpCommand3.dll</HintPath>
+    <Reference Include="TtpCommand3">
+      <HintPath>..\swat\SwopReview\bin\Debug\TtpCommand3.dll</HintPath>
     </Reference>
-    <Reference Include="TtpEngine3, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\TTP\TTP-V3\engine3\engine3\bin\Debug\TtpEngine3.dll</HintPath>
+    <Reference Include="TtpEngine3">
+      <HintPath>..\swat\SwopReview\bin\Debug\TtpEngine3.dll</HintPath>
     </Reference>
     <Reference Include="TtpUiUtils">
       <HintPath>..\swat\bin\Debug\TtpUiUtils.dll</HintPath>

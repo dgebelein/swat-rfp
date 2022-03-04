@@ -55,9 +55,13 @@ namespace SwatPresentations
 
 		static public Color GetDifferentColor(int id) 
 		{
-			double[] ff = { 0.0, 1.0, 0.5, 0.75, 0.125, 0.875, 0.375, 0.625 };
-			byte[] cc = { 255, 128, 64, 196, 32, 228, 96, 160 };
-			byte[] tt = { 255, 128, 196, 64 };
+			//double[] ff = { 0.0, 1.0, 0.5, 0.75, 0.125, 0.875, 0.375, 0.625 };
+			double[] ff = { 0.0, 1.0, 0.5, 0.75, 0.25, 0.875, 0.125, 0.625 };
+
+			//byte[] cc = { 255, 128, 64, 196, 32, 228, 96, 160 };
+			byte[] cc = { 255, 64, 128, 32, 196, 96, 228, 160 };
+
+			byte[] tt = { 255, 64, 196, 128 };
 			int maxId = ff.Length * cc.Length * tt.Length;
 			id %= maxId;
 			double f = ff[id % ff.Length];

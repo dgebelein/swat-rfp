@@ -69,6 +69,8 @@ namespace swat.vm
 				legitCode=1;
 			if ((bool)Application.Current.Properties["SuperUser"])
 				legitCode = 10;
+			if ((bool)Application.Current.Properties["Developer"])
+				legitCode = 100;
 
 			//if(_parameters == null)
 			//	_parameters = Workspace.CurrentWorkingParameters;

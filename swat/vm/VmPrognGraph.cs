@@ -12,6 +12,7 @@ using System.Windows.Media;
 using TTP.Engine3;
 using TTP.TtpCommand3;
 using TTP.UiUtils;
+using System.Text.RegularExpressions;
 //using SwatSim;
 
 namespace swat.vm
@@ -46,7 +47,7 @@ namespace swat.vm
 			_parentPanel = parentPanel;
 			Workspace.CalculatePopulation();
 
-			_evalMethod = EvalMethod.AbsDiff;
+			_evalMethod = EvalMethod.Relation;
 			_quantor = Quantor.CreateNew(Workspace.CurrentModel, Workspace.CurrentPopulationData,Workspace.CurrentMonitoringData, _evalMethod, true);
 
 			_graphData = GeneratePresentationsData();
@@ -114,13 +115,16 @@ namespace swat.vm
 			PresentationsData data = new PresentationsData
 			{
 				TimeRange = new TtpTimeRange(new TtpTime("1.1." + Workspace.SimulationYear), TtpEnPattern.Pattern1Year, 1),
-				//Title = _prognosis.Title,
+				TitleToolTip = Workspace.Notes,
 				Title = _quantor.Title,
 				HighlightTimeRange = GetPresentTimerange(),
 				ZoomFactor = 0
 			};
 
 			AddPrognosisRows(data);
+			data.AddMarkers(Workspace.Notes, Workspace.SimulationYear);
+
+
 			return data;
 		}
 
@@ -130,9 +134,8 @@ namespace swat.vm
 			PresentationsData data = new PresentationsData
 			{
 				TimeRange = copyData.TimeRange,
-				//Title = _prognosis.Title,
 				Title = _quantor.Title,
-
+				TitleToolTip = Workspace.Notes,
 				HighlightTimeRange = copyData.HighlightTimeRange,
 				ZoomFactor = copyData.ZoomFactor,
 				ZoomFactorRight=0,
@@ -140,6 +143,7 @@ namespace swat.vm
 			};
 
 			AddPrognosisRows(data);
+			data.AddMarkers(Workspace.Notes, Workspace.SimulationYear);
 			return data;
 		}
 
@@ -251,6 +255,57 @@ namespace swat.vm
 				LineType = TtpEnLineType.Chart
 			});
 		}
+
+		//private void AddMarkers(PresentationsData pd)
+		//{
+		//	if (string.IsNullOrWhiteSpace(pd.TitleToolTip))
+		//		return;
+
+		//	double[] markers = new double[366];
+		//	for (int i = 0; i < 366; i++)
+		//	{
+		//		markers[i] = double.NaN;
+		//	}
+
+		//	int year = Workspace.SimulationYear;
+		//	string[] mt = Regex.Split(pd.TitleToolTip, "\r\n|\r|\n");
+		//	foreach (string line in mt)
+		//	{
+		//		try
+		//		{
+		//			int n = line.IndexOf('|');
+		//			if (n >= 0)
+		//			{
+		//				Regex regex = new Regex(@"([0-9]+\.[0-9]+)");
+		//				Match match = regex.Match(line.Substring(n + 1));
+		//				if (match.Success)
+		//				{
+		//					string md = match.Value;
+
+		//					TtpTime tm = new TtpTime($"{md}.{year}");
+		//					if (tm.IsValid)
+		//					{
+		//						markers[tm.DayOfYear - 1] = 0.0;
+		//					}
+		//				}
+		//			}
+		//		}
+		//		catch (Exception e)
+		//		{ }
+
+
+		//	}
+
+		//	pd.MarkerRow = new PresentationRow
+		//	{
+		//		Values = markers,
+		//		IsVisible = true,
+		//		Thicknes = 1.0,
+		//		Color = Brushes.DeepPink,
+		//		Axis = TtpEnAxis.Left,
+		//		LineType = TtpEnLineType.Limit
+		//	};
+		//}
 
 		#endregion
 

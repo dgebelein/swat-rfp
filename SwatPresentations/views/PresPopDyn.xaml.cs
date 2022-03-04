@@ -114,6 +114,11 @@ namespace SwatPresentations
 		{
 			_title.Text = SourceData.Title;
 			_title.Foreground = _textColor;
+			if (!string.IsNullOrEmpty(SourceData.TitleToolTip))
+			{
+				ToolTipService.SetShowDuration(_title, 20000);
+				_title.ToolTip = SourceData.TitleToolTip;
+			}
 
 			// Zeitachse
 			_timeAxis = new TimeAxis(_xChartCanvas, _xTimeAxisCanvas, _xLeftAxisCanvas.Width, _xRightAxisCanvas.Width, _textColor, SourceData.TimeRange);

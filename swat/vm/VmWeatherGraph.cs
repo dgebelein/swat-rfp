@@ -80,6 +80,7 @@ namespace swat.vm
 			{
 				TimeRange = new TtpTimeRange(new TtpTime("1.1." + Workspace.SimulationYear), TtpEnPattern.Pattern1Year, 1),
 				Title = (_showSimSources) ? Workspace.WeatherData.Title + " (für Berechnung aufbereitet)" : Workspace.WeatherData.Title + " (wie eingegeben)",
+				TitleToolTip = Workspace.Notes,
 				ZoomFactor = 0
 			};
 

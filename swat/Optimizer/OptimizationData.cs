@@ -467,7 +467,7 @@ namespace swat.optimizer
 			try
 			{
 				model.RunSimulation();
-				_quantor = Quantor.CreateNew(model, model.Population, _workspace.CurrentMonitoringData, EvalMethod.AbsDiff, false);  
+				_quantor = Quantor.CreateNew(model, model.Population, _workspace.CurrentMonitoringData, evalMethod, false);  
 
 				DevStage stage = _quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 				actEval = _quantor.GetRemainingError(stage, evalMethod, FirstEvalIndex, LastEvalIndex); // optimieren:auswahl zulassen!
@@ -527,6 +527,7 @@ namespace swat.optimizer
 				{
 					TimeRange = new TtpTimeRange(new TtpTime("1.1." + _workspace.SimulationYear), TtpEnPattern.Pattern1Year, 1),
 					Title = _quantor.Title ,
+					TitleToolTip = _workspace.Notes,
 					ZoomFactor = 0,
 					ZoomFactorRight = 0,
 					HighlightTimeRange = EvalTimerange

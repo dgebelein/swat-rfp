@@ -87,12 +87,12 @@ namespace SwopCompare
 
 		public void LoadCommandFile()
 		{
+			if (!Data.LoadCommandFile())
+				return;
 
-			Data.LoadCommandFile();
 			if(!Data.HasValidData)
 			{				
 				DlgMessage.Show("Swop-Compare - Error", Data.ErrMessage, MessageLevel.Error);
-
 			}
 
 			InitMenu();
@@ -103,7 +103,6 @@ namespace SwopCompare
 		{
 			_viewLeft.CreateSimSetPanel(ShowResult);			
 			OnPropertyChanged("CommandFileName");
- 
 		}
 
 		#endregion

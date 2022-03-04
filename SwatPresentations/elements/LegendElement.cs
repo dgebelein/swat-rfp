@@ -195,7 +195,7 @@ namespace SwatPresentations
 			le._isVisible = row.IsVisible;
 			le._linetype = row.LineType;
 			ToolTipService.SetInitialShowDelay(le, 350);
-			ToolTipService.SetShowDuration(le, 3000);
+			ToolTipService.SetShowDuration(le, 30000);
 			le.ToolTip = string.IsNullOrEmpty(row.LegendTooltip) ? "Doppelklick schaltet Sichtbarkeit um" : row.LegendTooltip;
 
 			TextBlock tb = new TextBlock

@@ -10,7 +10,9 @@
  >
 
 	<UserControl.Resources>
-
+		<Style TargetType="ToolTip">
+			<Setter Property="TextBlock.TextAlignment" Value="Left"/>
+		</Style>
 
 		<Style x:Key="YAxisStyle" TargetType="{x:Type Canvas}">
 			<Setter Property="Cursor" Value="ScrollNS" />

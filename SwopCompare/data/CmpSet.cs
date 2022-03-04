@@ -14,7 +14,10 @@ namespace SwopCompare
 	{
 		public WeatherData Weather { get; private set; }
 		public MonitoringData Monitoring { get; private set; }
+		public SimParamData CommonParams { get; private set; }
 		public List<SimParamData> ParamsList { get; private set; }
+		public List<string> ParamsText { get; private set; }
+
 		public List<string> CommentList { get; private set; }
 
 		public TtpTimeRange EvalTimeRange { get; private set; }
@@ -30,6 +33,7 @@ namespace SwopCompare
 		public CmpSet(ModelBase model)
 		{
 			ParamsList = new List<SimParamData>();
+			ParamsText = new List<string>();
 			CommentList = new List<string>();
 			_model = model;
 		}
@@ -76,6 +80,28 @@ namespace SwopCompare
 				ErrorMessage = Monitoring.ErrorMsg;
 				return false;
 			}
+		}
+
+		private bool AddCommonParams(string line)
+		{
+			CommonParams = _model.CodedParams.Clone();
+
+			string paramsfile = IsolateContent(line, "#p:");
+
+			if (!string.IsNullOrEmpty(paramsfile))
+			{
+				if (CommonParams.ReadFromFile(Path.Combine(GetPathSwop, paramsfile)))
+				{
+					return true;
+				}
+				else
+				{
+					ErrorMessage = CommonParams.ErrorMsg;
+					return false;
+				}
+			}
+			return true;
+
 		}
 
 		private bool AddTimeRange(string line)
@@ -139,14 +165,15 @@ namespace SwopCompare
 
 			if (!string.IsNullOrEmpty(paramsfile))
 			{
-				SimParamData cParams = _model.CodedParams.Clone();
+				SimParamData cParams = CommonParams.Clone();
 				if (cParams.ReadFromFile(Path.Combine(GetPathSwop, paramsfile)))
 				{
 					ParamsList.Add(cParams);
+					ParamsText.Add(GetParamsText(Path.Combine(GetPathSwop, paramsfile)));
 				}
 				else
 				{
-					ErrorMessage = cParams.ErrorMsg;
+					ErrorMessage =$"{paramsfile} : {cParams.ErrorMsg}";
 					return false;
 				}
 			}
@@ -171,8 +198,9 @@ namespace SwopCompare
 
 				if(Weather == null) //Wetter + Monitoring  zuerst
 				{
-					if (!AddWeather(lines[n]) || (!AddMonitoring(lines[n])) || !AddTimeRange(lines[n]))
+					if (!AddWeather(lines[n]) || (!AddMonitoring(lines[n]))  || !AddCommonParams(lines[n])|| !AddTimeRange(lines[n]))
 						return false;
+					 
 					AddNotes();
 
 				}
@@ -188,6 +216,10 @@ namespace SwopCompare
 
 		}
 
+		private string GetParamsText(string  filename)
+		{
+			return File.ReadAllText(filename).Trim();
+		}
 
 		#region static helpers
 
@@ -262,35 +294,7 @@ namespace SwopCompare
 		}
 		#endregion
 
-		#region helper
 
-		//string GetToken(string line)
-		//{
-		//	if (line.StartsWith("#"))
-		//	{
-		//		int n = line.IndexOf(':');
-		//		if (n > 1)
-		//			return (line.Substring(1, n));
-		//		else
-		//			return null;
-
-		//	}
-		//	return null;
-		//}
-
-		//string GetTokenContentString(string line)
-		//{
-		//	if (line.StartsWith("#"))
-		//	{
-		//		int n = line.IndexOf(':');
-		//		if (n > 1)
-		//			return (line.Substring(n + 1).Trim());
-		//		else
-		//			return null;
-		//	}
-		//	return null;
-		//}
-		#endregion
 
 	}
 }

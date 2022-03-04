@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -151,10 +152,55 @@ namespace SwatPresentations
 			_dataRows.Add(row);
 		}
 
-		//public void AddTimeMarker(TtpTime marker)
-		//{
-		//	_timeMarkers.Add(marker);
-		//}
+
+		public void AddMarkers(string markerText, int year)
+		{
+			if (string.IsNullOrWhiteSpace(markerText))
+				return;
+
+			double[] markers = new double[366];
+			for (int i = 0; i < 366; i++)
+			{
+				markers[i] = double.NaN;
+			}
+
+			//int year = Workspace.SimulationYear;
+			string[] mt = Regex.Split(markerText, "\r\n|\r|\n");
+			foreach (string line in mt)
+			{
+				try
+				{
+					int n = line.IndexOf('|');
+					if (n >= 0)
+					{
+						Regex regex = new Regex(@"([0-9]+\.[0-9]+)");
+						Match match = regex.Match(line.Substring(n + 1));
+						if (match.Success)
+						{
+							string md = match.Value;
+
+							TtpTime tm = new TtpTime($"{md}.{year}");
+							if (tm.IsValid)
+							{
+								markers[tm.DayOfYear - 1] = 0.0;
+							}
+						}
+					}
+				}
+				catch (Exception e)
+				{ }
+			}
+
+			MarkerRow = new PresentationRow
+			{
+				Values = markers,
+				IsVisible = true,
+				Thicknes = 1.0,
+				Color = Brushes.DeepPink,
+				Axis = TtpEnAxis.Left,
+				LineType = TtpEnLineType.Limit
+			};
+		}
 
 		public PresentationRow GetRow(int num)
 		{

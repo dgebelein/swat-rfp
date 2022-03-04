@@ -20,6 +20,8 @@ namespace Swop.glob
 		public List<double> EvalWeightings;
 
 		public List<string> ParameterKeys;
+		public List<string> ParameterInitials;
+
 		public FlyType ModelTyp;
 		public SwopWorkMode SwopMode;
 		public string Description;
@@ -38,6 +40,8 @@ namespace Swop.glob
 			FirstIndices = new List<int>();
 			LastIndices = new List<int>();
 			ParameterKeys = new List<string>();
+			ParameterInitials = new List<string>();
+
 			EvalWeightings = new List<double>();
 
 		}
@@ -188,6 +192,16 @@ namespace Swop.glob
 			ParameterKeys.Add(line);
 		}
 
+		private void ReadInitialParam(string line)
+		{
+			if (string.IsNullOrEmpty(line))
+			{
+				ErrMsg = "Parameter-Angabe fehlt";
+				return;
+			}
+			ParameterInitials.Add(line);
+		}
+
 		private void ReadDate(string line)
 		{
 			string[] elems = line.Trim().Split('-');
@@ -266,6 +280,7 @@ namespace Swop.glob
 								case "model": ReadModelType(elems[1]); break;
 								case "set": ReadSet(elems[1]); break;
 								case "param": ReadParam(elems[1]); break;
+								case "init": ReadInitialParam(elems[1]); break;
 								case "date": ReadDate(elems[1]); break;
 								default: ErrMsg = "unbekannte Anweisung: '" + line + "'"; break;
 							}

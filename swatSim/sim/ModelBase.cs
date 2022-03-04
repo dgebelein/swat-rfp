@@ -18,8 +18,10 @@ namespace swatSim
 		protected double[] _tableFlightAct;
 		protected double[] _tableFlightInhib; // Einschränkung Flug/Eiablage durch fehlenden Niederschlag
 		protected double[] _tableHatchInhib; // Einschränkung Puppenschlupf durch fehlenden Niederschlag
+		protected double[] _tableFertInhib; // Verminderung Eiablage (durch Regen)
+
 		protected double[,] _tableMortality;
-		protected double[] _tableDiapause;
+		//protected double[] _tableDiapause;
 
 		protected double[] _transitions;
 		protected double[] _maxDevRates;
@@ -191,6 +193,8 @@ namespace swatSim
 			_tableFlightAct = new double[366];
 			_tableFlightInhib = new double[366];
 			_tableHatchInhib = new double[366];
+			_tableFertInhib = new double[366];
+
 			_tableMortality = new double[6, 366]; //6 wegen zusätzl.Larven-Mortalität im Junglarvenstadium
 
 
@@ -213,6 +217,7 @@ namespace swatSim
 				InitTableFert();
 				InitTableFlightAct();
 				InitTableMortality();
+				InitSpecialConditions();
 
 				CalcMaxEggPeriods();
 			}
@@ -232,6 +237,10 @@ namespace swatSim
 		protected abstract void InitTransitions();
 
 		protected abstract void Individual(DevStage startStage, double startAge, int dayIndex, int generation, bool isDiapauseGen);
+
+
+		protected virtual void InitSpecialConditions() // muss vom Fliegenmodell überschrieben werden
+		{ }
 
 		protected virtual double GetStartAge() // wird z.B. von Zwiebelfliege überschrieben
 		{
@@ -403,6 +412,11 @@ namespace swatSim
 			return _tableHatchInhib[dayIndex];
 		}
 
+		public double GetFertInhib(int dayIndex)
+		{
+			return _tableFertInhib[dayIndex];
+		}
+
 		public double GetFlightInhib(int dayIndex)
 		{
 			return _tableFlightInhib[dayIndex];
@@ -410,7 +424,7 @@ namespace swatSim
 
 		public double GetSoilTemp(int dayIndex)
 		{
-			return _simSoilTemps[dayIndex]; 
+			return (dayIndex>=0)? _simSoilTemps[dayIndex]: 0.0; 
 		}
 
 		//public double GetAirTemp(int dayIndex)

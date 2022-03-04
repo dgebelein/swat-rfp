@@ -22,6 +22,8 @@ namespace SwopReview
 		SimParamData _localSetParams;
 		SimParamData _commonBestParams;
 		SimParamData _setBestParams;
+
+		EvalMethod _quantorMethod;
 		int _setIndex;
 		Int64 _lastSimIndivCalc; // Hilfsvariable zum Übertragen der Individuenanzahl;
 
@@ -39,6 +41,8 @@ namespace SwopReview
 		{
 			_swopData = sd;
 			_setIndex = setId;
+			_quantorMethod = EvalMethod.Relation;
+
 			_randomNumbers = new double[10000000]; // Erzeugung von Zufallszahlen-Folge
 			Random rand = new Random(96);
 			for (int i = 0; i < _randomNumbers.Length; i++)
@@ -79,9 +83,9 @@ namespace SwopReview
 			return simParams;
 		}
 
-		SimParamData GetCommonBestParams()
+		public SimParamData GetCommonBestParams()
 		{
-			SimParamData simParams = GetLocalSetParams(); //GetLocalSetParams(model, setId);
+			SimParamData simParams = GetLocalSetParams(); 
 			
 			int p = 0;
 			foreach (string param in _swopData.OptParameters)
@@ -195,7 +199,7 @@ namespace SwopReview
 			ModelBase model = CreateSimulationModel(Weather, optParam);
 			model.RunSimulation();
 			_lastSimIndivCalc = model.Population.NumIndividuals;
-			Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, EvalMethod.AbsDiff, false);
+			Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, _quantorMethod, false);
 			_hasEggs = quantor.HasEggs;
 			return quantor.PrognValues;
 		}
@@ -249,7 +253,7 @@ namespace SwopReview
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
-				LegendTooltip = $"Calculated num of individuals: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
 				Values = trend,
 				LegendIndex = 1,
 				IsVisible = true,
@@ -270,7 +274,7 @@ namespace SwopReview
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
-				LegendTooltip = $"Calculated num of individuals: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
 				Values = trend,
 				LegendIndex = 2,
 				IsVisible = false,
@@ -294,7 +298,7 @@ namespace SwopReview
 			{
 				Legend = legend,
 				Values = trend,
-				LegendTooltip = $"Calculated num of individuals: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
 				LegendIndex = 3,
 				IsVisible = false,
 				Thicknes = 1.0,
@@ -310,7 +314,7 @@ namespace SwopReview
 
 			pd.AddRow(new PresentationRow
 			{
-				Legend = "Lufttemperatur [°C]",
+				Legend = "Air-Temp [°C]",
 				LegendIndex = 4,
 				IsVisible = false,
 				Thicknes = 1.0,
@@ -322,7 +326,7 @@ namespace SwopReview
 
 			pd.AddRow(new PresentationRow
 			{
-				Legend = "Bodentemperatur [°C]",
+				Legend = "Soil-Temp [°C]",
 				LegendIndex = 5,
 				IsVisible = false,
 				Thicknes = 1.0,
@@ -334,7 +338,7 @@ namespace SwopReview
 
 			pd.AddRow(new PresentationRow
 			{
-				Legend = "Niederschlag [mm]",
+				Legend = "Rain [mm]",
 				LegendIndex = 6,
 				IsVisible = false,
 				Thicknes = 1.0,

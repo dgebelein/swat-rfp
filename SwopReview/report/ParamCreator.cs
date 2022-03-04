@@ -12,50 +12,63 @@ namespace SwopReview
 {
 	class ParamCreator
 	{
-		readonly SwopData _data;
-		//string _paramPath;
-		SimParamData _setParams;
+		//readonly SwopData _data;
+		////string _paramPath;
+		//SimParamData _setParams;
 		//int _setId;
 
-		public ParamCreator(SwopData sd)
-		{
-			_data = sd;
-		}
+		//public ParamCreator(SwopData sd)
+		//{
+		//	_data = sd;
+		//}
 
-		public bool CreateParamFile(int setIndex,string filePath)
+		public static bool CreateParamFile(SwopData swopData,int setIndex,string filePath)
 		{
-			CreateSetParameters(setIndex);
-			return WriteParameterFile(setIndex, filePath);
-		}
 
-		void CreateSetParameters(int setId)
-		{
-			ModelBase model;
-			switch (_data.ModelType)
+			SimData sd = new SimData(swopData, setIndex);
+			SimParamData para= sd.GetCommonBestParams();
+
+			string fileName = Path.Combine(filePath, swopData.OptSets[setIndex].Monitoring + ".swat-par");
+			if (!para.WriteToFile(fileName))
 			{
-				case FlyType.DR: model = new ModelDR(null, null, null); break;
-				case FlyType.PR: model = new ModelPR(null, null, null); break;
-				case FlyType.DA: model = new ModelDA(null, null, null); break;
-
-				default: model = null; break;
+				DlgMessage.Show("Error writing File", para.ErrorMsg, MessageLevel.Error);
+				return false;
 			}
-			_setParams = model.CodedParams;
+			return true;
+			//return para.WriteToFile(filePath);
+
+			//CreateSetParameters(setIndex);
+			//return WriteParameterFile(setIndex, filePath);
+		}
+
+		//void CreateSetParameters(int setId)
+		//{
+		//	ModelBase model;
+		//	switch (_data.ModelType)
+		//	{
+		//		case FlyType.DR: model = new ModelDR(null, null, null); break;
+		//		case FlyType.PR: model = new ModelPR(null, null, null); break;
+		//		case FlyType.DA: model = new ModelDA(null, null, null); break;
+
+		//		default: model = null; break;
+		//	}
+		//	_setParams = model.CodedParams;
 			
-			//Lokale Parameter
-			foreach(string s in _data.OptSets[setId].LocalParams)
-			{
-				_setParams.ReadFromString(s);
-			}
+		//	//Lokale Parameter
+		//	foreach(string s in _data.OptSets[setId].LocalParams)
+		//	{
+		//		_setParams.ReadFromString(s);
+		//	}
 			
-			// neu optimierte Parameter
-			int p = 0;
-			foreach (string param in _data.OptParameters)
-			{
-				string val = GetParameterValueString(_setParams, param, _data.BestParamValues[p++]);
-				string st=$"{param} = {val}";
-				_setParams.ReadFromString(st);
-			}
-		}
+		//	// neu optimierte Parameter
+		//	int p = 0;
+		//	foreach (string param in _data.OptParameters)
+		//	{
+		//		string val = GetParameterValueString(_setParams, param, _data.BestParamValues[p++]);
+		//		string st=$"{param} = {val}";
+		//		_setParams.ReadFromString(st);
+		//	}
+		//}
 
 
 		public static string GetParameterValueString(SimParamData paramData, string paramKey, double paramValue)
@@ -84,26 +97,26 @@ namespace SwopReview
 
 		}
 
-		bool WriteParameterFile(int setIndex, string filePath)
-		{
-			string fileName = Path.Combine(filePath, _data.OptSets[setIndex].Monitoring + ".swat-par");
-			if(!_setParams.WriteToFile(fileName))
-			{
-				DlgMessage.Show("Error writing File", _setParams.ErrorMsg, MessageLevel.Error);
-				return false;
-			}
-			return true;
-		}
+		//bool WriteParameterFile(int setIndex, string filePath)
+		//{
+		//	string fileName = Path.Combine(filePath, _data.OptSets[setIndex].Monitoring + ".swat-par");
+		//	if(!_setParams.WriteToFile(fileName))
+		//	{
+		//		DlgMessage.Show("Error writing File", _setParams.ErrorMsg, MessageLevel.Error);
+		//		return false;
+		//	}
+		//	return true;
+		//}
 
-		public SimParamData GetBestCommonParameters(int setId)
-		{
-			return null;
-		}
+		//public SimParamData GetBestCommonParameters(int setId)
+		//{
+		//	return null;
+		//}
 
-		public SimParamData GetBestSetParameters(int setId)
-		{
-			return null;
-		}
+		//public SimParamData GetBestSetParameters(int setId)
+		//{
+		//	return null;
+		//}
 
 	}
 }

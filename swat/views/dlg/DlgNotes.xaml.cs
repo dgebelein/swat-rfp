@@ -60,6 +60,7 @@ namespace swat.views.dlg
 			}
 			catch { }
 			_isChanged = false;
+			_ws.Notes = txtNotes.Text.Trim();
 
 		}
 
@@ -72,7 +73,7 @@ namespace swat.views.dlg
 
 			try
 			{
-				return File.ReadAllText(fn, Encoding.UTF8);
+				return File.ReadAllText(fn.Trim());
 			}
 			catch { }
 
