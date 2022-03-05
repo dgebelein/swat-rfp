@@ -97,6 +97,7 @@ namespace swatSim
 
 		public static void CreateAndLive(ModelDR model, DevStage startStage, double startAge, int startDay, int generationNo, bool isDiapauseGeneration)
 		{
+			//Achtung bei Swop: MaxGen um 1 erhöhen wegen Auswertung bei Modelinitialisierung
 			if (generationNo >= model.MaxGenerations) // kein neues Individuum bei zu hoher Generationenanzahl (wegen Speicherüberlauf!)
 				return;
 

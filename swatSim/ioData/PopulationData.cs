@@ -49,12 +49,8 @@ namespace swatSim
 
 		public PopulationData(int maxGen)
 		{
-			_maxGen = maxGen;
-
-
-
+			_maxGen = maxGen; 
 			Initialize();
-
 		}
 
 		public void Initialize()

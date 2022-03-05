@@ -161,6 +161,12 @@ namespace Swop.glob
 			}
 			_modelParameters = _model.CodedParams;
 
+			for (int i = 0; i < instructions.ParameterInitials.Count; i++) // muss zuerst ausgewertet werden, damit Initialwerte übernommen werden
+			{
+				if (!ChangeParamInitial(instructions.ParameterInitials[i]))
+					return false;
+			}
+
 			_firstOptIndex = instructions.FirstOptIndex;
 			_lastOptIndex = instructions.LastOptIndex;
 
@@ -171,11 +177,7 @@ namespace Swop.glob
 					return false;
 			}
 
-			for (int i = 0; i < instructions.ParameterInitials.Count; i++)
-			{
-				if (!ChangeParamInitial(instructions.ParameterInitials[i]))
-					return false;
-			}
+
 
 			for (int i = 0; i < instructions.ParameterKeys.Count; i++)
 			{
