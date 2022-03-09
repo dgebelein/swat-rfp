@@ -42,7 +42,7 @@ namespace SwopReview
 		#region  generierung daten 
 		private PresentationsData GeneratePresentationsData(int setId)
 		{
-			 _graphData = new PresentationsData
+			_graphData = new PresentationsData
 			{
 				Title = _swopData.SwopLogName + "  "+ _swopData.OptSets[setId].Monitoring,
 				ZoomFactor = 0,
@@ -54,6 +54,10 @@ namespace SwopReview
 
 			_graphData.TimeRange = new TtpTimeRange(new TtpTime("1.1." + _simData.GetSimYear()), TtpEnPattern.Pattern1Year, 1);
 			_graphData.HighlightTimeRange = _simData.GetEvalTimeSpan();
+			_graphData.TitleToolTip = _simData.Notes;
+			_graphData.AddMarkers(_simData.Notes, _simData.GetSimYear());
+
+
 			return _graphData;
 
 		}

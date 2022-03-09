@@ -56,6 +56,7 @@
     <Compile Include="ioData\GlobalsDefs.cs" />
     <Compile Include="ioData\MonitoringData.cs" />
     <Compile Include="ioData\PopulationData.cs" />
+    <Compile Include="ioData\ReadCmd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ioData\WeatherData.cs" />
     <Compile Include="quantify\evaluator.cs" />

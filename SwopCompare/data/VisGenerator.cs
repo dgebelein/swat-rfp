@@ -120,7 +120,6 @@ namespace SwopCompare
 			for (int i=0; i< numSets; i++)
 			{
 				double[] trend = GetModelTrend(_data.CompareSets[_setIndex].ParamsList[i]);
-				//string paraText = _data.CompareSets[_setIndex].ParamsText[i];
 				string paraText = _data.CompareSets[_setIndex].ParamsList[i].GetString(true);
 
 				pd.AddRow(new PresentationRow

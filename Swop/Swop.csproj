@@ -116,6 +116,10 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SwatPresentations\SwatPresentations.csproj">
+      <Project>{dd40c06d-d084-4390-ab60-a863d96dfbb3}</Project>
+      <Name>SwatPresentations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\swatSim\swatSim.csproj">
       <Project>{e0aec615-87c3-4925-81df-1476dadbd87f}</Project>
       <Name>swatSim</Name>

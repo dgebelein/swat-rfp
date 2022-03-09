@@ -49,7 +49,7 @@ namespace swatSim
 
 
 			p.InitItem("dr.SimStart", 59, typeof(int), 1.0, 180.0, "Simulationsstart (Tag des Jahres)", 1); // (1. März)
-			p.InitItem("dr.StartAge", 0.20, typeof(double), 0.0, 0.5, "Biol. Alter der Startpopulation", 3);
+			p.InitItem("dr.StartAge", 0.20, typeof(double), 0.0, 0.9, "Biol. Alter der Startpopulation", 3);
 
 			p.InitItem("dr.UseOnlyAir", false, typeof(bool), 0.0, 1.0, "nur Lufttemperatur nutzen?", 1);
 			p.InitItem("dr.SummerSoilRel", 0.5, typeof(double), 0.0, 1.0, "Mischungsverh. Boden-/Lufttemp ab 1.6.", 1); //0= 0%Boden, 100%Luft; 0.5= (Boden +Luft)/2; 1= 100% Boden
@@ -102,7 +102,7 @@ namespace swatSim
 
 
 			p.InitItem("dr.DevFlyTmax", 35.0, typeof(double), 30.0, 45.0, "Entwicklung Fliege: Temperaturmaximum", 3);
-			p.InitItem("dr.DevFlyTopt", 30.0, typeof(double), 20.0, 29.9, "Entwicklung Fliege: Temperaturoptimum", 3);
+			p.InitItem("dr.DevFlyTopt", 25.0, typeof(double), 20.0, 29.9, "Entwicklung Fliege: Temperaturoptimum", 3);
 			p.InitItem("dr.DevFlyQ", 1.67, typeof(double), 1.1, 4.0, "Entwicklung Fliege: Temperatur-Spezifität", 3);
 			p.InitItem("dr.DevFlyL", 0.006, typeof(double), 0.0, 0.1, "Entwicklung Fliege: Konvexität linke Flanke", 3);
 			p.InitItem("dr.DevFlyKmax", 0.072, typeof(double), 0.025, 0.2, "Entwicklung Fliege: max. tägl. Entwicklungsrate", 3);
@@ -110,8 +110,8 @@ namespace swatSim
 			p.InitItem("dr.DevWiPupaTmax", 30.52, typeof(double), 29.0, 40.0, "Entwicklung Winterpuppe: Temperaturmaximum", 3);
 			p.InitItem("dr.DevWiPupaTopt", 25.03, typeof(double), 20.0, 29.0, "Entwicklung Winterpuppe: Temperaturoptimum", 3);
 			p.InitItem("dr.DevWiPupaQ", 1.56, typeof(double), 1.1, 2.0, "Entwicklung Winterpuppe: Temperatur-Spezifität", 3);
-			p.InitItem("dr.DevWiPupaL", 0.0313, typeof(double), 0.01, 0.05, "Entwicklung Winterpuppe: Konvexität linke Flanke", 3);
-			p.InitItem("dr.DevWiPupaKmax", 0.1029, typeof(double), 0.05, 0.25, "Entwicklung Winterpuppe: max. tägl. Entwicklungsrate", 3);
+			p.InitItem("dr.DevWiPupaL", 0.03, typeof(double), 0.01, 0.05, "Entwicklung Winterpuppe: Konvexität linke Flanke", 3);
+			p.InitItem("dr.DevWiPupaKmax", 0.10, typeof(double), 0.05, 0.25, "Entwicklung Winterpuppe: max. tägl. Entwicklungsrate", 3);
 
 			//experimentell alle Stadien
 

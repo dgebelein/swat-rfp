@@ -25,22 +25,24 @@ namespace SwopCompare
 		public string Notes { get; private set; }
 		public string ErrorMessage { get; private set; }
 
-		//FlyType _modelType;
+		
 		ModelBase _model;
+		string _swatPath;
 
 
 
-		public CmpSet(ModelBase model)
+		public CmpSet(ModelBase model, string workDir)
 		{
 			ParamsList = new List<SimParamData>();
 			ParamsText = new List<string>();
 			CommentList = new List<string>();
 			_model = model;
+			_swatPath = workDir;
 		}
 
 		private bool AddWeather(string line)
 		{
-			string weatherfile = IsolateContent(line, "#w:");
+			string weatherfile = ReadCmd.IsolateContent(line, "#w:");
 			if (weatherfile == null)
 			{
 				ErrorMessage = "Wetterdaten fehlen" + " (" + line + ")";
@@ -62,7 +64,7 @@ namespace SwopCompare
 
 		private bool AddMonitoring(string line)
 		{
-			string monitoringfile = IsolateContent(line, "#m:");
+			string monitoringfile = ReadCmd.IsolateContent(line, "#m:");
 			if (monitoringfile == null)
 			{
 				ErrorMessage = "Monitoringdaten fehlen" + " (" + line + ")";
@@ -86,7 +88,7 @@ namespace SwopCompare
 		{
 			CommonParams = _model.CodedParams.Clone();
 
-			string paramsfile = IsolateContent(line, "#p:");
+			string paramsfile = ReadCmd.IsolateContent(line, "#p:");
 
 			if (!string.IsNullOrEmpty(paramsfile))
 			{
@@ -106,7 +108,7 @@ namespace SwopCompare
 
 		private bool AddTimeRange(string line)
 		{
-			string tr = IsolateContent(line, "#d:");
+			string tr = ReadCmd.IsolateContent(line, "#d:");
 			if (tr == null)
 			{
 				tr = "01.01-31.12";// ganzes Jahr, wenn nicht vorh.
@@ -156,7 +158,7 @@ namespace SwopCompare
 
 		private bool AddParams(string line)
 		{
-			string paramsfile = IsolateContent(line, "#p:");
+			string paramsfile = ReadCmd.IsolateContent(line, "#p:");
 			if (paramsfile == null)
 			{
 				ErrorMessage = "Parameter-File fehlt" + " (" + line + ")";
@@ -178,7 +180,7 @@ namespace SwopCompare
 				}
 			}
 			
-			string comment = IsolateContent(line, "#c:");
+			string comment = ReadCmd.IsolateContent(line, "#c:");
 			if (comment == null) // wenn nicht vorh. mit Dateinamen ersetzen
 			{
 				comment = paramsfile;
@@ -221,77 +223,33 @@ namespace SwopCompare
 			return File.ReadAllText(filename).Trim();
 		}
 
-		#region static helpers
+		#region helpers für Dateipfade
 
-		public static string GetPathSwat
+		string GetPathSwat
 		{
 			get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat"); }
 		}
 
-		public static string GetPathSwop
+		string GetPathSwop
 		{
-			get { return Path.Combine(GetPathSwat, "Swop"); }
+			get { return Path.Combine(_swatPath, "Swop"); }
 		}
 
-		public static string GetPathWeather
-		{
-			get { return GetPathSwat; }
-		}
-
-		public static string GetPathMonitoring
+		 string GetPathWeather
 		{
 			get { return GetPathSwat; }
 		}
 
-		public static string GetPathNotes
+		string GetPathMonitoring
 		{
 			get { return GetPathSwat; }
 		}
 
-		public static string GetPathParams
+		string GetPathNotes
 		{
-			get { return GetPathSwop; }
+			get { return GetPathSwat; }
 		}
 
-		static public int GetLineNo(string[] lines, string key, int rep = 0) // rep = die x-te Wiederholung von key (0 = 1.Vorkommen)
-		{
-			int n = 0;
-			for (int i = 0; i < lines.Length; i++)
-			{
-				string s = lines[i].Trim();
-				if (s.StartsWith("--"))
-					continue;
-				
-				if (s.ToLower().Contains(key.ToLower()))
-				{ 
-					if(++n > rep)
-						return i;
-				}
-			}
-
-			return -1;
-		}
-
-		static public string IsolateContent(string sourceLine, string key)
-		{
-			string source = sourceLine.ToLower();
-			if (source.Trim().StartsWith("--"))
-				return null;
-			if (source.ToLower().Contains(key))
-			{
-				int startPos = source.IndexOf(key, 0) + key.Length;
-
-				int endPos = source.IndexOf("#", startPos);
-				if (endPos <= 0)
-					endPos = source.Length;
-
-				return (source.Substring(startPos, endPos - startPos).Trim());
-
-			}
-			else
-				return null;
-
-		}
 		#endregion
 
 

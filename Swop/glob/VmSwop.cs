@@ -48,6 +48,7 @@ namespace Swop.glob
 		public string CmdErrorText	{	get { return SwopData.ErrorMessage; }}
 		public string BestText{	get { return SwopData.BestText; }}
 		public string PrologText{	get {return SwopData.PrologText;}}
+
 		public Visibility VisOptimization 
 		{	
 			get { if ((SwopData.WorkMode == SwopWorkMode.LEAST) || (SwopData.WorkMode == SwopWorkMode.SHRINK))
@@ -56,6 +57,7 @@ namespace Swop.glob
 						return Visibility.Collapsed; 
 			}	
 		}
+
 		public Visibility VisCombination { get { return (SwopData.WorkMode == SwopWorkMode.COMBI) ? Visibility.Visible : Visibility.Collapsed; } }
 		public string OptStep{ get { return SwopData.OptStep; }}
 		public string StepEval { get { return SwopData.StepEval; } }
@@ -108,7 +110,7 @@ namespace Swop.glob
 		{
 			OpenFileDialog dlg = new OpenFileDialog
 			{
-				InitialDirectory = GlobData.GetPathSwop,
+				InitialDirectory = SwopData.GetPathSwop,
 				Filter = "Swop files (*.swop)|*.swop|All files (*.*)|*.*"
 			};
 

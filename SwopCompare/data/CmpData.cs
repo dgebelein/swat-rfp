@@ -17,6 +17,7 @@ namespace SwopCompare
 		public List<CmpSet> CompareSets { get; private set; }
 		public FlyType ModelType { get; private set; }
 		public ModelBase Model { get; private set; }
+		public string SwatWorkDir { get; private set; }
 
 		public string Description { get; private set; }
 
@@ -31,6 +32,30 @@ namespace SwopCompare
 		public CmpData()
 		{
 			CompareSets = new List<CmpSet>();
+			AssignWorkDir();
+		}
+
+		private void AssignWorkDir()
+		{
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			try
+			{
+
+				string[] fileLines = File.ReadAllLines(cfgFn);
+				SwatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+			}
+			catch (Exception e)
+			{
+				SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+			}
+
+
+			string swopDir = Path.Combine(SwatWorkDir, "Swop");
+			if (!Directory.Exists(swopDir))
+			{
+				DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {swopDir} existiert nicht", MessageLevel.Error);
+			}
 		}
 
 		#endregion
@@ -46,7 +71,7 @@ namespace SwopCompare
 		{
 			OpenFileDialog dlg = new OpenFileDialog
 			{
-				InitialDirectory = CmpSet.GetPathSwop,
+				InitialDirectory = Path.Combine(SwatWorkDir,"Swop"),
 				Filter = "Swop Cmp-Files (*.swat-cmp)|*.swat-cmp|All files (*.*)|*.*"
 			};
 
@@ -85,7 +110,7 @@ namespace SwopCompare
 
 		void ReadModelType(string[] lines)
 		{
-			int sl = CmpSet.GetLineNo(lines, "[Model]");
+			int sl = ReadCmd.GetLineNo(lines, "[Model]");
 			if (sl < 0)
 			{
 				ErrMessage = $"\r\nSektion [Model] nicht gefunden";
@@ -114,7 +139,7 @@ namespace SwopCompare
 
 		void ReadDescription(string[] lines)
 		{
-			int sl = CmpSet.GetLineNo(lines,"[Descr]");
+			int sl = ReadCmd.GetLineNo(lines,"[Descr]");
 			if (sl < 0)
 			{
 				Description = "";
@@ -144,10 +169,10 @@ namespace SwopCompare
 				int setNo = 0;
 				while (HasValidData)
 				{
-					int startLine = CmpSet.GetLineNo(lines, "[Set]", setNo);
+					int startLine = ReadCmd.GetLineNo(lines, "[Set]", setNo);
 					if (startLine < 0)
 						break;
-					CmpSet cmpSet = new CmpSet(Model);
+					CmpSet cmpSet = new CmpSet(Model, SwatWorkDir);
 					if (cmpSet.Read(lines, startLine+1))
 					{
 						CompareSets.Add(cmpSet);

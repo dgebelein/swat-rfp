@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SwatPresentations;
 using swatSim;
 using Swop.optimizer;
 
@@ -19,6 +20,7 @@ namespace Swop.glob
 	{
 
 		#region Variable
+
 		List<WeatherData>    _weathers;
 		List<MonitoringData> _monitorings;
 		List<SimParamData> _locParams;
@@ -29,6 +31,8 @@ namespace Swop.glob
 		public int _firstOptIndex;
 		public int _lastOptIndex;
 		public Int64 NumCombinations { get; set; }
+		public string SwatWorkDir { get; private set; }
+
 
 		SimParamData _modelParameters;
 		SimParamData _workParameters;
@@ -50,6 +54,7 @@ namespace Swop.glob
 		public GlobData()
 		{
 			Init();
+			AssignWorkDir();
 		}
 
 		private void Init()
@@ -70,32 +75,53 @@ namespace Swop.glob
 			ErrorMessage = "";
 		}
 
-		public static string GetPathWorkspace
+		private void AssignWorkDir()
 		{
-			get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat"); }
+			//SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			try
+			{
+
+				string[] fileLines = File.ReadAllLines(cfgFn);
+				SwatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+			}
+			catch (Exception e)
+			{
+				SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+			}
+
+			string swopDir = Path.Combine(SwatWorkDir, "Swop");
+			if (!Directory.Exists(swopDir))
+			{
+				DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {swopDir} existiert nicht", MessageLevel.Error);
+			}
+
 		}
 
-		public static string GetPathMonitoring
+
+		public string GetPathMonitoring
 		{
 			get
 			{
-				return GetPathWorkspace;
+				return SwatWorkDir;
 				//return Path.Combine(GetPathWorkspace, "Monitoring");
 			}
 		}
 
-		public static string GetPathWeather
+		public string GetPathWeather
 		{
 			get
 			{
-				return GetPathWorkspace;
+				return SwatWorkDir;
 				//return Path.Combine(GetPathWorkspace, "Weather");
 			}
 		}
 
-		public static string GetPathSwop
+		public string GetPathSwop
 		{
-			get { return Path.Combine(GetPathWorkspace, "Swop"); }
+			get { return Path.Combine(SwatWorkDir, "Swop"); }
 		}
 
 		#endregion

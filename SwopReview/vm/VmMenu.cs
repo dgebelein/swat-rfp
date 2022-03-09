@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SwatPresentations;
+using swatSim;
 using SwopReview.views;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace SwopReview
 		bool _hasValidData;
 		int _selectedViewIndex;
 		bool _hasCode;
+		string _swatWorkDir;
 
 		RelayCommand _openFileCommand;
 		RelayCommand _printReportCommand;
@@ -78,6 +80,7 @@ namespace SwopReview
 
 		public VmMenu(SwopData sd, UserControl view): base(sd, view)
 		{
+
 			_openFileCommand = new RelayCommand(param => this.OpenSwopFile());
 			_printReportCommand = new RelayCommand(param => this.PrintReport());
 			_saveReportCommand = new RelayCommand(param => this.SaveReport());
@@ -99,8 +102,32 @@ namespace SwopReview
 			_colorMeshCommand = new RelayCommand(param => this.ShowColorMesh(true),param => this.CanShowColorMesh);
 			_meshClearLapBoxesCommand = new RelayCommand(param => this.MeshClearLapBoxes());
 			_meshSetAllLapBoxesCommand = new RelayCommand(param => this.MeshSetAllLapBoxes());
+
+			AssignWorkDir();
 		}
 
+		private void AssignWorkDir()
+		{
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			try
+			{
+
+				string[] fileLines = File.ReadAllLines(cfgFn);
+				_swatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+			}
+			catch (Exception e)
+			{
+				_swatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+			}
+
+
+			string swopDir = Path.Combine(_swatWorkDir, "Swop");
+			if (!Directory.Exists(swopDir))
+			{
+				DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {swopDir} existiert nicht", MessageLevel.Error);
+			}
+		}
 		#endregion
 
 
@@ -219,9 +246,9 @@ namespace SwopReview
 
 		#region Read Swop-File
 
-		public static string GetPathSwop
+		string GetPathSwop
 		{
-			get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat","Swop"); }
+			get { return Path.Combine(_swatWorkDir,"Swop"); }
 		}
 
 		public void OpenSwopFile()

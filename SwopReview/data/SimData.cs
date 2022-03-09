@@ -26,13 +26,14 @@ namespace SwopReview
 		EvalMethod _quantorMethod;
 		int _setIndex;
 		Int64 _lastSimIndivCalc; // Hilfsvariable zum Übertragen der Individuenanzahl;
+		string _lastSimParams;	// Hilfsvariable zum Übertragen des Parameter-Tooltips;
+
 
 		public WeatherData Weather { get; private set; }
 		public MonitoringData Monitoring { get; private set; }
+		public string Notes { get; private set;}
 
 
-		//ModelBase _model;
-		//SimParamData _localSetParams;
 
 		#endregion
 
@@ -116,6 +117,24 @@ namespace SwopReview
 			return simParams;
 		}
 
+		private void AddNotes()
+		{
+			string notesName = System.IO.Path.Combine(GetPathWorkspace, Path.GetFileNameWithoutExtension(Monitoring.Filename) + " - Notes.txt");
+
+			if (!File.Exists(notesName))
+				Notes = "";
+
+			try
+			{
+				Notes = File.ReadAllText(notesName, Encoding.UTF8);
+			}
+			catch
+			{
+				Notes = "";
+			}
+		}
+
+
 		#endregion
 
 		#region Modell berechnen
@@ -191,6 +210,8 @@ namespace SwopReview
 				return false;
 			}
 
+			AddNotes();
+
 			return true;
 		}
 
@@ -199,6 +220,7 @@ namespace SwopReview
 			ModelBase model = CreateSimulationModel(Weather, optParam);
 			model.RunSimulation();
 			_lastSimIndivCalc = model.Population.NumIndividuals;
+			_lastSimParams = optParam.GetString(true);
 			Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, _quantorMethod, false);
 			_hasEggs = quantor.HasEggs;
 			return quantor.PrognValues;
@@ -253,7 +275,7 @@ namespace SwopReview
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
-				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
 				Values = trend,
 				LegendIndex = 1,
 				IsVisible = true,
@@ -274,7 +296,7 @@ namespace SwopReview
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
-				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
 				Values = trend,
 				LegendIndex = 2,
 				IsVisible = false,
@@ -298,7 +320,7 @@ namespace SwopReview
 			{
 				Legend = legend,
 				Values = trend,
-				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
 				LegendIndex = 3,
 				IsVisible = false,
 				Thicknes = 1.0,

@@ -412,24 +412,6 @@ namespace SwopReview
 			}
 		}
 
-		//void ReadCombiParameters()
-		//{
-		//	int sl = GetLineNo("[Opt-Parameters]");
-		//	if (sl < 0)
-		//	{
-		//		ErrMessage += $"\r\nSektion [Opt-Parameters] nicht gefunden";
-		//		return;
-		//	}
-		//	for (int n = sl + 1; n < _logLines.Length; n++)
-		//	{
-		//		string s = _logLines[n];
-		//		if (s.StartsWith("["))
-		//			break;
-		//		CombiParameters.Add(GetTokenContentString(s));
-
-		//	}
-		//}
-
 
 		void CreateParamCombinations()
 		{
