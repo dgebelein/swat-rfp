@@ -39,6 +39,7 @@ namespace SwopReview
 
 			AddCommonStatistics();
 			AddCommonBestParameters();
+			AddCommonBestTenParameters();
 
 			AddSetStatistics();
 			AddLapStatistics();
@@ -317,6 +318,55 @@ namespace SwopReview
 		}
 
 
+		public void AddCommonBestTenParameters()
+		{
+			if (IsCombiMode)
+				return;
+
+			_gtr.WriteElement("h3", "Best 10 Parameter Sets");
+			List<string> headers = new List<string> { "Pos","Eval", "Step",  };
+			List<int> colWidths = new List<int>{ 5, 5, 5};
+			foreach (string s in _data.OptParameters)
+			{
+				headers.Add(s);
+				colWidths.Add(0);
+			}
+
+			List<double> A = _data.CommonErrors.ToList();
+
+			var sorted = A
+				 .Select((x, i) => new KeyValuePair<double, int>(x, i))
+				 .OrderBy(x => x.Key)
+				 .ToList();
+
+			List<double> Evals = sorted.Select(x => x.Key).ToList();
+			List<int> idx = sorted.Select(x => x.Value).ToList();
+
+
+			List<List<string>> tableRows = new List<List<string>>();
+			for (int i = 0; i <10; i++)
+			{
+				if (i >= Evals.Count)
+					break;
+
+				List<string> row = new List<string>
+				{
+					(i+1).ToString(),
+					Evals[i].ToString("F4"),
+					idx[i].ToString()
+					
+				};
+				for(int p=0; p< _data.OptParameters.Count; p++)
+				{
+					double paramVal = _data.GetOptParamValue(idx[i], p);
+					row.Add(ParamCreator.GetParameterValueString(_data.DefaultParameters, _data.OptParameters[p], paramVal));
+				}
+				tableRows.Add(row);
+			}
+		
+			_gtr.WriteTable(headers, tableRows, colWidths);
+		}
+
 		public void AddSetStatistics()
 		{
 			_gtr.WriteElement("h3", "Statistics by Sets");
@@ -407,8 +457,10 @@ namespace SwopReview
 
 			foreach (string p in list)
 			{
-				List<string> row = new List<string>();
-				row.Add(p);
+				List<string> row = new List<string>
+				{
+					p
+				};
 
 				if (sd[p].ObjType == typeof(double))
 				{ 
@@ -555,7 +607,6 @@ namespace SwopReview
 
 		int GetBestStep()
 		{
-
 			double minVal = _data.CommonErrorsAbsolute[0];
 			int best = 0;
 			

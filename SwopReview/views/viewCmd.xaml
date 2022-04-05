@@ -35,13 +35,18 @@
 					<RowDefinition Height="60"/>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="80"/>
+					<RowDefinition Height="50"/>
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
 				<Button Grid.Row="0"  Height="35"  Width="150"  Margin="0,10,0,10" Command="{Binding Path=PrintReportCommand}"  Background="#202020"  Content="Print / Create PDF"/>
 				<Button Grid.Row="1" Height="35"  Width="150"  Margin="0,10,0,10" Command="{Binding Path=SaveReportCommand}"  Background="#202020"  Content="Save File" />
 				<Separator Grid.Row="2"/>
-				<Button Grid.Row="3" Height="35"  Width="150"  Margin="0,20,0,20" Command="{Binding Path=CreateParameterFilesCommand}"  Background="#202020"  Content="Create Parameter-Files" />
-				<ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" Margin="20,0,0,0">
+				<Button Grid.Row="3" Height="35"  Width="150"  Margin="0,10,0,10" Command="{Binding Path=CreateParameterFilesCommand}"  Background="#202020"  Content="Create Parameter-Files" />
+				<StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+					<TextBlock Text="File-Prefix: " Foreground="DeepSkyBlue"  />
+					<TextBox  Width="80"  Text="{Binding Path=ParaPrefix}"/>
+				</StackPanel>
+				<ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" Margin="20,0,0,0">
 					<StackPanel  Orientation="Vertical">
 						<TextBlock Text="Parameter-Files" Foreground="DeepSkyBlue" Margin="15,20,0,10"/>
 						<StackPanel  Name="_paramFileSelector"  Orientation="Vertical" />

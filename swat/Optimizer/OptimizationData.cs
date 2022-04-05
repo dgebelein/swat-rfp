@@ -549,6 +549,12 @@ namespace swat.optimizer
 			}
 			data.Title = "Optimierung " +_workspace.Name +" / " + _workspace.CurrentModelName +  "  Evaluierung: " + GetEvalTimerangeText()+" / " + GetEvalMethodText();
 			
+			if (isCompleted)
+			{
+				data.TitleToolTip = _workspace.Notes;
+				data.AddMarkers(_workspace.Notes, _workspace.SimulationYear);
+			}
+			
 			return data;
 		}
 
@@ -636,9 +642,10 @@ namespace swat.optimizer
 						LineType = TtpEnLineType.LinePoint
 					});
 
-				if(isCompleted) // Wetterdaten erst am Schluss einblenden
+				if(isCompleted) // Wetterdaten,Markierungen, Title-tooltip erst am Schluss einblenden
 				{
 					WeatherData wd = _workspace.WeatherData;
+					
 
 					data.AddRow(new PresentationRow
 					{

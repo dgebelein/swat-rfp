@@ -279,7 +279,9 @@ namespace swatSim
 					case 4: CalcDiapauseWarm_T(indiv, day, soilTemp); break;
 					case 5: CalcDiapauseCold_Sum(indiv, soilTemp); break;
 					case 6: CalcDiapause_Trig(indiv, day);break;
-					default: break;
+					case 7: CalcDiapause_Trig(indiv, day); break;
+
+				default: break;
 				}
 		}
 

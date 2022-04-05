@@ -23,14 +23,14 @@ namespace SwopReview
 
 		#region Variable
 		bool _hasData;
-		public string ErrMessage{get;set;}
+		public string ErrMessage { get; set; }
 		public bool RunIsCancelled { get; set; }
 
 		public SwopWorkMode WorkMode { get; private set; }
 		public string Description { get; private set; }
 		public FlyType ModelType { get; private set; }
 		public SimParamData DefaultParameters { get; private set; }
-		
+
 		public List<string> OptParameters { get; private set; }
 		public List<string> CombiParameters { get; private set; }
 
@@ -38,7 +38,7 @@ namespace SwopReview
 
 		public double[,] OptParamValues { get; private set; }  // step,paranum
 
-		public double[] CommonErrors{ get; private set; }
+		public double[] CommonErrors { get; private set; }
 		public double BestCommonError { get; private set; }
 		public double StartCommonError { get; private set; }
 		public double[] StartParamValues { get; private set; }
@@ -51,9 +51,11 @@ namespace SwopReview
 		public double MinimumError { get; private set; }
 		public double MaximumError { get; private set; }
 
+		public string ParaPrefix{get;set;}
+
 		string _swopLogName;
 		string[] _logLines;
-
+		
 
 
 		#endregion
@@ -178,6 +180,7 @@ namespace SwopReview
 			CombiParameters = new List<string>();
 
 			_swopLogName = Filename;
+			ParaPrefix = "";
 
 			try
 			{

@@ -466,28 +466,67 @@ namespace Swop.optimizer
 				else
 				{
 					SimParamElem elem = _startParams.ParamDict[key];
+					switch(Type.GetTypeCode(elem.ObjType))
+					{
+						case TypeCode.Boolean:
+							{ 
+							if (n == varyIndex)
+							{
+								variedParams[varyIndex] = (amount > 0.0) ? 1 : 0;
+							}
+							else
+								variedParams[n] = 0.5;
+							}
+							break;
+						case TypeCode.Double:
+							{
+								double dp = _solverParams[n];
+								if (n == varyIndex)
+								{
+									variedParams[varyIndex] = (amount > 0.0) ?
+											dp + (GetSolverLimit(LimitType.High)[varyIndex] - dp) * amount :
+											dp + (dp - GetSolverLimit(LimitType.Low)[varyIndex]) * amount;
+								}
+								else
+									variedParams[n] = dp;
+							}
+							break;
+						default: //int
+							{
+								double dp = _solverParams[n];
+								if (n == varyIndex)
+								{
+									variedParams[varyIndex] = (amount > 0.0) ?
+											dp + Math.Max(1.0, (GetSolverLimit(LimitType.High)[varyIndex] - dp) * amount) : // mindestens 1 mehr oder weniger
+											dp + Math.Min(-1.0, (dp - GetSolverLimit(LimitType.Low)[varyIndex]) * amount);
+								}
+								else
+									variedParams[n] = dp;
+							}
+							break;
+					}
 
-					if (Type.GetTypeCode(elem.ObjType) == TypeCode.Boolean)
-					{
-						if (n == varyIndex)
-						{
-							variedParams[varyIndex] = (amount > 0.0) ? 1 : 0;
-						}
-						else
-							variedParams[n] = 0.5;
-					}
-					else // int und double
-					{
-						double dp = _solverParams[n];
-						if (n == varyIndex)
-						{
-							variedParams[varyIndex] = (amount > 0.0) ?
-									dp + (GetSolverLimit(LimitType.High)[varyIndex] - dp) * amount :
-									dp + (dp - GetSolverLimit(LimitType.Low)[varyIndex]) * amount;
-						}
-						else
-							variedParams[n] = dp;
-					}
+					//if (Type.GetTypeCode(elem.ObjType) == TypeCode.Boolean)
+					//{
+					//	if (n == varyIndex)
+					//	{
+					//		variedParams[varyIndex] = (amount > 0.0) ? 1 : 0;
+					//	}
+					//	else
+					//		variedParams[n] = 0.5;
+					//}
+					//else // int und double
+					//{
+					//	double dp = _solverParams[n];
+					//	if (n == varyIndex)
+					//	{
+					//		variedParams[varyIndex] = (amount > 0.0) ?
+					//				dp + (GetSolverLimit(LimitType.High)[varyIndex] - dp) * amount :
+					//				dp + (dp - GetSolverLimit(LimitType.Low)[varyIndex]) * amount;
+					//	}
+					//	else
+					//		variedParams[n] = dp;
+					//}
 				}
 				n++;
 			}

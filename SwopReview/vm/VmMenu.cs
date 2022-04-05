@@ -80,7 +80,6 @@ namespace SwopReview
 
 		public VmMenu(SwopData sd, UserControl view): base(sd, view)
 		{
-
 			_openFileCommand = new RelayCommand(param => this.OpenSwopFile());
 			_printReportCommand = new RelayCommand(param => this.PrintReport());
 			_saveReportCommand = new RelayCommand(param => this.SaveReport());
@@ -116,7 +115,7 @@ namespace SwopReview
 				_swatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
 
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				_swatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
 			}
@@ -141,6 +140,16 @@ namespace SwopReview
 			{
 				_vmReport = value;
 				OnPropertyChanged("ViewReportDataContext");
+			}
+		}
+
+		public string ParaPrefix
+		{
+			get { return _swopData.ParaPrefix; }
+			set 
+			{
+				_swopData.ParaPrefix = value;
+				OnPropertyChanged("ParaPrefix");
 			}
 		}
 
@@ -287,6 +296,7 @@ namespace SwopReview
 				OnPropertyChanged("VisSimResultCommands");
 
 				OnPropertyChanged("SelectedTabIndex");
+				OnPropertyChanged("ParaPrefix");
 				InitMenues();
 			}
 
@@ -351,7 +361,6 @@ namespace SwopReview
 				else return;
 			}
 
-			//ParamCreator pc = new ParamCreator(_swopData);
 			foreach(int setId in GetSelectedParameterFiles())
 			{
 				if (!ParamCreator.CreateParamFile(_swopData, setId, outputPath))
