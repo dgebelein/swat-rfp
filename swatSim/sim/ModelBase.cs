@@ -45,6 +45,9 @@ namespace swatSim
 		protected double[] _simSoilTemps;
 		protected double[] _simPrec;
 
+		//int _numI;
+		//int _newEgg;
+
 
 		protected SimParamData _workingParams;
 		public bool ParaSetOK { get; set; }
@@ -260,7 +263,7 @@ namespace swatSim
 			_population.SetEggPeriods(_maxEggPeriods);
 
 			string popName = (CanSimulate) ?
-					Name + " - Population " :
+					Name + " - Population" :
 					"keine Wetterdaten für Berechnung der Population";
 			_population.Title = popName;
 			_population.Year = _weather.Year;
@@ -270,6 +273,7 @@ namespace swatSim
 		public void IncIndividualNum()
 		{
 			_population.NumIndividuals++;
+			//_numI++;
 		}
 
 		public double GetEggOvipProb()
@@ -438,6 +442,9 @@ namespace swatSim
 
 		public void ReportIndivStatus(DevStage stage, int index, int generation, double bioAge, bool inInAest)
 		{
+			//if (stage == DevStage.NewEgg)
+			//	_newEgg++;
+
 			Population.Add(stage, index, generation, bioAge, inInAest);
 		}
 

@@ -28,9 +28,35 @@ namespace SwatPresentations
 
 		public static SwatPresentation Create(PresentationType pt, PresentationsData data, bool printVersion )
 		{
-			switch(pt)
+			switch (pt)
 			{
 				case PresentationType.Weather: return CreateWeatherGraph(data,printVersion);
+				case PresentationType.PopDyn: return CreatePopDynGraph(data, printVersion);
+				case PresentationType.AgeClasses: return CreateAgeClassesChart(data, printVersion);
+				case PresentationType.Monitoring: return CreateMonitoringGraph(data, printVersion);
+				case PresentationType.Prognosis: return CreatePrognosisGraph(data, printVersion);
+				case PresentationType.Optimization: return CreateOptimizationGraph(data, printVersion);
+				case PresentationType.ScatterPlot: return CreateScatterPlot(data, printVersion);
+				case PresentationType.FunctionPlot: return CreateFunctionPlot(data, printVersion);
+				case PresentationType.ColorMeshPlot: return CreateColorMeshPlot(data, printVersion);
+				case PresentationType.MeshPanelElement: return CreateMeshPanelElement(data, printVersion);
+				case PresentationType.MeshPanel: return CreateMeshPanel(data, printVersion);
+
+
+			}
+			return null;
+		}
+
+		// geschützte Version für Code-Ansicht - läuft nur im JKI-Netz
+		public static SwatPresentation CreatePres(PresentationType pt, PresentationsData data, bool printVersion)
+		{
+			if (!System.IO.Directory.Exists(@"\\BS-GLT\Log\SwatData\Swat"))
+			{
+				Environment.Exit(999);
+			}
+			switch (pt)
+			{
+				case PresentationType.Weather: return CreateWeatherGraph(data, printVersion);
 				case PresentationType.PopDyn: return CreatePopDynGraph(data, printVersion);
 				case PresentationType.AgeClasses: return CreateAgeClassesChart(data, printVersion);
 				case PresentationType.Monitoring: return CreateMonitoringGraph(data, printVersion);

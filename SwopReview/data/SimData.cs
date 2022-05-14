@@ -275,7 +275,7 @@ namespace SwopReview
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
-				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("### ### ###", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
 				Values = trend,
 				LegendIndex = 1,
 				IsVisible = true,
@@ -296,7 +296,7 @@ namespace SwopReview
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
-				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("### ### ###", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
 				Values = trend,
 				LegendIndex = 2,
 				IsVisible = false,
@@ -320,7 +320,7 @@ namespace SwopReview
 			{
 				Legend = legend,
 				Values = trend,
-				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("N0", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
+				LegendTooltip = $"Num Indiv: {_lastSimIndivCalc.ToString("### ### ###", CultureInfo.InvariantCulture)}\r\n\n{_lastSimParams}",
 				LegendIndex = 3,
 				IsVisible = false,
 				Thicknes = 1.0,

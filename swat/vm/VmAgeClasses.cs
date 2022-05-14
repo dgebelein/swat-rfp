@@ -11,6 +11,7 @@ using System.Windows.Media;
 using TTP.Engine3;
 using TTP.TtpCommand3;
 using TTP.UiUtils;
+using System.IO;
 
 namespace swat.vm
 {
@@ -22,6 +23,8 @@ namespace swat.vm
 		TtpTime _tmDisplay;
 
 		RelayCommand _printCommand;
+		RelayCommand _saveCommand;
+
 
 		#endregion
 
@@ -33,6 +36,8 @@ namespace swat.vm
 			_acData = GeneratePresentationsData();
 			ViewVisual = PresentationCreator.Create(PresentationType.AgeClasses, _acData, false);
 			_printCommand = new RelayCommand(param => this.Print());
+			_saveCommand = new RelayCommand(param => this.SaveAsCsv());
+
 		}
 
 		#endregion
@@ -40,6 +45,8 @@ namespace swat.vm
 		#region Properties für Binding
 
 		public ICommand PrintCommand { get { return _printCommand; } }
+		public ICommand SaveCommand { get { return _saveCommand; } }
+
 		//public ICommand NotesCommand { get { return _notesCommand; } }
 
 		#endregion
@@ -139,6 +146,12 @@ namespace swat.vm
 		{
 			SwatPresentation printPres = PresentationCreator.Create(PresentationType.AgeClasses, _acData, true);
 			printPres.PrintView();
+		}
+
+		private void SaveAsCsv()
+		{
+			PopulationData pop = Workspace.CurrentPopulationData;
+			pop.WriteAKToFile(Path.Combine(WorkspaceData.GetPathReports, pop.Title + "Age Classes.csv"));
 		}
 
 		#endregion

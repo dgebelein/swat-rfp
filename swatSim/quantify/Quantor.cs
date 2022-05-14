@@ -337,7 +337,7 @@ namespace swatSim
 		{
 			if (HasEggs)
 			{
-				_eggMonitoringPeriods = GetMonitoringPeriods(_md.Eggs, _pd.MaxEggPeriods); // Begrenzung  des zu Integrations-Zeitraums auf die  Entwicklungsdauer der Eier
+				_eggMonitoringPeriods = GetMonitoringPeriods(_md.Eggs, _pd.MaxEggPeriods); // Begrenzung des Integrations-Zeitraums auf die Entwicklungsdauer der Eier
 			}
 
 			if (HasAdults)

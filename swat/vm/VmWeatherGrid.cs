@@ -137,14 +137,14 @@ namespace swat.vm
 		public ICommand NotesCommand { get { return _notesCommand; } }
 		public ICommand UpdateDwdWeatherCommand { get { return _updateDwdWeatherCommand; } }
 
-
+	
 
 		public Visibility VisUpdateDwdWeatherButton
 		{
 			// aktuelles Jahr? letzte Daten älter als 2 Tage?
 		
 			get {
-				if ((Workspace.SimulationYear == DateTime.Now.Year) &&(Workspace.WeatherData.LastActualIndex < (DateTime.Now.DayOfYear - 3)))
+				if ( (Workspace.WeatherData.Origin== WeatherSource.Dwd) && (Workspace.SimulationYear == DateTime.Now.Year) &&(Workspace.WeatherData.LastActualIndex < (DateTime.Now.DayOfYear - 3)))
 					return Visibility.Visible;
 				else
 					return Visibility.Hidden;
@@ -226,7 +226,7 @@ namespace swat.vm
 
 		public string SetAndValidateEditText(int rowIndex,int colIndex, string txt)
 		{
-			string fmt = ((colIndex == 3) || (colIndex == 6)) ? "00" : "0.0";
+			string fmt = ((colIndex == 3) || (colIndex == 6)) ? "0.0" : "0.0";
 
 			double val = Workspace.WeatherData.SetValue(rowIndex, colIndex, txt);
 			OnWeatherDataChanged(EventArgs.Empty);

@@ -15,9 +15,9 @@ namespace swatSim
 	{
 		#region Variable
 
-		
+
 		const int maxAc = 10;   // Aufteilung in 10 Altersklassen
-		//todo:14 Altersklassen?
+										//todo:14 Altersklassen?
 
 		int _maxGen;
 		Int64[,] eggs;
@@ -49,7 +49,7 @@ namespace swatSim
 
 		public PopulationData(int maxGen)
 		{
-			_maxGen = maxGen; 
+			_maxGen = maxGen;
 			Initialize();
 		}
 
@@ -89,7 +89,7 @@ namespace swatSim
 			switch (stage)
 			{
 				case DevStage.Egg:
-					eggs[generation,dayIndex]++;
+					eggs[generation, dayIndex]++;
 					eggAc[generation, bioAc, dayIndex]++;
 					break;
 				case DevStage.Larva:
@@ -160,7 +160,7 @@ namespace swatSim
 				case DevStage.WiPupa:
 					return wipupas[generation, dayIndex];
 				case DevStage.NewEgg:
-					return	newEggs[generation, dayIndex];
+					return newEggs[generation, dayIndex];
 				case DevStage.ActiveFly:
 					return activeFlies[generation, dayIndex];
 			}
@@ -182,7 +182,7 @@ namespace swatSim
 			}
 			else
 			{
-				for( int g = 0; g <= mg; g++ )
+				for (int g = 0; g <= mg; g++)
 				{
 					for (int d = 0; d < 366; d++)
 						row[d] += GetVal(stage, g, d);
@@ -195,10 +195,10 @@ namespace swatSim
 		public double[] GetNormalizedRow(DevStage stage, int generation, double[] normFactors, int maxIndex = 366)
 		{
 			if (generation >= 0) // Generationen einzeln
-			{ 
+			{
 				double[] normRow = GetValRow(stage, generation);
 
-				for(int d=0; d < maxIndex; d++)
+				for (int d = 0; d < maxIndex; d++)
 				{
 					normRow[d] *= normFactors[generation];
 				}
@@ -208,12 +208,12 @@ namespace swatSim
 			{
 				double[] normRow = new double[maxIndex];
 				int mg = Math.Min(_maxGen, normFactors.Length);
-				for ( int g=0; g < mg; g++)
+				for (int g = 0; g < mg; g++)
 				{
-					double[] row= GetValRow(stage, g);
+					double[] row = GetValRow(stage, g);
 					for (int d = 0; d < maxIndex; d++)
 					{
-						normRow[d]+= row[d] * normFactors[g];
+						normRow[d] += row[d] * normFactors[g];
 					}
 				}
 				return normRow;
@@ -226,7 +226,7 @@ namespace swatSim
 			{
 				CalcNormalisation(); // gleiche Individuenzahlen für alle Generationen
 			}
-			return GetNormalizedRow(stage, generation,_normalisationFactors);
+			return GetNormalizedRow(stage, generation, _normalisationFactors);
 		}
 
 		public double[] GetAgeClasses(DevStage stage, int day)
@@ -236,16 +236,16 @@ namespace swatSim
 				CalcNormalisation();
 			}
 
-			double[] ac = new double[maxAc]; 
+			double[] ac = new double[maxAc];
 			switch (stage)
 			{
 				case DevStage.Egg:
-					for(int g = 0; g < _maxGen; g++)
+					for (int g = 0; g < _maxGen; g++)
 					{
-						for (int c = 0; c < maxAc/2; c++)
-						{ 
-							ac[c] += eggAc[g, c*2, day] * _normalisationFactors[g];   // immer zwei Altersklassen zu einem Balken zusammenfassen
-							ac[c] += eggAc[g, c*2+1, day] * _normalisationFactors[g]; // wegen sonst zu kleiner Belegungszahlen
+						for (int c = 0; c < maxAc / 2; c++)
+						{
+							ac[c] += eggAc[g, c * 2, day] * _normalisationFactors[g];   // immer zwei Altersklassen zu einem Balken zusammenfassen
+							ac[c] += eggAc[g, c * 2 + 1, day] * _normalisationFactors[g]; // wegen sonst zu kleiner Belegungszahlen
 						}
 
 					}
@@ -299,14 +299,14 @@ namespace swatSim
 				num = 1.0;
 			_normalisationFactors[0] = 1.0;
 
-			for (int g = 1; g < _maxGen;g++)
+			for (int g = 1; g < _maxGen; g++)
 			{
-					double s = GetValRow(DevStage.NewEgg, g).Sum();
-					_normalisationFactors[g] =  (s > 0.0)? num / s : 0.0;
+				double s = GetValRow(DevStage.NewEgg, g).Sum();
+				_normalisationFactors[g] = (s > 0.0) ? num / s : 0.0;
 			}
 
 			//eventuelle letzte "rein rechnerische" Generation mit verschwindend geringen Individuenzahlen ignorieren
-			for(int numGen = GetNumGenerations(); numGen > 3; numGen--)
+			for (int numGen = GetNumGenerations(); numGen > 3; numGen--)
 			{
 				if ((_normalisationFactors[numGen] / _normalisationFactors[numGen - 1]) > 5)
 					_normalisationFactors[numGen] = 0.0;
@@ -337,20 +337,20 @@ namespace swatSim
 					}
 				}
 
-				nextGen: continue;
+			nextGen: continue;
 			}
 
 			return _numGenerations;
 		}
 
-		
+
 		public int GenerationStartIndex(DevStage stage, int generation)
 		{
 			if ((generation < 1) || (generation > GetNumGenerations()))
 				return -1;
-			
+
 			double[] row = GetValRow(stage, generation);
-			double sumStart = row.Sum()*0.05; // Generationstart bei 5% der Eiablagesumme/aktiven Fliegen (Fliegen ungenauer!)
+			double sumStart = row.Sum() * 0.05; // Generationstart bei 5% der Eiablagesumme/aktiven Fliegen (Fliegen ungenauer!)
 			double sumIndiv = 0.0;
 
 			for (int i = 0; i < 365; i++)
@@ -379,7 +379,8 @@ namespace swatSim
 		{
 			int numGenerations = GetNumGenerations();
 
-			try { 
+			try
+			{
 				using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.UTF8))
 				{
 					//Kopfzeile
@@ -390,13 +391,13 @@ namespace swatSim
 						{
 							DevStage st = (DevStage)s;
 							sw.Write($"{st}{g};");
-						
+
 						}
 					}
 					sw.WriteLine();
 
 					// Populationdaten
-					for (int d=0; d<365;d++)
+					for (int d = 0; d < 365; d++)
 					{
 						WriteElem(sw, d);
 						for (int s = (int)DevStage.Egg; s <= (int)DevStage.ActiveFly; s++)
@@ -405,20 +406,96 @@ namespace swatSim
 							{
 								WriteElem(sw, GetVal((DevStage)s, g, d));
 							}
-						
+
 						}
 						sw.WriteLine();
 					}
 				}
 			}
-			catch(Exception ex)
+			catch (Exception ex)
+			{
+				DlgMessage.Show("Daten können nicht geschrieben werden", ex.Message, MessageLevel.Error);
+			}
+
+		}
+
+		public void WriteAKToFile(string fileName)
+		{
+			//Int64[,,] eggAc;
+			//Int64[,,] larvalAc;
+			//Int64[,,] pupaAc;
+			//Int64[,,] flyAc;
+			//Int64[,,] pupaAestAc;
+
+			try
+			{
+				using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.UTF8))
+				{
+					//Kopfzeile
+					sw.Write("day;");
+					for (int s = (int)DevStage.Egg; s <= (int)DevStage.Fly; s++)
+					{
+						int mc = (s == (int)DevStage.Egg) ? 5 : 10;
+						for (int g = 0; g < mc; g++)
+						{
+							DevStage st = (DevStage)s;
+							sw.Write($"{st}{g};");
+						}
+					}
+					for (int g = 0; g < 10; g++)
+					{
+						DevStage st = DevStage.AestPup;
+						sw.Write($"{st}{g};");
+					}
+
+					sw.WriteLine();
+
+					// Age-Class-Data
+					for (int d = 0; d < 365; d++)
+					{
+						WriteElem(sw, d+1);
+
+						double[] eggs = GetAgeClasses(DevStage.Egg, d);
+						for(int i=0; i<5; i++) 
+						{ 
+							WriteElem(sw,(Int64) eggs[i]);
+						}
+						double[] larvals = GetAgeClasses(DevStage.Larva, d);
+						for (int i = 0; i < 10; i++)
+						{
+							WriteElem(sw, (Int64)larvals[i]);
+						}
+
+						double[] pupals = GetAgeClasses(DevStage.Pupa, d);
+						for (int i = 0; i < 10; i++)
+						{
+							WriteElem(sw, (Int64)pupals[i]);
+						}
+
+						double[] flies = GetAgeClasses(DevStage.Fly, d);
+						for (int i = 0; i < 10; i++)
+						{
+							WriteElem(sw, (Int64)flies[i]);
+						}
+
+						double[] aestPupals = GetAgeClasses(DevStage.AestPup, d);
+						for (int i = 0; i < 10; i++)
+						{
+							WriteElem(sw, (Int64)aestPupals[i]);
+						}
+
+
+						sw.WriteLine();
+					}
+				}
+			}
+			catch (Exception ex)
 			{
 				DlgMessage.Show("Daten können nicht geschrieben werden", ex.Message, MessageLevel.Error);
 			}
 
 
 		}
-
 		#endregion
 	}
 }

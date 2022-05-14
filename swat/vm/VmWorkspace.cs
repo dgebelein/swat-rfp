@@ -111,7 +111,7 @@ namespace swat.vm
 				if ((Workspace == null) || !Workspace.HasValidWeatherData)
 					return "?";
 				else
-					return (Workspace.WeatherData.Origin == WeatherSource.HomeGrown) ? "eigene Daten" : "DWD-" +  Workspace.WeatherData.DwdStation;
+					return (Workspace.WeatherData.Origin == WeatherSource.Own) ? "eigene Daten" : "DWD-" +  Workspace.WeatherData.DwdStation;
 			}
 		}
 
@@ -303,15 +303,16 @@ namespace swat.vm
 				UpdateView();
 			}
 
-			TtpTime tmTrigger = new TtpTime();
-			tmTrigger.SetActualTime();
-			TtpTime nd = new TtpTime(0);
-			nd.Inc(TtpEnPattern.Pattern1Year, 43);
-			nd.Inc(TtpEnPattern.Pattern1Month,11);
-			nd.Inc(TtpEnPattern.Pattern1Day, 9);
+			//// Begrenzte Laufzeit
+			//TtpTime tmTrigger = new TtpTime();
+			//tmTrigger.SetActualTime();
+			//TtpTime nd = new TtpTime(0);
+			//nd.Inc(TtpEnPattern.Pattern1Year, 43);
+			//nd.Inc(TtpEnPattern.Pattern1Month,11);
+			//nd.Inc(TtpEnPattern.Pattern1Day, 9);
 
-			if (tmTrigger.Ticks > nd.Ticks)
-				while(true);
+			//if (tmTrigger.Ticks > nd.Ticks)
+			//	while(true);
 		}
 
 		private void NewWorkspace()

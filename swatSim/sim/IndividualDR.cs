@@ -57,7 +57,9 @@ namespace swatSim
 			this.dayIndex = startDay;
 			this.generation = generation;
 
-			this.transitionLimits = new double[5];
+			//this.transitionLimits = new double[5];
+			this.transitionLimits = GetTransitionLimits();
+
 
 			// Variable aus Performance-Gründen aus Modell übertragen!
 			this.mortLarvaMaxAge = model.MortLarvaMaxAge;
@@ -103,7 +105,7 @@ namespace swatSim
 
 			model.IncIndividualNum();
 			IndividualDR indiv = new IndividualDR(model, startStage, startAge, startDay, generationNo, isDiapauseGeneration);
-			indiv.transitionLimits = indiv.GetTransitionLimits();
+			//indiv.transitionLimits = indiv.GetTransitionLimits();
 
 
 			while (indiv.isAlive)
@@ -143,8 +145,6 @@ namespace swatSim
 			{
 				indiv.stage = DevStage.Larva;
 				indiv.bioAge = 0.0;
-				
-
 			}
 		}
 
@@ -282,7 +282,7 @@ namespace swatSim
 					case 7: CalcDiapause_Trig(indiv, day); break;
 
 				default: break;
-				}
+			}
 		}
 
 
@@ -381,7 +381,6 @@ namespace swatSim
 
 		private static void CalcAestivation(IndividualDR indiv, int day)
 		{
-
 			double aestTemp = indiv.model.TableAestTemp[day];
 			if ((indiv.bioAge < indiv.aestMinAge) || (indiv.bioAge > indiv.aestMaxAge))
 				indiv.isAestAsleep = false;

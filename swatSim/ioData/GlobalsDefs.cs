@@ -38,7 +38,7 @@ namespace swatSim
 
 	public enum WeatherSource
 	{
-		HomeGrown,
+		Own,
 		Dwd
 	}
 

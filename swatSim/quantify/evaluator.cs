@@ -38,9 +38,12 @@ namespace swatSim
 			}
 			else
 			{
-				prognVal += 1.0;
-				monVal += 1.0;
-				return (prognVal > monVal) ? (prognVal / monVal) : (monVal / prognVal);
+				//prognVal += 1.0;
+				//monVal += 1.0;
+				prognVal = Math.Sqrt(prognVal + 1.0);
+				monVal = Math.Sqrt(monVal + 1.0);
+
+				return ( prognVal > monVal) ? (prognVal / monVal) : (monVal / prognVal);
 			}
 		}
 

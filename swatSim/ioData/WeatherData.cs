@@ -85,7 +85,7 @@ namespace swatSim
 			}
 			else
 			{
-				Origin = WeatherSource.HomeGrown;
+				Origin = WeatherSource.Own;
 				_location = workspaceCmd.Substring(0,li);
 				DwdStation = "";
 			}
@@ -180,7 +180,7 @@ namespace swatSim
 			set
 			{
 				_dwdStation = value;
-				_origin = (string.IsNullOrEmpty(value)) ? WeatherSource.HomeGrown : WeatherSource.Dwd;
+				_origin = (string.IsNullOrEmpty(value)) ? WeatherSource.Own : WeatherSource.Dwd;
 			}
 		}
 
@@ -188,8 +188,8 @@ namespace swatSim
 		{
 			get
 			{
-				return (Origin == WeatherSource.HomeGrown) ?
-					GetFilename(WeatherSource.HomeGrown, Location, Year) :
+				return (Origin == WeatherSource.Own) ?
+					GetFilename(WeatherSource.Own, Location, Year) :
 					GetFilename(WeatherSource.Dwd, DwdStation, Year);
 			}
 		}
@@ -305,7 +305,7 @@ namespace swatSim
 
 		public bool CreateNewFile(string location)
 		{
-			if (Origin == WeatherSource.HomeGrown)
+			if (Origin == WeatherSource.Own)
 			{
 				_location = location;
 				if (File.Exists(Filename))
@@ -762,13 +762,13 @@ namespace swatSim
 			string ext= (string)Application.Current.Properties["ExtWeather"];
 			if((path == null)|| (ext == null))//swop
 			{
-				return (origin == WeatherSource.HomeGrown) ?
+				return (origin == WeatherSource.Own) ?
 						 $"{location}-{year}"  :
 						 $"DWD-{location}-{year}";
 			}
 			else // swat
 			{
-				return (origin == WeatherSource.HomeGrown) ?
+				return (origin == WeatherSource.Own) ?
 						Path.Combine(path, $"{location}-{year}" + ext) :
 						Path.Combine(path, $"DWD-{location}-{year}" + ext);
 			}

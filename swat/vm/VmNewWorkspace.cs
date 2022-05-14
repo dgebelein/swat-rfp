@@ -94,7 +94,7 @@ namespace swat.vm
 		{
 			get
 			{
-				if (_weatherOrigin == WeatherSource.HomeGrown)
+				if (_weatherOrigin == WeatherSource.Own)
 					return $"{_location}-{_year}{WorkspaceData.ExtWeather}";
 				else
 					return $"DWD-{_dwdImporter.GetSelectedStationName(_dwdListIndex)}-{_year}{WorkspaceData.ExtWeather}";
@@ -242,7 +242,7 @@ namespace swat.vm
 
 		private bool GetWeatherData()
 		{
-			if (WspWeatherOrigin == WeatherSource.HomeGrown) // nix zu tun 
+			if (WspWeatherOrigin == WeatherSource.Own) // nix zu tun 
 				return true;
 
 			DlgImportDwdData.Show(this);

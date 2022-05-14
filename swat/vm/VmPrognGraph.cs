@@ -13,6 +13,7 @@ using TTP.Engine3;
 using TTP.TtpCommand3;
 using TTP.UiUtils;
 using System.Text.RegularExpressions;
+using System.Globalization;
 //using SwatSim;
 
 namespace swat.vm
@@ -109,13 +110,18 @@ namespace swat.vm
 
 		}
 
-
-		private PresentationsData GeneratePresentationsData()
+		private string GetTitleToolTip()
 		{
+			return Workspace.Notes + $"\r\n\n ----------------------\r\nNum Indiv: {Workspace.CurrentPopulationData.NumIndividuals.ToString("### ### ### ###", CultureInfo.InvariantCulture)}";
+		}
+
+	private PresentationsData GeneratePresentationsData()
+		{
+
 			PresentationsData data = new PresentationsData
 			{
 				TimeRange = new TtpTimeRange(new TtpTime("1.1." + Workspace.SimulationYear), TtpEnPattern.Pattern1Year, 1),
-				TitleToolTip = Workspace.Notes,
+				TitleToolTip = GetTitleToolTip(),
 				Title = _quantor.Title,
 				HighlightTimeRange = GetPresentTimerange(),
 				ZoomFactor = 0
@@ -135,7 +141,7 @@ namespace swat.vm
 			{
 				TimeRange = copyData.TimeRange,
 				Title = _quantor.Title,
-				TitleToolTip = Workspace.Notes,
+				TitleToolTip = GetTitleToolTip(),
 				HighlightTimeRange = copyData.HighlightTimeRange,
 				ZoomFactor = copyData.ZoomFactor,
 				ZoomFactorRight=0,
