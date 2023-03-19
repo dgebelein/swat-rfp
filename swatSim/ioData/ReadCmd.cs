@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TTP.Engine3;
 
 namespace swatSim
 {
@@ -45,6 +47,40 @@ namespace swatSim
 			}
 			else
 				return null;
+
+		}
+
+		static public  TtpTimeRange GetTimeRangeFromShort(string line, int year)
+		{
+			TtpTimeRange tr = new TtpTimeRange();
+			string st = ReadCmd.IsolateContent(line, "#d:");
+			if (String.IsNullOrWhiteSpace(line))
+			{
+				return tr;
+			}
+
+			string[] elems = line.Trim().Split('-');
+
+			if (elems.Length != 2)
+			{
+				return tr;
+			}
+
+			if (DateTime.TryParseExact(elems[0].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime first) &&
+				DateTime.TryParseExact(elems[1].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime last))
+			{
+				//TtpTime start = new TtpTime($"1.1.{year}");
+				//start.Inc(TtpEnPattern.Pattern1Day, first.DayOfYear - 1);
+				//TtpTime end = new TtpTime($"1.1.{year}");
+				//end.Inc(TtpEnPattern.Pattern1Day, last.DayOfYear - 1);
+				//tr= new TtpTimeRange(start, end, TtpEnPattern.Pattern1Day);
+
+				TtpTime start = new TtpTime($"{elems[0].Trim()}.{year}");
+				TtpTime end = new TtpTime($"{elems[1].Trim()}.{year}");
+				tr = new TtpTimeRange(start, end, TtpEnPattern.Pattern1Day);
+			}
+
+			return tr;
 
 		}
 	}

@@ -21,6 +21,8 @@ namespace SwopReview
 		SimData _simData;
 		PresentationsData _graphData;
 		RelayCommand _printCommand;
+		RelayCommand _exportCommand;
+
 
 		#endregion
 
@@ -29,6 +31,8 @@ namespace SwopReview
 		public VmSimResult(SwopData sd, int setId) : base(sd, null)
 		{
 			_printCommand = new RelayCommand(param => this.Print());
+			_exportCommand = new RelayCommand(param => this.ExportToFile());
+
 
 			_simData = new SimData(_swopData, setId);
 			_graphData = GeneratePresentationsData(setId);
@@ -66,8 +70,10 @@ namespace SwopReview
 
 		#region Properties für Binding
 		public ICommand PrintCommand { get { return _printCommand; } }
-		public Visibility VisQuantCommands { get { return Visibility.Collapsed; } } // entfernt die quantifizierungsmethoden aus contextmenü
+		public ICommand ExportCommand { get { return _exportCommand; } }
 
+		public Visibility VisQuantCommands { get { return Visibility.Collapsed; } } // entfernt die quantifizierungsmethoden aus contextmenü
+		public Visibility VisExportCommand { get { return Visibility.Collapsed; } } // entfernt den Quantifizierungsexport im contextmenü
 		#endregion
 
 		#region Methoden  aus Contextmenü
@@ -76,6 +82,11 @@ namespace SwopReview
 		{
 			SwatPresentation printPres = PresentationCreator.Create(PresentationType.Optimization, _graphData, true);
 			printPres.PrintView();
+		}
+
+		private void ExportToFile()
+		{
+			_simData.ExportToCsv();
 		}
 
 		#endregion

@@ -44,6 +44,8 @@ namespace swat.vm
 			Directory.CreateDirectory(WorkspaceData.GetPathWeatherMes);
 			Directory.CreateDirectory(WorkspaceData.GetPathReports);
 			Directory.CreateDirectory(WorkspaceData.GetPathNotes);
+			Directory.CreateDirectory(WorkspaceData.GetPathSwop);
+
 
 			_isExtUser = (bool)Application.Current.Properties["ExtUser"];
 			_isSuperUser = (bool)Application.Current.Properties["SuperUser"];

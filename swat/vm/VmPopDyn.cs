@@ -25,6 +25,8 @@ namespace swat.vm
 		RelayCommand _notesCommand;
 
 		RelayCommand _saveCommand;
+		RelayCommand _saveNormalisedCommand;
+
 		RelayCommand _toggleSeparateCommand;
 
 		VmBase _parentPanel;
@@ -48,6 +50,8 @@ namespace swat.vm
 			_notesCommand = new RelayCommand(param => this.ShowNotes());
 
 			_saveCommand = new RelayCommand(param => this.SaveAsCsv());
+			_saveNormalisedCommand = new RelayCommand(param => this.SaveAsNormalisedCsv());
+
 			_toggleSeparateCommand = new RelayCommand(param => this.ToggleSeparateGenerations());
 		}
 
@@ -60,6 +64,8 @@ namespace swat.vm
 		public ICommand NotesCommand { get { return _notesCommand; } }
 
 		public ICommand SaveCommand { get { return _saveCommand; } }
+		public ICommand SaveNormalisedCommand { get { return _saveNormalisedCommand; } }
+
 		public ICommand ToggleSeparateCommand { get { return _toggleSeparateCommand; } }
 
 
@@ -234,7 +240,7 @@ namespace swat.vm
 			}
 			else
 			{
-				int numGen = Workspace.CurrentPopulationData.GetNumGenerations();
+				int numGen = Workspace.CurrentPopulationData.GetCalcGenerationsNum();
 				for(int g = 0;g <= numGen; g++)
 				{
 					AddStageGeneration(data, DevStage.Egg, g);
@@ -266,7 +272,13 @@ namespace swat.vm
 		private void SaveAsCsv()
 		{
 			PopulationData pop = Workspace.CurrentPopulationData;
-			pop.WritePopToFile(Path.Combine(WorkspaceData.GetPathReports, pop.Title + ".csv"));
+			pop.WritePopToFile(Path.Combine(WorkspaceData.GetPathReports, pop.Title + "-raw.csv"), false);
+		}
+
+		private void SaveAsNormalisedCsv()
+		{
+			PopulationData pop = Workspace.CurrentPopulationData;
+			pop.WritePopToFile(Path.Combine(WorkspaceData.GetPathReports, pop.Title + "-norm.csv"), true);
 		}
 
 		private void ToggleSeparateGenerations()

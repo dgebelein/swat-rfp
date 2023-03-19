@@ -26,12 +26,18 @@ namespace SwopReview
 		EvalMethod _quantorMethod;
 		int _setIndex;
 		Int64 _lastSimIndivCalc; // Hilfsvariable zum Übertragen der Individuenanzahl;
-		string _lastSimParams;	// Hilfsvariable zum Übertragen des Parameter-Tooltips;
+		double _lastEval;       // Hilfsvariable zum Übertragen des Fehlerwertes;
+		double _startEval;
+		string _lastSimParams;  // Hilfsvariable zum Übertragen des Parameter-Tooltips;
+		double[] _startTrend;
+		double[] _bestCommonTrend;
+		double[] _bestSetTrend;
+		double[] _monTrend;
 
 
 		public WeatherData Weather { get; private set; }
 		public MonitoringData Monitoring { get; private set; }
-		public string Notes { get; private set;}
+		public string Notes { get; private set; }
 
 
 
@@ -44,7 +50,7 @@ namespace SwopReview
 			_setIndex = setId;
 			_quantorMethod = EvalMethod.Relation;
 
-			_randomNumbers = new double[10000000]; // Erzeugung von Zufallszahlen-Folge
+			_randomNumbers = new double[1000000]; // Erzeugung von Zufallszahlen-Folge
 			Random rand = new Random(96);
 			for (int i = 0; i < _randomNumbers.Length; i++)
 			{
@@ -76,6 +82,7 @@ namespace SwopReview
 		SimParamData GetLocalSetParams()
 		{
 			SimParamData simParams = _swopData.DefaultParameters.Clone();// model.CodedParams.Clone();
+
 			foreach (string p in _swopData.OptSets[_setIndex].LocalParams)
 			{
 				if (!simParams.ReadFromString(p))
@@ -86,8 +93,8 @@ namespace SwopReview
 
 		public SimParamData GetCommonBestParams()
 		{
-			SimParamData simParams = GetLocalSetParams(); 
-			
+			SimParamData simParams = GetLocalSetParams();
+
 			int p = 0;
 			foreach (string param in _swopData.OptParameters)
 			{
@@ -100,7 +107,7 @@ namespace SwopReview
 
 		SimParamData GetSetBestParams()
 		{
-			SimParamData simParams = GetLocalSetParams(); 
+			SimParamData simParams = GetLocalSetParams();
 
 			int bestStepSet = _swopData.OptSets[_setIndex].GetBestErrorId();
 			if (bestStepSet < 0)
@@ -109,7 +116,7 @@ namespace SwopReview
 			int p = 0;
 			foreach (string param in _swopData.OptParameters)
 			{
-				string st= $"{param} = {ParamCreator.GetParameterValueString(_swopData.DefaultParameters, param, _swopData.OptParamValues[bestStepSet, p])}";
+				string st = $"{param} = {ParamCreator.GetParameterValueString(_swopData.DefaultParameters, param, _swopData.OptParamValues[bestStepSet, p])}";
 				if (!simParams.ReadFromString(st))
 					return null;
 				p++;
@@ -141,7 +148,9 @@ namespace SwopReview
 
 		public string GetPathWorkspace
 		{
-			get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat"); }
+			get { return _swopData.SwatWorkDir; }
+
+			//get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat"); }
 		}
 
 		WeatherData GetWeatherData(string name)
@@ -178,7 +187,7 @@ namespace SwopReview
 				return false;
 			}
 
-			 Monitoring = GetMonitoringData(_swopData.OptSets[_setIndex].Monitoring);
+			Monitoring = GetMonitoringData(_swopData.OptSets[_setIndex].Monitoring);
 			if (Monitoring == null)
 			{
 				string msg = $"Error reading monitoring data for Set {_setIndex}!";
@@ -186,7 +195,7 @@ namespace SwopReview
 				return false;
 			}
 
-			 _localSetParams = GetLocalSetParams();
+			_localSetParams = GetLocalSetParams();
 			if (_localSetParams == null)
 			{
 				string msg = $"Error reading local parameters for set {_setIndex}!";
@@ -202,7 +211,7 @@ namespace SwopReview
 				return false;
 			}
 
-			 _setBestParams = GetSetBestParams();
+			_setBestParams = GetSetBestParams();
 			if (_setBestParams == null)
 			{
 				string msg = $"Error reading parameters for set {_setIndex}!";
@@ -215,14 +224,26 @@ namespace SwopReview
 			return true;
 		}
 
-		double[] GetModelTrend(SimParamData optParam)
+		double[] GetModelTrend(SimParamData optParam, bool saveQuantor= false)
 		{
 			ModelBase model = CreateSimulationModel(Weather, optParam);
 			model.RunSimulation();
 			_lastSimIndivCalc = model.Population.NumIndividuals;
 			_lastSimParams = optParam.GetString(true);
-			Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, _quantorMethod, false);
-			_hasEggs = quantor.HasEggs;
+			Quantor quantor = Quantor.CreateNew(model, model.Population, Monitoring, _quantorMethod, true);
+			if ( saveQuantor)
+			{
+				string s = Path.GetFileNameWithoutExtension(Monitoring.Filename) + "_quanti.txt";
+				string fn = Path.Combine(_swopData.SwopWorkDir, s);
+				quantor.WriteOptimizationReport(fn);
+			}
+			//_hasEggs = quantor.HasEggs;
+
+			TtpTimeRange tr = GetEvalTimeSpan();
+			int start = tr.Start.DayOfYear - 1;
+			int end = tr.End.DayOfYear;
+
+			_lastEval = quantor.GetRemainingError(DevStage.NewEgg, _quantorMethod, start, end);
 			return quantor.PrognValues;
 		}
 
@@ -230,7 +251,7 @@ namespace SwopReview
 		{
 			return Weather.Year;
 		}
-		
+
 		public TtpTimeRange GetEvalTimeSpan()
 		{
 			string s = _swopData.OptSets[_setIndex].EvalTime;
@@ -241,21 +262,28 @@ namespace SwopReview
 
 		public void AddTrends(PresentationsData pd)
 		{
-			double[] startTrend = GetModelTrend(_localSetParams); // zuerst aufrufen, weil hier auf Eier/Adulte umgeschaltet wird
-			AddMonitoringRow(pd);
-			AddStartParamRow(pd, startTrend);
-			AddCommonBestParamRow(pd, GetModelTrend(_commonBestParams));
-			AddSetBestParamRow(pd, GetModelTrend(_setBestParams));
+			// Trends zwischenspeichern für Datenexport
+			_hasEggs = Monitoring.HasEggs;
+			_monTrend = (_hasEggs ? Monitoring.Eggs : Monitoring.Adults);
+			AddMonitoringRow(pd, _monTrend);
+
+			_startTrend = GetModelTrend(_localSetParams, true);
+			AddStartParamRow(pd, _startTrend);
+			_bestCommonTrend = GetModelTrend(_commonBestParams);
+			AddCommonBestParamRow(pd, _bestCommonTrend);
+			_bestSetTrend = GetModelTrend(_setBestParams);
+			AddSetBestParamRow(pd, _bestSetTrend);
+
 			AddWeatherRows(pd);
 
 		}
 
-		private void AddMonitoringRow(PresentationsData pd)
+		private void AddMonitoringRow(PresentationsData pd, double[] trend)
 		{
 			pd.AddRow(new PresentationRow
 			{
-				Legend = (_hasEggs) ? "Oviposion - Monitoring" : "Flight - Monitoring",
-				Values = (_hasEggs) ? Monitoring.Eggs :Monitoring.Adults,
+				Legend = _hasEggs ? "Oviposion - Monitoring" : "Flight - Monitoring",
+				Values = trend,
 				LegendIndex = 0,
 				IsVisible = true,
 				Thicknes = 1.0,
@@ -267,11 +295,14 @@ namespace SwopReview
 		}
 
 		private void AddStartParamRow(PresentationsData pd, double[] trend)
-		{			
+		{
 			double err = _swopData.OptSets[_setIndex].StartErrValue;
+			_startEval = _lastEval;
 			string legend = (_hasEggs) ? "Oviposion - calc with startparams" : "Flight - calc with startparams";
-			legend += $"    Err = {err.ToString("0.###", CultureInfo.InvariantCulture)}";
-			
+			//legend += $"    Err = {err.ToString("0.###", CultureInfo.InvariantCulture)}";
+			legend += $"    Err = {_startEval.ToString("0.###", CultureInfo.InvariantCulture)}";
+
+
 			pd.AddRow(new PresentationRow
 			{
 				Legend = legend,
@@ -289,9 +320,11 @@ namespace SwopReview
 		private void AddCommonBestParamRow(PresentationsData pd, double[] trend)
 		{
 			double startErr = _swopData.OptSets[_setIndex].StartErrValue;
-			double bestCommonErr = _swopData.OptSets[_setIndex].BestErrValue;
+			double bestCommonErr1 = _swopData.OptSets[_setIndex].BestErrValue;
+			double bestCommonErr = _lastEval;
+
 			string legend = (_hasEggs) ? "Oviposion - calc with common best Params" : "Flight - calc with common best Params";
-			legend += $"    Err = {bestCommonErr.ToString("0.###", CultureInfo.InvariantCulture)};   Rel = {(bestCommonErr / startErr).ToString("0.###", CultureInfo.InvariantCulture)}";
+			legend += $"    Err = {bestCommonErr.ToString("0.###", CultureInfo.InvariantCulture)};   Rel = {(bestCommonErr / _startEval).ToString("0.###", CultureInfo.InvariantCulture)}";
 
 			pd.AddRow(new PresentationRow
 			{
@@ -311,10 +344,12 @@ namespace SwopReview
 		{
 			double startErr = _swopData.OptSets[_setIndex].StartErrValue;
 			int step = _swopData.OptSets[_setIndex].GetBestErrorId();
-			double bestSetErr = _swopData.OptSets[_setIndex].ErrValues[step];
+			double bestSetErr1 = _swopData.OptSets[_setIndex].ErrValues[step];
+			double bestSetErr = _lastEval;
+
 
 			string legend = (_hasEggs) ? "Oviposion - calc with best Params for Set" : "Flight - calc with best Params for Set";
-			legend += $"     Err = {bestSetErr.ToString("0.###", CultureInfo.InvariantCulture)};   Rel ={(bestSetErr/startErr).ToString("0.###", CultureInfo.InvariantCulture)}";
+			legend += $"     Err = {bestSetErr.ToString("0.###", CultureInfo.InvariantCulture)};   Rel ={(bestSetErr / _startEval).ToString("0.###", CultureInfo.InvariantCulture)}";
 
 			pd.AddRow(new PresentationRow
 			{
@@ -370,6 +405,61 @@ namespace SwopReview
 				LineType = TtpEnLineType.Chart
 			});
 		}
+		#endregion
+
+		#region Simdaten exportieren
+
+		private void WriteElem(StreamWriter w, double elem)
+		{
+			string delim = ";";
+
+			if (double.IsNaN(elem))
+				w.Write($"{delim}");
+			else
+				w.Write($"{elem:0.#}{delim}");
+		}
+
+		private void WriteToFile(string fileName)
+		{
+			TtpTimeRange tr = GetEvalTimeSpan();
+			int start = tr.Start.DayOfYear - 1;
+			int end = tr.End.DayOfYear;
+			try
+			{
+				using (StreamWriter sw = new StreamWriter(fileName, false, Encoding.UTF8))
+				{
+					//Kopfzeile
+					sw.WriteLine("Datum;Mon;Progn 0;Progn 1;Progn 2;");
+
+					// Daten						
+					TtpTime at = tr.Start;
+					for (int d = start; d < end; d++)
+					{
+						sw.Write(at.ToString("dd.MM.yyyy") + ";");
+						WriteElem(sw,_monTrend[d]);
+						WriteElem(sw,_startTrend[d]);
+						WriteElem(sw, _bestCommonTrend[d]);
+						WriteElem(sw, _bestSetTrend[d]);
+						sw.WriteLine();
+						at.Inc(TtpEnPattern.Pattern1Day, 1);
+
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				DlgMessage.Show("Daten können nicht geschrieben werden", ex.Message, MessageLevel.Error);
+			}
+		}
+
+		public void ExportToCsv()
+		{
+			string s = Path.GetFileNameWithoutExtension(Monitoring.Filename)+".csv";
+			string fn = Path.Combine(_swopData.SwopWorkDir, s);
+			WriteToFile(fn);
+		}
+		
+
 		#endregion
 	}
 }

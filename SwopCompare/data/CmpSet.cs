@@ -237,12 +237,12 @@ namespace SwopCompare
 
 		 string GetPathWeather
 		{
-			get { return GetPathSwat; }
+			get { return _swatPath; }
 		}
 
 		string GetPathMonitoring
 		{
-			get { return GetPathSwat; }
+			get { return _swatPath; }
 		}
 
 		string GetPathNotes

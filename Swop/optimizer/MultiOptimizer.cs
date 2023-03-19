@@ -81,7 +81,7 @@ namespace Swop.optimizer
 			_globData = globData;
 			_quantorMethod = EvalMethod.Relation;
 
-			_randomNumbers = new double[10000000]; // Erzeugung von Zufallszahlen-Folge für Multithreading
+			_randomNumbers = new double[1000000]; // Erzeugung von Zufallszahlen-Folge für Multithreading
 			Random rand = new Random(96);
 			for (int i = 0; i < _randomNumbers.Length; i++)
 			{
@@ -147,7 +147,7 @@ namespace Swop.optimizer
 						break;
 
 					case TypeCode.Double:
-						solverParams[n] = ((double)elem.Obj);
+						solverParams[n] = Math.Round(((double)elem.Obj),4);
 						break;
 				}
 				n++;
@@ -175,7 +175,7 @@ namespace Swop.optimizer
 						break;
 
 					case TypeCode.Double:
-						elem.Obj = solverData[n];
+						elem.Obj = Math.Round(solverData[n],4);
 						break;
 
 				}
@@ -668,19 +668,20 @@ namespace Swop.optimizer
 
 			Parallel.For(0, _globData.NumSets, i =>
 			 {
+				 int set = i;
 				 try
 				 {
-					 ModelBase model = CreateOptimizationModel(simParams, i);
+					 ModelBase model = CreateOptimizationModel(simParams, set);
 					 model.RunSimulation();
 
-					 Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[i], _quantorMethod, false); 
+					 Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[set], _quantorMethod, false); 
 					 DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
 
-					 singleEvals[i + 1] = quantor.GetRemainingError(stage, _quantorMethod, _globData.FirstIndices[i], _globData.LastIndices[i]); // optimieren:immer relationen!
+					 singleEvals[set + 1] = quantor.GetRemainingError(stage, _quantorMethod, _globData.FirstIndices[set], _globData.LastIndices[set]); // optimieren:immer relationen!
 				 }
 				 catch
 				 {
-					 singleEvals[i + 1] = 99999.0;
+					 singleEvals[set + 1] = 99999.0;
 				 };
 			 }
 			);
@@ -691,6 +692,42 @@ namespace Swop.optimizer
 			{
 				//Eval-Wert immer in Relation zu Startfehler, weil Datensätze mit großen  Fängen tendenziell größere Fehlerwerte liefern
 				singleEvals[0] += _globData.EvalWeightings[i-1] * singleEvals[i]/_startEvals[i]; // achtung Indizes!  
+				totalWeightings += _globData.EvalWeightings[i - 1];
+			}
+			singleEvals[0] /= totalWeightings;
+
+			return singleEvals;
+		}
+
+		double[] CalcModelResiduals_(SimParamData simParams)
+		{
+			double[] singleEvals = new double[_globData.NumSets + 1];
+
+			for ( int i=0;i< _globData.NumSets; i++)
+			{
+				try
+				{
+					ModelBase model = CreateOptimizationModel(simParams, i);
+					model.RunSimulation();
+
+					Quantor quantor = Quantor.CreateNew(model, model.Population, _globData.Monitorings[i], _quantorMethod, false);
+					DevStage stage = quantor.HasEggs ? DevStage.NewEgg : DevStage.ActiveFly;
+
+					singleEvals[i + 1] = quantor.GetRemainingError(stage, _quantorMethod, _globData.FirstIndices[i], _globData.LastIndices[i]); // optimieren:immer relationen!
+				}
+				catch
+				{
+					singleEvals[i + 1] = 99999.0;
+				}
+			}
+			
+
+			singleEvals[0] = 0.0;
+			double totalWeightings = 0.0;
+			for (int i = 1; i <= _globData.NumSets; i++)
+			{
+				//Eval-Wert immer in Relation zu Startfehler, weil Datensätze mit großen  Fängen tendenziell größere Fehlerwerte liefern
+				singleEvals[0] += _globData.EvalWeightings[i - 1] * singleEvals[i] / _startEvals[i]; // achtung Indizes!  
 				totalWeightings += _globData.EvalWeightings[i - 1];
 			}
 			singleEvals[0] /= totalWeightings;

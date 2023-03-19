@@ -24,6 +24,10 @@ namespace SwopReview
 		#region Variable
 		bool _hasData;
 		public string ErrMessage { get; set; }
+		public string SwopWorkDir { get; set; }
+		public string SwatWorkDir { get; set; }
+
+
 		public bool RunIsCancelled { get; set; }
 
 		public SwopWorkMode WorkMode { get; private set; }

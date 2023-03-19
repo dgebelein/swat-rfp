@@ -19,7 +19,7 @@ namespace SwopCompare
 		public ModelBase Model { get; private set; }
 		public string SwatWorkDir { get; private set; }
 
-		public string Description { get; private set; }
+		//public string Description { get; private set; }
 
 		public string ErrMessage { get; private set; }
 		public string CommandFilename { get; private set; }
@@ -38,16 +38,25 @@ namespace SwopCompare
 		private void AssignWorkDir()
 		{
 			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
-			try
-			{
-
-				string[] fileLines = File.ReadAllLines(cfgFn);
-				SwatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
-
-			}
-			catch (Exception e)
-			{
+			
+			if (!File.Exists(cfgFn))
+			{ 
 				SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+			}
+			else
+			{ 
+				try
+				{
+
+					string[] fileLines = File.ReadAllLines(cfgFn);
+					SwatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+				}
+				catch (Exception e)
+				{
+					DlgMessage.Show("Swop Konfigurationsfehler", $"'swop.cfg' kann nicht gelesen werden ", MessageLevel.Error);
+					SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+				}
 			}
 
 
@@ -134,37 +143,38 @@ namespace SwopCompare
 			}
 
 			if(Model== null)
-				ErrMessage = $"Modell-Angabe falsch";
+				ErrMessage = $"[Model]: unbekannte Angabe";
 		}
 
-		void ReadDescription(string[] lines)
-		{
-			int sl = ReadCmd.GetLineNo(lines,"[Descr]");
-			if (sl < 0)
-			{
-				Description = "";
-				return;
-			}
+		//void ReadDescription(string[] lines)
+		//{
+		//	int sl = ReadCmd.GetLineNo(lines,"[Descr]");
+		//	if (sl < 0)
+		//	{
+		//		Description = "";
+		//		return;
+		//	}
 
-			for (int n = sl + 1; n < lines.Length; n++)
-			{
-				if (lines[n].StartsWith("["))
-					break;
-				Description = lines[n].Trim();
-			}
+		//	for (int n = sl + 1; n < lines.Length; n++)
+		//	{
+		//		if (lines[n].StartsWith("["))
+		//			break;
+		//		Description = lines[n].Trim();
+		//	}
 
-		}
+		//}
 
 		void ReadCommandFile(string filename)
 		{
 			ErrMessage = "";
+			Model = null;
 			CompareSets.Clear();
 
 			string[]lines = GetCommandLines(filename);
 			if (HasValidData)
 			{
 				ReadModelType(lines);
-				ReadDescription(lines);
+				//ReadDescription(lines);
 
 				int setNo = 0;
 				while (HasValidData)

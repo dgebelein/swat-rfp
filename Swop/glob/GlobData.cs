@@ -7,6 +7,7 @@ using System.Text;
 using SwatPresentations;
 using swatSim;
 using Swop.optimizer;
+using TTP.Engine3;
 
 namespace Swop.glob
 {
@@ -193,13 +194,14 @@ namespace Swop.glob
 					return false;
 			}
 
-			_firstOptIndex = instructions.FirstOptIndex;
-			_lastOptIndex = instructions.LastOptIndex;
+			//_firstOptIndex = instructions.FirstOptIndex;
+			//_lastOptIndex = instructions.LastOptIndex;
 
 			for (int i=0; i< instructions.WeatherFilenames.Count;i++)
 			{
-				if (!AddDataSet(instructions.WeatherFilenames[i], instructions.MonitoringFilenames[i], instructions.LocParamFilenames[i], 
-						instructions.FirstIndices[i], instructions.LastIndices[i], instructions.EvalWeightings[i]))
+				//if (!AddDataSet(instructions.WeatherFilenames[i], instructions.MonitoringFilenames[i], instructions.LocParamFilenames[i],
+				//		instructions.EvalDates[i], instructions.EvalWeightings[i]))
+				if(!AddDataSet(instructions, i))
 					return false;
 			}
 
@@ -228,12 +230,17 @@ namespace Swop.glob
 			return true;
 		}
 
-		private bool AddDataSet(string weatherFilename,string monitoringFilename, string locParamFilename, int firstIndex, int lastIndex, double weighting)
+		//private bool AddDataSet(string weatherFilename,string monitoringFilename, string locParamFilename, string evalDate, double weighting)
+		private bool AddDataSet(Instructions instructions, int setId)
 		{
+			//instructions.WeatherFilenames[i], instructions.MonitoringFilenames[i], instructions.LocParamFilenames[i],
+			//			instructions.EvalDates[i], instructions.EvalWeightings[i]
+
 			WeatherData wea = new WeatherData(-1);
-			if(wea.ReadFromFile(Path.Combine(GetPathWeather, weatherFilename)))
+			string wfn = instructions.WeatherFilenames[setId];
+			if (wea.ReadFromFile(Path.Combine(GetPathWeather, wfn)))
 			{
-				wea.SetLocation(weatherFilename);
+				wea.SetLocation(wfn);
 				_weathers.Add(wea);
 			}
 			else
@@ -242,7 +249,7 @@ namespace Swop.glob
 				return false;
 			}
 
-			MonitoringData mon = MonitoringData.CreateNew(Path.Combine(GetPathMonitoring, monitoringFilename));
+			MonitoringData mon = MonitoringData.CreateNew(Path.Combine(GetPathMonitoring, instructions.MonitoringFilenames[setId]));
 			
 			if (mon.ReadFromFile())
 			{
@@ -256,9 +263,10 @@ namespace Swop.glob
 
 			SimParamData param = _modelParameters.Clone();
 
-			if (!string.IsNullOrEmpty(locParamFilename))
+			string lfn = instructions.LocParamFilenames[setId];
+			if (!string.IsNullOrEmpty(lfn))
 			{
-				if (param.ReadFromFile(Path.Combine(GetPathSwop, locParamFilename)))
+				if (param.ReadFromFile(Path.Combine(GetPathSwop, lfn)))
 				{
 					_locParams.Add(param);
 				}
@@ -271,14 +279,25 @@ namespace Swop.glob
 			else
 				_locParams.Add(null);
 
-			if((firstIndex < 0) && (lastIndex < 0))
+
+			string evalDate = instructions.EvalDates[setId];
+			if(string.IsNullOrWhiteSpace(evalDate))
 			{
-				firstIndex = _firstOptIndex;
-				lastIndex = _lastOptIndex;
+				evalDate =  instructions.GlobDate;
 			}
-			_firstIndices.Add(firstIndex);
-			_lastIndices.Add(lastIndex);
-			_evalWeightings.Add(weighting);
+
+			TtpTimeRange tr = ReadCmd.GetTimeRangeFromShort(evalDate, wea.Year);
+			if (!tr.IsValid)
+			{
+				ErrorMessage = $"falsche Zeitraum-Angabe: {evalDate}";
+				return false;
+			}
+
+			_firstIndices.Add(tr.Start.DayOfYear);
+			_lastIndices.Add(tr.End.DayOfYear);
+
+
+			_evalWeightings.Add(instructions.EvalWeightings[setId]);
 
 			return true;
 		}
@@ -426,12 +445,12 @@ namespace Swop.glob
 
 		// Methoden mit ...Display... für Bildschirmanzeige, mit ...Log... für Ausgabe in Log-Datei
 
-		private string GetEvalTimerangeText(int firstIndex, int lastIndex)
+		private string GetEvalTimerangeText(int firstIndex, int lastIndex, int year)
 		{
-			DateTime start = DateTime.Parse("1.1.1995");
+			DateTime start = DateTime.Parse("1.1."+year);
 			DateTime end = start;
-			start = start.AddDays(firstIndex);
-			end = end.AddDays(lastIndex);
+			start = start.AddDays(firstIndex-1);
+			end = end.AddDays(lastIndex-1);
 
 			return start.ToString("dd.MM") + " - " + end.ToString("dd.MM");
 		}
@@ -447,7 +466,7 @@ namespace Swop.glob
 				else
 					pt.Append($"Set{i + 1} = {Monitorings[i].Location},{Weathers[i].Filename}");
 
-				pt.AppendLine($", Eval-Time: {GetEvalTimerangeText(FirstIndices[i], LastIndices[i])}, Eval-Weight: {EvalWeightings[i]}");
+				pt.AppendLine($", Eval-Time: {GetEvalTimerangeText(FirstIndices[i], LastIndices[i], Weathers[i].Year)}, Eval-Weight: {EvalWeightings[i]}");
 			}
 			pt.AppendLine();
 
@@ -485,7 +504,7 @@ namespace Swop.glob
 				else
 					pt.Append($"Set{i + 1} = {Monitorings[i].Location},{Weathers[i].Filename}");
 
-				pt.AppendLine($", Eval-Time: {GetEvalTimerangeText(FirstIndices[i], LastIndices[i])}, Eval-Weight: {EvalWeightings[i]}");
+				pt.AppendLine($", Eval-Time: {GetEvalTimerangeText(FirstIndices[i], LastIndices[i], Weathers[i].Year)}, Eval-Weight: {EvalWeightings[i]}");
 			}
 			pt.AppendLine();
 
@@ -566,7 +585,7 @@ namespace Swop.glob
 				pt.AppendLine($"  #S{i + 1}:");
 				pt.AppendLine($"    #W:{Weathers[i].Filename}");
 				pt.AppendLine($"    #M:{Monitorings[i].Location}");
-				pt.AppendLine($"    #T:{GetEvalTimerangeText(FirstIndices[i], LastIndices[i])}");
+				pt.AppendLine($"    #T:{GetEvalTimerangeText(FirstIndices[i], LastIndices[i], Weathers[i].Year)}");
 				pt.AppendLine($"    #E:{EvalWeightings[i].ToString(CultureInfo.InvariantCulture)}");
 				
 				// Ausgabe lokaler, datenset-spezifischer Parameter ('#P:' im Swop-Command- File)

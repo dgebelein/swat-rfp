@@ -296,6 +296,11 @@ namespace swat.iodata
 			get { return Path.Combine(GetPathWorkspace, "Reports"); }
 		}
 
+		public static string GetPathSwop
+		{
+			get { return Path.Combine(GetPathWorkspace, "Swop"); }
+		}
+
 		public static string GetPathParameters
 		{
 			get
@@ -502,6 +507,13 @@ namespace swat.iodata
 		// wird eigentlich nur gebraucht, um Zugriff auf Modellinterna zu ermöglichen
 		public ModelBase CreateModel(FlyType md, SimParamData simParam = null)
 		{
+			double[] randomNumbers = new double[1000000]; // Erzeugung von Zufallszahlen-Folge  wegen Identität mit swop-Familie
+			Random rand = new Random(96);
+			for (int i = 0; i < randomNumbers.Length; i++)
+			{
+				randomNumbers[i] = rand.NextDouble();
+			}
+
 			ModelBase model;
 			switch (md)
 			{
@@ -511,6 +523,8 @@ namespace swat.iodata
 
 				default: model = new ModelDR(Title, _dataWeather, CurrentPopulationData, simParam); break; 
 			}
+
+			model.SetRandomNumbers(randomNumbers);
 
 			return model;
 		}

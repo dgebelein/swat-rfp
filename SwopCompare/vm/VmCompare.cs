@@ -73,6 +73,7 @@ namespace SwopCompare
 		public ICommand PrintCommand { get { return _printCommand; } }
 
 		public Visibility VisQuantCommands { get { return Visibility.Visible; } } // aktiviert die quantifizierungspunkte im contextmenü
+		public Visibility VisExportCommand { get { return Visibility.Collapsed; } } // entfernt den Quantifizierungsexport im contextmenü
 		public ICommand QuantRelativeCommand { get { return _quantRelativeCommand; } }
 		public ICommand QuantAbsoluteCommand { get { return _quantAbsoluteCommand; } }
 		public ICommand QuantNormalizeCommand { get { return _quantNormalizeCommand; } }

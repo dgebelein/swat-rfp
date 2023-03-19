@@ -44,7 +44,7 @@ namespace SwopCompare
 		public VisGenerator(CmpData cd)
 		{
 			_data = cd;
-			_randomNumbers = new double[10000000]; // Erzeugung von Zufallszahlen-Folge
+			_randomNumbers = new double[1000000]; // Erzeugung von Zufallszahlen-Folge
 			Random rand = new Random(96);
 			for (int i = 0; i < _randomNumbers.Length; i++)
 			{
@@ -95,7 +95,6 @@ namespace SwopCompare
 		{
 			CalcTrends();
 
-			//double[] startTrend = GetModelTrend(_data.CompareSets[_setIndex].CommonParams); // zuerst aufrufen, weil hier auf Eier/Adulte umgeschaltet wird
 			AddMonitoringRow(pd);
 			AddDefaultParamRow(pd);
 			AddParameterRows(pd);

@@ -204,7 +204,7 @@ namespace swatSim
 
 			if(_randomNumbers == null)
 			{
-				double[] rN = new double[10000000];
+				double[] rN = new double[1000000];
 				Random rand = new Random(96);
 				for (int i = 0; i < rN.Length; i++)
 				{
@@ -256,8 +256,9 @@ namespace swatSim
 		{
 			SetMaxGenerations();
 
-			if (_population== null)
-				_population = new PopulationData(MaxGenerations);
+			if (_population == null)
+				_population = new PopulationData(10);
+
 
 			_population.Initialize();
 			_population.SetEggPeriods(_maxEggPeriods);

@@ -102,29 +102,60 @@ namespace SwopReview
 			_meshClearLapBoxesCommand = new RelayCommand(param => this.MeshClearLapBoxes());
 			_meshSetAllLapBoxesCommand = new RelayCommand(param => this.MeshSetAllLapBoxes());
 
-			AssignWorkDir();
+			AssignWorkDir(sd);
+			_swatWorkDir = sd.SwatWorkDir;
+			//sd.SwopWorkDir = Path.Combine(_swatWorkDir, "Swop");
+
 		}
 
-		private void AssignWorkDir()
+		private void AssignWorkDir(SwopData sd)
 		{
+			//string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			//try
+			//{
+
+			//	string[] fileLines = File.ReadAllLines(cfgFn);
+			//	sd.SwatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+			//}
+			//catch (Exception)
+			//{
+			//	_swatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+			//}
+
+
+			//string swopDir = Path.Combine(_swatWorkDir, "Swop");
+			//if (!Directory.Exists(swopDir))
+			//{
+			//	DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {swopDir} existiert nicht", MessageLevel.Error);
+			//}
 			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
-			try
+
+			if (!File.Exists(cfgFn))
 			{
-
-				string[] fileLines = File.ReadAllLines(cfgFn);
-				_swatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
-
+				sd.SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
 			}
-			catch (Exception)
+			else
 			{
-				_swatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+				try
+				{
+
+					string[] fileLines = File.ReadAllLines(cfgFn);
+					sd.SwatWorkDir = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+				}
+				catch (Exception e)
+				{
+					DlgMessage.Show("Swop Konfigurationsfehler", $"'swop.cfg' kann nicht gelesen werden ", MessageLevel.Error);
+					sd.SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+				}
 			}
 
 
-			string swopDir = Path.Combine(_swatWorkDir, "Swop");
-			if (!Directory.Exists(swopDir))
+			sd.SwopWorkDir = Path.Combine(sd.SwatWorkDir, "Swop");
+			if (!Directory.Exists(sd.SwopWorkDir))
 			{
-				DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {swopDir} existiert nicht", MessageLevel.Error);
+				DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {sd.SwopWorkDir} existiert nicht", MessageLevel.Error);
 			}
 		}
 		#endregion
@@ -255,7 +286,7 @@ namespace SwopReview
 
 		#region Read Swop-File
 
-		string GetPathSwop
+		public string GetPathSwop
 		{
 			get { return Path.Combine(_swatWorkDir,"Swop"); }
 		}

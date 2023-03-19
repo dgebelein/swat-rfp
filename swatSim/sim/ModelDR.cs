@@ -40,7 +40,7 @@ namespace swatSim
 			// Grundlegendes
 
 			p.InitItem("dr.StartPop", 1000, typeof(int), 500.0, 10000.0, "Startpopulation (Anzahl Individuen)", 1);
-			p.InitItem("dr.MaxGen", 6, typeof(int), 1, 7, "maximale Generationenzahl", 50);
+			p.InitItem("dr.MaxGen", 7, typeof(int), 1, 9, "maximale Generationenzahl", 50);
 			p.InitItem("dr.UseHourlyDev", false, typeof(bool), 0.0, 1.0, "Entwicklungsraten stündlich berechnen?", 50);
 			p.InitItem("dr.SoilAmpInc", 0.2, typeof(double), 0.0, 0.5, "Amplitudenfaktor Bodentemp für stündl. Berechnung", 50);
 

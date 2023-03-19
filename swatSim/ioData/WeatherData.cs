@@ -315,7 +315,8 @@ namespace swatSim
 				}
 			}
 
-			try {
+			try
+			{
 				using (File.Create(Filename)) { }
 			}
 			catch (Exception e)

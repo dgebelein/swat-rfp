@@ -112,6 +112,19 @@ namespace swatSim
 			}
 		}
 
+		public bool HasEggs
+		{
+			get
+			{
+				for (int i = 0; i < 366; i++)
+				{
+					if (!double.IsNaN(Eggs[i]))
+						return true;
+				}
+				return false;
+			}
+		}
+
 		private string MonitoringFlightDescr
 		{
 			get

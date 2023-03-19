@@ -15,6 +15,9 @@ namespace Swop.glob
 		public List<string> WeatherFilenames;
 		public List<string> MonitoringFilenames;
 		public List<string> LocParamFilenames;
+		public List<string> EvalDates;
+		public String GlobDate;
+
 		public List<int> FirstIndices;
 		public List<int> LastIndices;
 		public List<double> EvalWeightings;
@@ -36,6 +39,8 @@ namespace Swop.glob
 			WeatherFilenames = new List<string>();
 			MonitoringFilenames = new List<string>();
 			LocParamFilenames = new List<string>();
+			EvalDates = new List<string>();
+
 
 			FirstIndices = new List<int>();
 			LastIndices = new List<int>();
@@ -98,25 +103,36 @@ namespace Swop.glob
 				LocParamFilenames.Add("");
 
 
+			//string datesString = IsolateContent(line, "#d:");
+			//if (datesString != null)
+			//{
+			//	Tuple<int, int> indices = GetLocIndices(datesString);
+			//	if ((indices.Item1 < 0) || (indices.Item2 < 0))
+			//	{
+			//		ErrMsg = ErrMsg = "falsche Zeitbegrenzung" + " (" + line + ")";
+			//		return;
+			//	}
+			//	else
+			//	{
+			//		FirstIndices.Add(indices.Item1);
+			//		LastIndices.Add(indices.Item2);
+			//	}
+			//}
+			//else
+			//{
+			//	FirstIndices.Add(-1);
+			//	LastIndices.Add(-1);
+			//}
+
+
 			string datesString = IsolateContent(line, "#d:");
 			if (datesString != null)
 			{
-				Tuple<int, int> indices = GetLocIndices(datesString);
-				if ((indices.Item1 < 0) || (indices.Item2 < 0))
-				{
-					ErrMsg = ErrMsg = "falsche Zeitbegrenzung" + " (" + line + ")";
-					return;
-				}
-				else
-				{
-					FirstIndices.Add(indices.Item1);
-					LastIndices.Add(indices.Item2);
-				}
+				EvalDates.Add(datesString);
 			}
 			else
 			{
-				FirstIndices.Add(-1);
-				LastIndices.Add(-1);
+				EvalDates.Add("");
 			}
 
 			string weightString = IsolateContent(line, "#e:");
@@ -215,8 +231,10 @@ namespace Swop.glob
 			if (DateTime.TryParseExact(elems[0].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime first) &&
 				DateTime.TryParseExact(elems[1].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime last))
 			{
-				FirstOptIndex = first.DayOfYear - 1;
-				LastOptIndex = last.DayOfYear - 1;
+
+				GlobDate = line;
+				//FirstOptIndex = first.DayOfYear - 1;
+				//LastOptIndex = last.DayOfYear - 1;
 			}
 			else
 			{
@@ -224,33 +242,35 @@ namespace Swop.glob
 			}
 		}
 
-		private Tuple<int,int>GetLocIndices(string line)
-		{
-			Tuple<int, int> empty = new Tuple<int, int>(-1, -1);
-			if (string.IsNullOrEmpty(line))
-				return empty;
-			else
-			{
-				string[] elems = line.Trim().Split('-');
+		//private Tuple<int,int>GetLocIndices(string line)
+		//{
+		//	Tuple<int, int> empty = new Tuple<int, int>(-1, -1);
+		//	if (string.IsNullOrEmpty(line))
+		//		return empty;
+		//	else
+		//	{
+		//		string[] elems = line.Trim().Split('-');
 
-				if (elems.Length != 2)
-				{
-					ErrMsg = "falsche Zeitbegrenzung";
-					return empty; 
-				}
+		//		if (elems.Length != 2)
+		//		{
+		//			ErrMsg = "falsche Zeitbegrenzung";
+		//			return empty; 
+		//		}
 
-				if (DateTime.TryParseExact(elems[0].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime first) &&
-					DateTime.TryParseExact(elems[1].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime last))
-				{
-					return new Tuple<int, int>(first.DayOfYear-1, last.DayOfYear - 1);
-				}
-				else
-				{
-					ErrMsg = "falsche Zeitbegrenzung";
-					return empty;
-				}
-			}
-		}
+		//		if (DateTime.TryParseExact(elems[0].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime first) &&
+		//			DateTime.TryParseExact(elems[1].Trim(), "dd.MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime last))
+		//		{
+		//			return new Tuple<int, int>(first.DayOfYear-1, last.DayOfYear - 1);
+		//			//return new Tuple<int, int>(first.DayOfYear, last.DayOfYear);
+
+		//		}
+		//		else
+		//		{
+		//			ErrMsg = "falsche Zeitbegrenzung";
+		//			return empty;
+		//		}
+		//	}
+		//}
 
 
 		public bool Read(string filename)

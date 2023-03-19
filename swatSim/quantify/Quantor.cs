@@ -44,6 +44,7 @@ namespace swatSim
 
 		// report
 		bool _doCreateReport;
+		string _reportStartLine;
 		StringBuilder _optReport;
 
 		// public variable
@@ -83,7 +84,7 @@ namespace swatSim
 				_pd = pd,
 				_md = monData,
 				_evalMethod = evalMethod,
-				_lastQuantIndex = (monData.FirstVirtMonitoring > 0) ? monData.FirstVirtMonitoring - 1 : 366
+				_lastQuantIndex = (monData.FirstVirtMonitoring > 0) ? monData.FirstVirtMonitoring - 1 : 365
 			};
 
 			quantor._doCreateReport = doCreateReport;
@@ -409,7 +410,7 @@ namespace swatSim
 
 			for (int g = 1; g < factors.Length; g++)// Faktor für  Überwinterungsgeneration nicht antasten 
 			{
-				if (g == _pd.GetNumGenerations())
+				if (g == _pd.GetCalcGenerationsNum())
 				{
 					int si = _pd.GenerationStartIndex(DevStage.NewEgg, g);
 					if (si > 0 && si < _lastQuantIndex)
@@ -560,6 +561,9 @@ namespace swatSim
 				_optReport.Append($"{normFactors[i],10:f3}");
 			_optReport.AppendLine("");
 
+			if (_evalStep == 0)
+				_reportStartLine = _optReport.ToString();  // wg Wiederholung am Ende des Reports
+
 		}
 		
 		private void ReportOptimizationHeader(int numFactors) 
@@ -577,15 +581,18 @@ namespace swatSim
 			if (!_doCreateReport)
 				return;
 
+			_optReport.AppendLine($"Calculating Time : {duration} ms");
+			if (byTermination)
+				_optReport.AppendLine($"Early Termination");
+
+			_optReport.AppendLine($"\r\n\r\n Summary: Method = {_evalMethod}");
+
+			_optReport.Append(_reportStartLine);
 			_optReport.Append($" best:{optResult,10:f3}");
 
 			for (int i = 0; i < numFactors; i++)
 				_optReport.Append($"{bestFactors[i + 1],10:f3}");
 			_optReport.AppendLine("");
-
-			_optReport.AppendLine($"Calculating Time : {duration} ms");
-			if (byTermination)
-				_optReport.AppendLine($"Early Termination");
 		}
 
 		#endregion

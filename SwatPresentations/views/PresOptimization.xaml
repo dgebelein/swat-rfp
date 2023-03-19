@@ -57,6 +57,8 @@
 					<Image Source="/SwatPresentations;component/Resources/Images/print.png" Height="16"  Style="{StaticResource ButtonImageStyle}"/>
 				</MenuItem.Icon>
 			</MenuItem>
+			<MenuItem  Header="quantifizierte Daten exportieren"	Command="{Binding Path=ExportCommand}"  Visibility="{Binding VisExportCommand}" />
+
 			<Separator Visibility="{Binding VisQuantCommands}"/>
 
 			<MenuItem  Header="Quantifizierung mit Fehlerrelationen"	Command="{Binding Path=QuantRelativeCommand}" Visibility="{Binding VisQuantCommands}"/>

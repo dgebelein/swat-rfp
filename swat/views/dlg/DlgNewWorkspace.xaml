@@ -87,7 +87,7 @@
 									Margin="10,0,0,0"	 FontWeight="Normal"
 									Content="eigene Daten verwenden"	
 									IsChecked="{Binding Path=WspWeatherOrigin,	
-									Converter={StaticResource enumBooleanConverter}, ConverterParameter=HomeGrown}"/>
+									Converter={StaticResource enumBooleanConverter}, ConverterParameter=Own}"/>
 					<RadioButton GroupName="origin"
 									Margin="10,10,0,0" FontWeight="Normal"
 									Content="von DWD-Wetterstation beziehen" 

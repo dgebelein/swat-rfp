@@ -52,7 +52,7 @@ namespace Swop.optimizer
 			_globData = globData;
 			_quantorMethod = EvalMethod.Relation;
 
-			_randomNumbers = new double[10000000]; // Erzeugung von Zufallszahlen-Folge für Multithreading
+			_randomNumbers = new double[1000000]; // Erzeugung von Zufallszahlen-Folge für Multithreading
 			Random rand = new Random(96);
 			for (int i = 0; i < _randomNumbers.Length; i++)
 			{

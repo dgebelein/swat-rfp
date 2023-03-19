@@ -112,7 +112,7 @@ namespace swat.vm
 
 		private string GetTitleToolTip()
 		{
-			return Workspace.Notes + $"\r\n\n ----------------------\r\nNum Indiv: {Workspace.CurrentPopulationData.NumIndividuals.ToString("### ### ### ###", CultureInfo.InvariantCulture)}";
+			return  $"Num Indiv: {Workspace.CurrentPopulationData.NumIndividuals.ToString("### ### ### ###", CultureInfo.InvariantCulture)}\r\n\n -----------------\r\n"+Workspace.Notes;
 		}
 
 	private PresentationsData GeneratePresentationsData()
