@@ -33,7 +33,7 @@ namespace swat
 		public double[] ParamTic { get; set; }
 		public string[] ParamHeaders { get; set; }
 		public Visibility[]  ParamVisibilities { get; set; }
-		public Visibility CheckBoxVisibility { get; set; } // für Sichtbarkeit der Checkbox in Fertilität zum Umschalten auf kumulative Summe
+		public Visibility CheckBoxVisibility { get; set; } // für Sichtbarkeit der Checkbox  in Fertilität zum Umschalten auf kumulative Summe
 		public bool ShowCumSum { get; set; }
 
 		#endregion
