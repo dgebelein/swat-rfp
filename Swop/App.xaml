@@ -1,0 +1,9 @@
+﻿<Application x:Class="Swop.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Swop"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+					<ResourceDictionary Source="pack://application:,,,/SwatTheme;component/SwatTheme.xaml"/>
+		</Application.Resources>
+</Application>
