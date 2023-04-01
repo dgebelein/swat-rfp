@@ -5,7 +5,7 @@ Swat is a simulation program that can use weather data to calculate the populati
 - carrot fly (_psila rosae_  syn _chamaepsila rosae_)
 - onion fly (_delia antiqua_)
 
-These flies are among the most important pests in vegetable production. They occur each year in several, sometimes clearly separated, sometimes overlapping generations, so that in the course of a growing year infestation-free phases alternate with phases of high infestation pressure. Intelligent crop protection solutions must take this periodicity into account.
+These flies are among the most important pests in vegetable production. They occur each year in several, sometimes clearly separated, sometimes overlapping generations, so that in the course of a growing year infestation-free phases alternate with phases of high infestation pressure. Intelligent crop protection solutions must take into account this periodicity.
 
 Swat predicts periods at risk and provides cross-sections through the age structure of pest populations for any point in time. Advisory services are thus given more time to disseminate warnings.  It also helps in scheduling labor-intensive crop inspections and defense or control measures, 
 
