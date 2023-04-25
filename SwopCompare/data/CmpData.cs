@@ -37,7 +37,7 @@ namespace SwopCompare
 
 		private void AssignWorkDir()
 		{
-			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat.cfg");
 			
 			if (!File.Exists(cfgFn))
 			{ 
@@ -54,7 +54,7 @@ namespace SwopCompare
 				}
 				catch (Exception e)
 				{
-					DlgMessage.Show("Swop Konfigurationsfehler", $"'swop.cfg' kann nicht gelesen werden ", MessageLevel.Error);
+					DlgMessage.Show("Swop Konfigurationsfehler", $"'swat.cfg' kann nicht gelesen werden ", MessageLevel.Error);
 					SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
 				}
 			}

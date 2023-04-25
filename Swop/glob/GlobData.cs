@@ -80,7 +80,7 @@ namespace Swop.glob
 		{
 			//SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
 
-			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat.cfg");
 			try
 			{
 

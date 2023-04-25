@@ -13,6 +13,7 @@ using System.Windows;
 using swatSim;
 using swat.views.dlg;
 using System.Windows.Media;
+using SwatPresentations;
 
 namespace swat.vm
 {
@@ -36,6 +37,8 @@ namespace swat.vm
 
 		public VmSwat():base(null)
 		{
+			AssignWorkDir();
+
 			Directory.CreateDirectory(WorkspaceData.GetPathMonitoring);
 			Directory.CreateDirectory(WorkspaceData.GetPathOptimization);
 			Directory.CreateDirectory(WorkspaceData.GetPathParameters);
@@ -57,6 +60,35 @@ namespace swat.vm
 			SelectedMenuItem = _visibleMenu.Items[0];
 		}
 
+		private void AssignWorkDir()
+		{
+
+			if (!string.IsNullOrEmpty((string)Properties.Settings.Default["DataFolder"]))
+				return;
+
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat.cfg");
+
+			if (!File.Exists(cfgFn))
+			{
+				Properties.Settings.Default["DataFolder"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+			}
+			else
+			{
+				try
+				{
+
+					string[] fileLines = File.ReadAllLines(cfgFn);
+					Properties.Settings.Default["DataFolder"] = fileLines[ReadCmd.GetLineNo(fileLines, "SwatDir") + 1].Trim();
+
+				}
+				catch (Exception e)
+				{
+					DlgMessage.Show("Swat Konfigurationsfehler", $"'swat.cfg' kann nicht gelesen werden ", MessageLevel.Error);
+					Properties.Settings.Default["DataFolder"] = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
+				}
+			}
+
+		}
 
 		#endregion
 

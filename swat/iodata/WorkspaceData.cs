@@ -46,6 +46,7 @@ namespace swat.iodata
 		{
 			_flyNames = new List<string>() { "Kohlfliege", "Möhrenfliege", "Zwiebelfliege" };// nicht als const weil später durch Lokalisierung variabel
 			SetGlobalProperties();
+			//AssignWorkDir();
 			SimulationYear = year;
 
 			_dataWeather = new WeatherData(SimulationYear);
@@ -230,6 +231,7 @@ namespace swat.iodata
 
 		#region Read/Write
 
+
 		public static string GetPathWorkspace
 		{
 			get
@@ -239,7 +241,7 @@ namespace swat.iodata
 					return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
 				else
 				{
-					return Path.Combine(dataPath, "Swat");
+					return dataPath; // Path.Combine(dataPath, "Swat");
 				}
 			}
 		}

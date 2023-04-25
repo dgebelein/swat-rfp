@@ -110,7 +110,7 @@ namespace SwopReview
 
 		private void AssignWorkDir(SwopData sd)
 		{
-			//string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			//string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat.cfg");
 			//try
 			//{
 
@@ -129,7 +129,7 @@ namespace SwopReview
 			//{
 			//	DlgMessage.Show("Swop Konfigurationsfehler", $"das Arbeitsverzeichnis {swopDir} existiert nicht", MessageLevel.Error);
 			//}
-			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swop.cfg");
+			string cfgFn = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "swat.cfg");
 
 			if (!File.Exists(cfgFn))
 			{
@@ -146,7 +146,7 @@ namespace SwopReview
 				}
 				catch (Exception e)
 				{
-					DlgMessage.Show("Swop Konfigurationsfehler", $"'swop.cfg' kann nicht gelesen werden ", MessageLevel.Error);
+					DlgMessage.Show("Swop Konfigurationsfehler", $"'swat.cfg' kann nicht gelesen werden ", MessageLevel.Error);
 					sd.SwatWorkDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swat");
 				}
 			}
