@@ -407,7 +407,7 @@ namespace swatSim
 			if (hourlyDev)
 			{
 				double soilAmpInc = (Double)_workingParams.GetValue("dr.SoilAmpInc");
-				// für Lufttemp Amplituden monatsweise zuordnen
+				// für Lufttemp Amplituden monatsweise zuordnen:Jan,Feb,Nov,Dez = 5°, Apr,Sep=7.5°, alle anderen Monate=10°
 				double airAmp;
 				for (int i = _firstSimIndex; i < _lastSimIndex; i++)
 				{
@@ -426,7 +426,7 @@ namespace swatSim
 						double hat = _simAirTemps[i] - Math.Cos(h/24.0 * 2 * 3.14) * airAmp;						
 						_tableDev[(int)DevStage.Fly, i] += SimFunctions.ONeal(hat, devTmax, devTopt, devQ, devL, flyKmax) / 24.0;
 
-						double soilAmp = 1 + (_simSoilTemps[i] * soilAmpInc);
+						double soilAmp = 1 + (_simSoilTemps[i] * soilAmpInc); // für Bodentemp. Amplitude temperaturabhängig
 						double hst = _simSoilTemps[i] - Math.Cos(h/24.0 * 2 * 3.14) * soilAmp;
 						_tableDev[(int)DevStage.Egg, i] += SimFunctions.ONeal(hst, devTmax, devTopt, devQ, devL, eggKmax) / 24.0;
 						_tableDev[(int)DevStage.Larva, i] += SimFunctions.ONeal(hst, devTmax, devTopt, devQ, devL, larvaKmax) / 24.0;

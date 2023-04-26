@@ -12,7 +12,7 @@
 		<DockPanel LastChildFill="True">
 			<StackPanel	Orientation="Vertical" DockPanel.Dock="Bottom">
 				<Separator Margin="0,10,0,10"/>
-					<Label FontSize="12"	Margin="20,0">© 2020	by	Dieter Gebelein</Label>
+					<Label FontSize="12"	Margin="20,0">© 2023	by	Dieter Gebelein</Label>
 				<Label Content="alle	Rechte vorbehalten"	FontSize="12" Margin="33,0,0,10" />
 			</StackPanel>
 

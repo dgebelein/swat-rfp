@@ -10,7 +10,7 @@
 	<Grid	Background="{StaticResource CmdAreaBrush}" >
 		<DockPanel >
 			<StackPanel	Orientation="Vertical" DockPanel.Dock="Bottom">
-				<Label FontSize="12"	Margin="20,5">Release 2312</Label>
+				<Label FontSize="12"	Margin="20,5">Release 2317</Label>
 				<StackPanel Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
 					<Label FontSize="12"	>© 2023	by	</Label>
 					<TextBlock FontFamily="Segoe UI" FontSize="12"  Margin="5,-2">
