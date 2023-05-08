@@ -52,7 +52,7 @@ namespace SwatImporter
 
 		#endregion
 
-		#region ftp-directories
+		#region download-directories
 
 		public bool BuildDirectories()
 		{
@@ -118,7 +118,7 @@ namespace SwatImporter
 
 		#endregion
 
-		#region FtpDownload
+		#region Download
 
 		public string GetFtpDirName(Sensors sens, Topicality topic)
 		{
@@ -141,17 +141,48 @@ namespace SwatImporter
 			}
 		}
 
+		//public bool GetBinFile(string fileName, string outputDir)
+		//{
+		//	const int bufferSize = 2048;
+		//	try
+		//	{
+		//		FtpWebRequest request = (FtpWebRequest)WebRequest.Create(fileName);
+		//		request.Credentials = new NetworkCredential("anonymous", "anonymous");
+		//		request.UseBinary = true; // Use binary to ensure correct dlv!
+		//		request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+		//		FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+		//		Stream responseStream = response.GetResponseStream();
+		//		FileStream writer = new FileStream(Path.Combine(outputDir, Path.GetFileName(fileName)), FileMode.Create);
+
+		//		byte[] buffer = new byte[2048];
+
+		//		int readCount = responseStream.Read(buffer, 0, bufferSize);
+		//		while (readCount > 0)
+		//		{
+		//			writer.Write(buffer, 0, readCount);
+		//			readCount = responseStream.Read(buffer, 0, bufferSize);
+		//		}
+
+		//		responseStream.Close();
+		//		response.Close();
+		//		writer.Close();
+		//		return true;
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		ErrorMsgExt = e.Message;
+		//		return false;
+		//	}
+		//}
+
 		public bool GetBinFile(string fileName, string outputDir)
 		{
 			const int bufferSize = 2048;
 			try
 			{
-				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(fileName);
-				request.Credentials = new NetworkCredential("anonymous", "anonymous");
-				request.UseBinary = true; // Use binary to ensure correct dlv!
-				request.Method = WebRequestMethods.Ftp.DownloadFile;
-
-				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(fileName);
+				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 				Stream responseStream = response.GetResponseStream();
 				FileStream writer = new FileStream(Path.Combine(outputDir, Path.GetFileName(fileName)), FileMode.Create);
 
@@ -182,17 +213,10 @@ namespace SwatImporter
 
 			try
 			{
-				//Create FTP request
-				FtpWebRequest request = (FtpWebRequest)WebRequest.Create(dirName);
-
-				request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-				request.Credentials = new NetworkCredential("anonymous", "anonymous");
-				request.UsePassive = true;
-				request.UseBinary = true;
+				//Create Http request
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(dirName);
 				request.KeepAlive = false;
-
-
-				FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+				HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 				Stream responseStream = response.GetResponseStream();
 				StreamReader reader = new StreamReader(responseStream);
 
@@ -214,6 +238,44 @@ namespace SwatImporter
 			}
 
 		}
+		//public List<string> GetDirContentList(string dirName, Sensors sens)
+		//{
+		//	List<string> rawList = new List<string>();
+
+		//	try
+		//	{
+		//		//Create FTP request
+		//		FtpWebRequest request = (FtpWebRequest)WebRequest.Create(dirName);
+
+		//		request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+		//		request.Credentials = new NetworkCredential("anonymous", "anonymous");
+		//		request.UsePassive = true;
+		//		request.UseBinary = true;
+		//		request.KeepAlive = false;
+
+
+		//		FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+		//		Stream responseStream = response.GetResponseStream();
+		//		StreamReader reader = new StreamReader(responseStream);
+
+		//		while (!reader.EndOfStream)
+		//		{
+		//			rawList.Add(reader.ReadLine());
+		//		}
+
+		//		//Clean-up
+		//		reader.Close();
+		//		response.Close();
+
+		//		return ExtractFilenames(rawList, sens);
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		ErrorMsgExt = e.Message;
+		//		return null;
+		//	}
+
+		//}
 
 		#endregion
 

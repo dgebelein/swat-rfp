@@ -41,7 +41,7 @@
 		<TextBlock Grid.Row="1" Grid.Column="1"  Text="DWD-Station:" HorizontalAlignment="Right" Foreground="Yellow"/>
 		<TextBlock Grid.Row="1" Grid.Column="2"  Text="{Binding DwdStationName}" Margin="10,0"/>
 
-		<TextBlock Grid.Row="2" Grid.Column="1" Text="FTP-Download:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="2" Grid.Column="1" Text="Download:" HorizontalAlignment="Right"/>
 		<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding LogReadActFtpFolder}" Margin="10,0"/>
 
 

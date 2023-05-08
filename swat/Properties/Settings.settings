@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="FtpUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ftp://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily</Value>
+      <Value Profile="(Default)">https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily</Value>
     </Setting>
     <Setting Name="DataFolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />

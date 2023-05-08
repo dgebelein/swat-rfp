@@ -53,7 +53,7 @@
 		<TextBlock Grid.Row="2" Grid.Column="1" Text="historische Daten" HorizontalAlignment="Right" Foreground="Yellow"/>
 
 
-		<TextBlock Grid.Row="3" Grid.Column="1" Text="FTP-Download:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="3" Grid.Column="1" Text="Download:" HorizontalAlignment="Right"/>
 		<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding LogReadHistFtpFolder}" Margin="10,0"/>
 
 		<TextBlock Grid.Row="4" Grid.Column="1" Text="Klima:" HorizontalAlignment="Right"/>
@@ -71,7 +71,7 @@
 
 		<TextBlock Grid.Row="8" Grid.Column="1" Text="neue Daten" HorizontalAlignment="Right" Foreground="Yellow"/>
 		
-		<TextBlock Grid.Row="9" Grid.Column="1" Text="FTP-Download:" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="9" Grid.Column="1" Text="Download:" HorizontalAlignment="Right"/>
 		<TextBlock Grid.Row="9" Grid.Column="2" Text="{Binding LogReadActFtpFolder}" Margin="10,0"/>
 
 		<TextBlock Grid.Row="10" Grid.Column="1" Text="Klima:" HorizontalAlignment="Right"/>

@@ -25,7 +25,8 @@ namespace swat.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ftp://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/dail" +
+            "y")]
         public string FtpUrl {
             get {
                 return ((string)(this["FtpUrl"]));
